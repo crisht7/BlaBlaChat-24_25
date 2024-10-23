@@ -17,11 +17,21 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.SwingConstants;
+import javax.swing.JMenuBar;
+import javax.swing.JMenu;
+import java.awt.GridLayout;
+import java.awt.GridBagLayout;
+import java.awt.GridBagConstraints;
+import java.awt.Insets;
+import javax.swing.JPasswordField;
+import java.awt.Dimension;
 
 public class VentanaLogin {
 
 	private JFrame frame;
 	private String UsuarioUrl;
+	private JTextField textField;
+	private JPasswordField passwordField;
 
 	/**
 	 * Launch the application.
@@ -51,11 +61,11 @@ public class VentanaLogin {
 	 */
 	private void initialize() {
 		frame = new JFrame();
-		frame.setBounds(100, 100, 670, 449); //Establece el tamaño de la ventana
+		frame.setBounds(100, 100, 720, 480); //Establece el tamaño de la ventana
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Establece la operación por defecto cuando se cierra la ventana
 		
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.SOUTH);
+		JPanel panelBot = new JPanel();
+		frame.getContentPane().add(panelBot, BorderLayout.SOUTH);
 		
 		JButton btnNewButton = new JButton("Registrar");
 		btnNewButton.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/angel_3434431 (2).png")));
@@ -63,32 +73,77 @@ public class VentanaLogin {
 			public void actionPerformed(ActionEvent e) {
 			}
 		});
-		panel.add(btnNewButton);
+		panelBot.add(btnNewButton);
 		
 		JButton btnNewButton_1 = new JButton("Login");
 		btnNewButton_1.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/thinking_3434449.png")));
-		panel.add(btnNewButton_1);
+		panelBot.add(btnNewButton_1);
 		
-		JPanel panel_1 = new JPanel();
-		frame.getContentPane().add(panel_1, BorderLayout.NORTH);
+		JPanel panelTop = new JPanel();
+		frame.getContentPane().add(panelTop, BorderLayout.NORTH);
 		
 		JLabel lblNewLabel = new JLabel("");
 		lblNewLabel.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/scared_3434441.png")));
-		panel_1.add(lblNewLabel);
+		panelTop.add(lblNewLabel);
 		
-		JScrollPane scrollPane = new JScrollPane();
-		scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_NEVER);
-		frame.getContentPane().add(scrollPane, BorderLayout.CENTER);
+		JPanel panelMid = new JPanel();
+		frame.getContentPane().add(panelMid, BorderLayout.CENTER);
+		GridBagLayout gbl_panelMid = new GridBagLayout();
+		gbl_panelMid.columnWidths = new int[]{30, 90, 275, 50, 0};
+		gbl_panelMid.rowHeights = new int[]{10, 0, 2, 0, 10, 0};
+		gbl_panelMid.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_panelMid.rowWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		panelMid.setLayout(gbl_panelMid);
 		
-		JTextArea textArea = new JTextArea();
-		textArea.setWrapStyleWord(true);
-		textArea.setLineWrap(true);
-		scrollPane.setViewportView(textArea);
+		JLabel lblNewLabel_1 = new JLabel("Teléfono:  ");
+		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
+		gbc_lblNewLabel_1.anchor = GridBagConstraints.SOUTHEAST;
+		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_1.gridx = 1;
+		gbc_lblNewLabel_1.gridy = 1;
+		panelMid.add(lblNewLabel_1, gbc_lblNewLabel_1);
 		
-		JLabel lblNewLabel_1 = new JLabel("Login");
-		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_1.setBorder(new EtchedBorder(EtchedBorder.RAISED, null, null));
-		scrollPane.setColumnHeaderView(lblNewLabel_1);
+		textField = new JTextField();
+		GridBagConstraints gbc_textField = new GridBagConstraints();
+		gbc_textField.anchor = GridBagConstraints.SOUTH;
+		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField.insets = new Insets(0, 0, 5, 5);
+		gbc_textField.gridx = 2;
+		gbc_textField.gridy = 1;
+		panelMid.add(textField, gbc_textField);
+		
+		JLabel lblNewLabel_2 = new JLabel("Contraseña:  ");
+		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
+		gbc_lblNewLabel_2.anchor = GridBagConstraints.NORTHEAST;
+		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_2.gridx = 1;
+		gbc_lblNewLabel_2.gridy = 3;
+		panelMid.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		
+		passwordField = new JPasswordField();
+		passwordField.setMinimumSize(new Dimension(15, 20));
+		GridBagConstraints gbc_passwordField = new GridBagConstraints();
+		gbc_passwordField.anchor = GridBagConstraints.NORTH;
+		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
+		gbc_passwordField.gridx = 2;
+		gbc_passwordField.gridy = 3;
+		panelMid.add(passwordField, gbc_passwordField);
+		
+		JMenuBar menuBar = new JMenuBar();
+		frame.setJMenuBar(menuBar);
+		
+		JMenu Files = new JMenu("Files");
+		menuBar.add(Files);
+		
+		JMenu mnNewMenu = new JMenu("New menu");
+		Files.add(mnNewMenu);
+		
+		JMenu mnNewMenu_1 = new JMenu("New menu");
+		Files.add(mnNewMenu_1);
+		
+		JMenu mnNewMenu_2 = new JMenu("Edit");
+		menuBar.add(mnNewMenu_2);
 		
 		
 		/*
