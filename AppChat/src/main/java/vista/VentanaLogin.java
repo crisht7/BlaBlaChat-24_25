@@ -29,7 +29,7 @@ import java.awt.Dimension;
 
 public class VentanaLogin {
 
-	private JFrame frame;
+	JFrame frame;
 	private String UsuarioUrl;
 	private JTextField textField;
 	private JPasswordField passwordField;
@@ -152,5 +152,10 @@ public class VentanaLogin {
         }
 	
 	*/
+	}
+
+	public void setVisible(boolean b) {
+		// TODO Auto-generated method stub
+		
 	}
 }

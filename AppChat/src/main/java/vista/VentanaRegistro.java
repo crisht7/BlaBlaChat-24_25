@@ -217,6 +217,7 @@ public class VentanaRegistro extends JFrame {
 		JButton btnNewButton = new JButton("Registrar");
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				
 			}
 		});
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -226,7 +227,15 @@ public class VentanaRegistro extends JFrame {
 		panel.add(horizontalGlue);
 		
 		JButton btnNewButton_1 = new JButton("Cancelar");
+		btnNewButton_1.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				dispose(); // Cierra la ventana actual (VentanaRegistro)
+		        VentanaLogin ventanaLogin = new VentanaLogin(); // Crea una nueva instancia de VentanaLogin
+		        ventanaLogin.frame.setVisible(true); // Muestra la ventana de login
+			}
+		});
 		panel.add(btnNewButton_1);
+		
 	}
 
 }
