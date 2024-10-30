@@ -12,6 +12,13 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
+import com.toedter.calendar.JDateChooser;
+import javax.swing.JSplitPane;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
+import javax.swing.BoxLayout;
+import java.awt.Component;
+import javax.swing.Box;
 
 public class VentanaRegistro extends JFrame {
 
@@ -22,6 +29,7 @@ public class VentanaRegistro extends JFrame {
 	private JTextField textField_2;
 	private JPasswordField passwordField;
 	private JPasswordField passwordField_1;
+	private JTextField textField_3;
 
 	
 	/**
@@ -29,7 +37,7 @@ public class VentanaRegistro extends JFrame {
 	 */
 	public VentanaRegistro() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 1102, 480);
+		setBounds(100, 100, 791, 497);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -39,10 +47,10 @@ public class VentanaRegistro extends JFrame {
 		
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{20, 0, 0, 0, 0, 20, 0};
+		gbl_contentPane.columnWidths = new int[]{20, 0, 0, 0, 0, 0, 20, 0};
 		gbl_contentPane.rowHeights = new int[]{20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
 		JLabel lblNewLabel = new JLabel("Nombre: ");
@@ -55,7 +63,7 @@ public class VentanaRegistro extends JFrame {
 		
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.gridwidth = 3;
+		gbc_textField.gridwidth = 4;
 		gbc_textField.insets = new Insets(0, 0, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 2;
@@ -73,7 +81,7 @@ public class VentanaRegistro extends JFrame {
 		
 		textField_1 = new JTextField();
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.gridwidth = 3;
+		gbc_textField_1.gridwidth = 4;
 		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 2;
@@ -107,7 +115,7 @@ public class VentanaRegistro extends JFrame {
 		contentPane.add(lblNewLabel_3, gbc_lblNewLabel_3);
 		
 		passwordField = new JPasswordField();
-		passwordField.setColumns(20);
+		passwordField.setColumns(40);
 		GridBagConstraints gbc_passwordField = new GridBagConstraints();
 		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
@@ -115,20 +123,19 @@ public class VentanaRegistro extends JFrame {
 		gbc_passwordField.gridy = 7;
 		contentPane.add(passwordField, gbc_passwordField);
 		
-		JLabel lblNewLabel_6 = new JLabel("Repetir Contraseña");
+		JLabel lblNewLabel_6 = new JLabel("Repetir Contraseña:");
 		GridBagConstraints gbc_lblNewLabel_6 = new GridBagConstraints();
 		gbc_lblNewLabel_6.anchor = GridBagConstraints.EAST;
 		gbc_lblNewLabel_6.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_6.gridx = 3;
+		gbc_lblNewLabel_6.gridx = 4;
 		gbc_lblNewLabel_6.gridy = 7;
 		contentPane.add(lblNewLabel_6, gbc_lblNewLabel_6);
 		
 		passwordField_1 = new JPasswordField();
-		passwordField_1.setColumns(20);
+		passwordField_1.setColumns(40);
 		GridBagConstraints gbc_passwordField_1 = new GridBagConstraints();
 		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_passwordField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_passwordField_1.gridx = 4;
+		gbc_passwordField_1.gridx = 5;
 		gbc_passwordField_1.gridy = 7;
 		contentPane.add(passwordField_1, gbc_passwordField_1);
 		
@@ -140,6 +147,22 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabel_4.gridy = 9;
 		contentPane.add(lblNewLabel_4, gbc_lblNewLabel_4);
 		
+		JDateChooser dateChooser = new JDateChooser();
+		GridBagConstraints gbc_dateChooser = new GridBagConstraints();
+		gbc_dateChooser.insets = new Insets(0, 0, 5, 5);
+		gbc_dateChooser.fill = GridBagConstraints.BOTH;
+		gbc_dateChooser.gridx = 2;
+		gbc_dateChooser.gridy = 9;
+		contentPane.add(dateChooser, gbc_dateChooser);
+		
+		JLabel lblNewLabel_7 = new JLabel("Imagen:");
+		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
+		gbc_lblNewLabel_7.anchor = GridBagConstraints.WEST;
+		gbc_lblNewLabel_7.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_7.gridx = 4;
+		gbc_lblNewLabel_7.gridy = 9;
+		contentPane.add(lblNewLabel_7, gbc_lblNewLabel_7);
+		
 		JLabel lblNewLabel_5 = new JLabel("Saludo:");
 		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
 		gbc_lblNewLabel_5.anchor = GridBagConstraints.WEST;
@@ -147,6 +170,38 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabel_5.gridx = 1;
 		gbc_lblNewLabel_5.gridy = 11;
 		contentPane.add(lblNewLabel_5, gbc_lblNewLabel_5);
+		
+		textField_3 = new JTextField();
+		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
+		gbc_textField_3.gridheight = 3;
+		gbc_textField_3.insets = new Insets(0, 0, 5, 5);
+		gbc_textField_3.fill = GridBagConstraints.BOTH;
+		gbc_textField_3.gridx = 2;
+		gbc_textField_3.gridy = 11;
+		contentPane.add(textField_3, gbc_textField_3);
+		textField_3.setColumns(10);
+		
+		JPanel panel = new JPanel();
+		GridBagConstraints gbc_panel = new GridBagConstraints();
+		gbc_panel.insets = new Insets(0, 0, 0, 5);
+		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.gridx = 2;
+		gbc_panel.gridy = 14;
+		contentPane.add(panel, gbc_panel);
+		
+		JButton btnNewButton = new JButton("Registrar");
+		btnNewButton.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+		panel.add(btnNewButton);
+		
+		Component horizontalGlue = Box.createHorizontalGlue();
+		panel.add(horizontalGlue);
+		
+		JButton btnNewButton_1 = new JButton("Cancelar");
+		panel.add(btnNewButton_1);
 	}
 
 }
