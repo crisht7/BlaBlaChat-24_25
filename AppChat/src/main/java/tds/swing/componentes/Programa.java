@@ -20,6 +20,7 @@ public class Programa {
         
         // Crear el JList basado en el modelo
         JList<Persona> lista = new JList<>(modelo);
+        lista.setModel(modelo);
         lista.setCellRenderer(new PersonaCellRenderer());//Renderizador
 
         // Agregar la lista al frame
