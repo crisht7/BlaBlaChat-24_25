@@ -19,6 +19,9 @@ import java.awt.event.ActionEvent;
 import javax.swing.BoxLayout;
 import java.awt.Component;
 import javax.swing.Box;
+import java.awt.Label;
+import javax.swing.ImageIcon;
+import javax.swing.JScrollPane;
 
 public class VentanaRegistro extends JFrame {
 
@@ -30,6 +33,7 @@ public class VentanaRegistro extends JFrame {
 	private JPasswordField passwordField;
 	private JPasswordField passwordField_1;
 	private JTextField textField_3;
+	private JTextField textField_4;
 
 	
 	/**
@@ -47,10 +51,10 @@ public class VentanaRegistro extends JFrame {
 		
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
-		gbl_contentPane.columnWidths = new int[]{20, 0, 0, 0, 0, 0, 20, 0};
-		gbl_contentPane.rowHeights = new int[]{20, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
-		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 0.0, 0.0, 1.0, Double.MIN_VALUE};
+		gbl_contentPane.columnWidths = new int[]{20, 0, 0, 0, 0, 20, 0};
+		gbl_contentPane.rowHeights = new int[]{20, 0, 10, 0, 10, 0, 10, 0, 10, 0, 10, 0, 0, 20, 0};
+		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
+		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
 		
 		JLabel lblNewLabel = new JLabel("Nombre: ");
@@ -63,7 +67,7 @@ public class VentanaRegistro extends JFrame {
 		
 		textField = new JTextField();
 		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.gridwidth = 4;
+		gbc_textField.gridwidth = 3;
 		gbc_textField.insets = new Insets(0, 0, 5, 5);
 		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField.gridx = 2;
@@ -81,7 +85,7 @@ public class VentanaRegistro extends JFrame {
 		
 		textField_1 = new JTextField();
 		GridBagConstraints gbc_textField_1 = new GridBagConstraints();
-		gbc_textField_1.gridwidth = 4;
+		gbc_textField_1.gridwidth = 3;
 		gbc_textField_1.insets = new Insets(0, 0, 5, 5);
 		gbc_textField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textField_1.gridx = 2;
@@ -127,7 +131,7 @@ public class VentanaRegistro extends JFrame {
 		GridBagConstraints gbc_lblNewLabel_6 = new GridBagConstraints();
 		gbc_lblNewLabel_6.anchor = GridBagConstraints.EAST;
 		gbc_lblNewLabel_6.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_6.gridx = 4;
+		gbc_lblNewLabel_6.gridx = 3;
 		gbc_lblNewLabel_6.gridy = 7;
 		contentPane.add(lblNewLabel_6, gbc_lblNewLabel_6);
 		
@@ -135,7 +139,7 @@ public class VentanaRegistro extends JFrame {
 		passwordField_1.setColumns(40);
 		GridBagConstraints gbc_passwordField_1 = new GridBagConstraints();
 		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_passwordField_1.gridx = 5;
+		gbc_passwordField_1.gridx = 4;
 		gbc_passwordField_1.gridy = 7;
 		contentPane.add(passwordField_1, gbc_passwordField_1);
 		
@@ -159,34 +163,55 @@ public class VentanaRegistro extends JFrame {
 		GridBagConstraints gbc_lblNewLabel_7 = new GridBagConstraints();
 		gbc_lblNewLabel_7.anchor = GridBagConstraints.WEST;
 		gbc_lblNewLabel_7.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_7.gridx = 4;
+		gbc_lblNewLabel_7.gridx = 3;
 		gbc_lblNewLabel_7.gridy = 9;
 		contentPane.add(lblNewLabel_7, gbc_lblNewLabel_7);
 		
+		textField_4 = new JTextField();
+		GridBagConstraints gbc_textField_4 = new GridBagConstraints();
+		gbc_textField_4.insets = new Insets(0, 0, 5, 5);
+		gbc_textField_4.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textField_4.gridx = 4;
+		gbc_textField_4.gridy = 9;
+		contentPane.add(textField_4, gbc_textField_4);
+		textField_4.setColumns(10);
+		
+		JLabel lblNewLabel_8 = new JLabel("");
+		lblNewLabel_8.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/imagenes/usuario.png")));
+		GridBagConstraints gbc_lblNewLabel_8 = new GridBagConstraints();
+		gbc_lblNewLabel_8.gridheight = 3;
+		gbc_lblNewLabel_8.insets = new Insets(0, 0, 5, 5);
+		gbc_lblNewLabel_8.gridx = 4;
+		gbc_lblNewLabel_8.gridy = 10;
+		contentPane.add(lblNewLabel_8, gbc_lblNewLabel_8);
+		
 		JLabel lblNewLabel_5 = new JLabel("Saludo:");
 		GridBagConstraints gbc_lblNewLabel_5 = new GridBagConstraints();
-		gbc_lblNewLabel_5.anchor = GridBagConstraints.WEST;
+		gbc_lblNewLabel_5.anchor = GridBagConstraints.NORTHWEST;
 		gbc_lblNewLabel_5.insets = new Insets(0, 0, 5, 5);
 		gbc_lblNewLabel_5.gridx = 1;
 		gbc_lblNewLabel_5.gridy = 11;
 		contentPane.add(lblNewLabel_5, gbc_lblNewLabel_5);
 		
+		JScrollPane scrollPane = new JScrollPane();
+		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
+		gbc_scrollPane.fill = GridBagConstraints.BOTH;
+		gbc_scrollPane.insets = new Insets(0, 0, 5, 5);
+		gbc_scrollPane.gridx = 2;
+		gbc_scrollPane.gridy = 11;
+		contentPane.add(scrollPane, gbc_scrollPane);
+		
 		textField_3 = new JTextField();
-		GridBagConstraints gbc_textField_3 = new GridBagConstraints();
-		gbc_textField_3.gridheight = 3;
-		gbc_textField_3.insets = new Insets(0, 0, 5, 5);
-		gbc_textField_3.fill = GridBagConstraints.BOTH;
-		gbc_textField_3.gridx = 2;
-		gbc_textField_3.gridy = 11;
-		contentPane.add(textField_3, gbc_textField_3);
+		scrollPane.setViewportView(textField_3);
 		textField_3.setColumns(10);
 		
 		JPanel panel = new JPanel();
 		GridBagConstraints gbc_panel = new GridBagConstraints();
-		gbc_panel.insets = new Insets(0, 0, 0, 5);
-		gbc_panel.fill = GridBagConstraints.BOTH;
+		gbc_panel.anchor = GridBagConstraints.SOUTH;
+		gbc_panel.insets = new Insets(0, 0, 5, 5);
+		gbc_panel.fill = GridBagConstraints.HORIZONTAL;
 		gbc_panel.gridx = 2;
-		gbc_panel.gridy = 14;
+		gbc_panel.gridy = 12;
 		contentPane.add(panel, gbc_panel);
 		
 		JButton btnNewButton = new JButton("Registrar");
