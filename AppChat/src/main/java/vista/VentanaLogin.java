@@ -18,6 +18,7 @@ import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EtchedBorder;
 import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
+import javax.swing.JOptionPane;
 import javax.swing.JMenu;
 import java.awt.GridLayout;
 import java.awt.GridBagLayout;
@@ -42,6 +43,10 @@ public class VentanaLogin {
 				try {
 					VentanaLogin window = new VentanaLogin(); //Constructor de la clase actual
 					window.frame.setVisible(true); //Hace visible 
+					
+					// VER VENTANAS DIALOGO PAGINA 73
+					// int JOptionPane.showMessageDialog(window, frame, "Login", JOptionPane.PLAIN_MESSAGE);
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -71,6 +76,9 @@ public class VentanaLogin {
 		btnNewButton.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/angel_3434431 (2).png")));
 		btnNewButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+		        frame.dispose(); // Cierra la ventana actual
+		        VentanaRegistro ventanaRegistro = new VentanaRegistro(); // Crea una nueva instancia de VentanaRegistro
+		        ventanaRegistro.setVisible(true); // Muestra la ventana de registro
 			}
 		});
 		panelBot.add(btnNewButton);
@@ -129,21 +137,6 @@ public class VentanaLogin {
 		gbc_passwordField.gridx = 2;
 		gbc_passwordField.gridy = 3;
 		panelMid.add(passwordField, gbc_passwordField);
-		
-		JMenuBar menuBar = new JMenuBar();
-		frame.setJMenuBar(menuBar);
-		
-		JMenu Files = new JMenu("Files");
-		menuBar.add(Files);
-		
-		JMenu mnNewMenu = new JMenu("New menu");
-		Files.add(mnNewMenu);
-		
-		JMenu mnNewMenu_1 = new JMenu("New menu");
-		Files.add(mnNewMenu_1);
-		
-		JMenu mnNewMenu_2 = new JMenu("Edit");
-		menuBar.add(mnNewMenu_2);
 		
 		
 		/*

@@ -22,6 +22,7 @@ import javax.swing.Box;
 import java.awt.Label;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
+import java.awt.ComponentOrientation;
 
 public class VentanaRegistro extends JFrame {
 
@@ -43,12 +44,9 @@ public class VentanaRegistro extends JFrame {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(100, 100, 791, 497);
 		contentPane = new JPanel();
+		contentPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
-		//De la siguiente manera hacemos visible el acceso a la ventana registro
-		VentanaRegistro registro = new VentanaRegistro();
-		registro.setVisible(true);
-		
 		setContentPane(contentPane);
 		GridBagLayout gbl_contentPane = new GridBagLayout();
 		gbl_contentPane.columnWidths = new int[]{20, 0, 0, 0, 0, 20, 0};
@@ -138,6 +136,7 @@ public class VentanaRegistro extends JFrame {
 		passwordField_1 = new JPasswordField();
 		passwordField_1.setColumns(40);
 		GridBagConstraints gbc_passwordField_1 = new GridBagConstraints();
+		gbc_passwordField_1.fill = GridBagConstraints.HORIZONTAL;
 		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
 		gbc_passwordField_1.gridx = 4;
 		gbc_passwordField_1.gridy = 7;
@@ -202,6 +201,7 @@ public class VentanaRegistro extends JFrame {
 		contentPane.add(scrollPane, gbc_scrollPane);
 		
 		textField_3 = new JTextField();
+		textField_3.setBorder(null);
 		scrollPane.setViewportView(textField_3);
 		textField_3.setColumns(10);
 		
