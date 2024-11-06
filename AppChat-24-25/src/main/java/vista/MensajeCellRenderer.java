@@ -53,13 +53,13 @@ public class MensajeCellRenderer extends JPanel
 
 		// Load the image from a random URL (for example, using "https://robohash.org")
 		try {
-			URL imageUrl = new URL("https://robohash.org/" + mensaje.getNombre() + "?size=50x50");
+			URL imageUrl = new URL("https://robohash.org/" + usuario + "?size=50x50");
 			Image image = ImageIO.read(imageUrl);
 			ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-			imageLabel.setIcon(imageIcon);
+			imagenLabel.setIcon(imageIcon);
 		} catch (IOException e) {
 			e.printStackTrace();
-			imageLabel.setIcon(null); // Default to no image if there was an issue
+			imagenLabel.setIcon(null); // Default to no image if there was an issue
 		}
 
 		// Set background and foreground based on selection

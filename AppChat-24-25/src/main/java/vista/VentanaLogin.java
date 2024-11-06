@@ -92,15 +92,15 @@ public class VentanaLogin {
 		JButton btnLogin = new JButton("Login");
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				// Recuperar datos 
-				String telefono = textFieldTelefono.getText();
-				@SuppressWarnings("deprecation")
-				String password = passwordFieldContraseña.getText();
+				// Recuperar datos ADAPTAR A BASE DE DATOS 
+				//String telefono = textFieldTelefono.getText();
+				//@SuppressWarnings("deprecation")
+				//String password = passwordFieldContraseña.getText();
 				
-				// Ejecutar negocio por controlador 
-				ControladorAppChat controlador = new ControladorAppChat(null);
-				boolean login = controlador.hacerLogin(telefono, password);
-				
+				// Ejecutar negocio por controlador terminar 
+				//ControladorAppChat controlador = new ControladorAppChat(null);
+				//boolean login = controlador.hacerLogin(telefono, password);
+				boolean login = true;
 				if (login) {
 					VentanaMain ventanaMain = new VentanaMain();
 					ventanaMain.frame.setVisible(true);

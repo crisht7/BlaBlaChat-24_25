@@ -24,6 +24,8 @@ import javax.swing.JLabel;
 import javax.swing.JList;
 
 import java.util.List;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 public class VentanaMain {
 
 	JFrame frame;
@@ -60,12 +62,13 @@ public class VentanaMain {
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.getContentPane().setLayout(new BorderLayout(0, 0));
 		
-		JPanel panel = new JPanel();
-		frame.getContentPane().add(panel, BorderLayout.WEST);
-		panel.setLayout(new BorderLayout(0, 0));
+		JPanel panelRecientes = new JPanel();
+		frame.getContentPane().add(panelRecientes, BorderLayout.WEST);
+		panelRecientes.setLayout(new BorderLayout(0, 0));
 		
-		List list = new List();
-		panel.add(list, BorderLayout.NORTH);
+		
+		//List list = new List();
+		//panelRecientes.add(list, BorderLayout.NORTH);
 		
 		JList<Mensaje> listaChatRecientes = new JList<Mensaje>();
 		listaChatRecientes.setCellRenderer(new MensajeCellRenderer());
@@ -77,31 +80,36 @@ public class VentanaMain {
         }
 		listaChatRecientes.setModel(model);
 		
-		JPanel panel_1 = new JPanel();
-		frame.getContentPane().add(panel_1, BorderLayout.NORTH);
-		panel_1.setLayout(new BoxLayout(panel_1, BoxLayout.X_AXIS));
+		JPanel panelNorte = new JPanel();
+		frame.getContentPane().add(panelNorte, BorderLayout.NORTH);
+		panelNorte.setLayout(new BoxLayout(panelNorte, BoxLayout.X_AXIS));
 		
+		@SuppressWarnings("rawtypes")
 		JComboBox comboPanelRecientes = new JComboBox();
 		comboPanelRecientes.setEditable(true);
-		panel_1.add(comboPanelRecientes);
+		panelNorte.add(comboPanelRecientes);
 		
 		JButton btnEnviarMensaje = new JButton("");
-		panel_1.add(btnEnviarMensaje);
+		panelNorte.add(btnEnviarMensaje);
 		
 		JButton btnBuscarMensaje = new JButton("");
-		panel_1.add(btnBuscarMensaje);
+		panelNorte.add(btnBuscarMensaje);
 		
 		JButton btnContactos = new JButton("Contactos");
-		panel_1.add(btnContactos);
+		btnContactos.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+			}
+		});
+		panelNorte.add(btnContactos);
 		
 		Component horizontalGlue = Box.createHorizontalGlue();
-		panel_1.add(horizontalGlue);
+		panelNorte.add(horizontalGlue);
 		
 		JButton btnPremium = new JButton("Premium");
-		panel_1.add(btnPremium);
+		panelNorte.add(btnPremium);
 		
 		JLabel lblFoto = new JLabel("Usuario");
-		panel_1.add(lblFoto);
+		panelNorte.add(lblFoto);
 		
 		JPanel panelChatActual = new JPanel();
 		frame.getContentPane().add(panelChatActual, BorderLayout.CENTER);
