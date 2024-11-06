@@ -1,5 +1,6 @@
 package vista;
 
+import controlador.ControladorAppChat;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -16,6 +17,9 @@ import javax.swing.JTextArea;
 import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EtchedBorder;
+
+import controlador.ControladorAppChat;
+
 import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
@@ -33,8 +37,8 @@ public class VentanaLogin {
 
 	JFrame frame;
 	private String UsuarioUrl;
-	private JTextField textField;
-	private JPasswordField passwordField;
+	private JTextField textFieldTelefono;
+	private JPasswordField passwordFieldContraseña;
 
 	/**
 	 * Launch the application.
@@ -74,27 +78,48 @@ public class VentanaLogin {
 		JPanel panelBot = new JPanel();
 		frame.getContentPane().add(panelBot, BorderLayout.SOUTH);
 		
-		JButton btnNewButton = new JButton("Registrar");
-		btnNewButton.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/angel_3434431 (2).png")));
-		btnNewButton.addActionListener(new ActionListener() {
+		JButton btnRegistrar = new JButton("Registrar");
+		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/angel_3434431 (2).png")));
+		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		        frame.dispose(); // Cierra la ventana actual
 		        VentanaRegistro ventanaRegistro = new VentanaRegistro(); // Crea una nueva instancia de VentanaRegistro
 		        ventanaRegistro.setVisible(true); // Muestra la ventana de registro
 			}
 		});
-		panelBot.add(btnNewButton);
+		panelBot.add(btnRegistrar);
 		
-		JButton btnNewButton_1 = new JButton("Login");
-		btnNewButton_1.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/thinking_3434449.png")));
-		panelBot.add(btnNewButton_1);
+		JButton btnLogin = new JButton("Login");
+		btnLogin.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				// Recuperar datos 
+				String telefono = textFieldTelefono.getText();
+				@SuppressWarnings("deprecation")
+				String password = passwordFieldContraseña.getText();
+				
+				// Ejecutar negocio por controlador 
+				ControladorAppChat controlador = new ControladorAppChat(null);
+				boolean login = controlador.hacerLogin(telefono, password);
+				
+				if (login) {
+					VentanaMain ventanaMain = new VentanaMain();
+					ventanaMain.frame.setVisible(true);
+					VentanaLogin.this.frame.setVisible(false);
+				} else {
+					JOptionPane.showMessageDialog(frame, "Login incorrecto", "Login", JOptionPane.ERROR_MESSAGE);
+				}
+			}
+		});
+		
+		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/thinking_3434449.png")));
+		panelBot.add(btnLogin);
 		
 		JPanel panelTop = new JPanel();
 		frame.getContentPane().add(panelTop, BorderLayout.NORTH);
 		
-		JLabel lblNewLabel = new JLabel("");
-		lblNewLabel.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/scared_3434441.png")));
-		panelTop.add(lblNewLabel);
+		JLabel lblFotoLogin = new JLabel("");
+		lblFotoLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/scared_3434441.png")));
+		panelTop.add(lblFotoLogin);
 		
 		JPanel panelMid = new JPanel();
 		frame.getContentPane().add(panelMid, BorderLayout.CENTER);
@@ -105,49 +130,41 @@ public class VentanaLogin {
 		gbl_panelMid.rowWeights = new double[]{0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		panelMid.setLayout(gbl_panelMid);
 		
-		JLabel lblNewLabel_1 = new JLabel("Teléfono:  ");
-		lblNewLabel_1.addKeyListener(new KeyAdapter() {
-			//Al pulsar la tecla "enter" se salta al siguiente campo
-			
-			public void keyReleased(KeyEvent e) {
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					passwordField.requestFocus();
-				}
-			}
-		});
-		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
-		gbc_lblNewLabel_1.anchor = GridBagConstraints.SOUTHEAST;
-		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_1.gridx = 1;
-		gbc_lblNewLabel_1.gridy = 1;
-		panelMid.add(lblNewLabel_1, gbc_lblNewLabel_1);
+		JLabel lblTelefono = new JLabel("Teléfono:  ");
 		
-		textField = new JTextField();
-		GridBagConstraints gbc_textField = new GridBagConstraints();
-		gbc_textField.anchor = GridBagConstraints.SOUTH;
-		gbc_textField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textField.insets = new Insets(0, 0, 5, 5);
-		gbc_textField.gridx = 2;
-		gbc_textField.gridy = 1;
-		panelMid.add(textField, gbc_textField);
+		GridBagConstraints gbc_lblTelefono = new GridBagConstraints();
+		gbc_lblTelefono.anchor = GridBagConstraints.SOUTHEAST;
+		gbc_lblTelefono.insets = new Insets(0, 0, 5, 5);
+		gbc_lblTelefono.gridx = 1;
+		gbc_lblTelefono.gridy = 1;
+		panelMid.add(lblTelefono, gbc_lblTelefono);
 		
-		JLabel lblNewLabel_2 = new JLabel("Contraseña:  ");
-		GridBagConstraints gbc_lblNewLabel_2 = new GridBagConstraints();
-		gbc_lblNewLabel_2.anchor = GridBagConstraints.NORTHEAST;
-		gbc_lblNewLabel_2.insets = new Insets(0, 0, 5, 5);
-		gbc_lblNewLabel_2.gridx = 1;
-		gbc_lblNewLabel_2.gridy = 3;
-		panelMid.add(lblNewLabel_2, gbc_lblNewLabel_2);
+		textFieldTelefono = new JTextField();
+		GridBagConstraints gbc_textFieldTelefono = new GridBagConstraints();
+		gbc_textFieldTelefono.anchor = GridBagConstraints.SOUTH;
+		gbc_textFieldTelefono.fill = GridBagConstraints.HORIZONTAL;
+		gbc_textFieldTelefono.insets = new Insets(0, 0, 5, 5);
+		gbc_textFieldTelefono.gridx = 2;
+		gbc_textFieldTelefono.gridy = 1;
+		panelMid.add(textFieldTelefono, gbc_textFieldTelefono);
 		
-		passwordField = new JPasswordField();
-		passwordField.setMinimumSize(new Dimension(15, 20));
-		GridBagConstraints gbc_passwordField = new GridBagConstraints();
-		gbc_passwordField.anchor = GridBagConstraints.NORTH;
-		gbc_passwordField.fill = GridBagConstraints.HORIZONTAL;
-		gbc_passwordField.insets = new Insets(0, 0, 5, 5);
-		gbc_passwordField.gridx = 2;
-		gbc_passwordField.gridy = 3;
-		panelMid.add(passwordField, gbc_passwordField);
+		JLabel lblContraseña = new JLabel("Contraseña:  ");
+		GridBagConstraints gbc_lblContraseña = new GridBagConstraints();
+		gbc_lblContraseña.anchor = GridBagConstraints.NORTHEAST;
+		gbc_lblContraseña.insets = new Insets(0, 0, 5, 5);
+		gbc_lblContraseña.gridx = 1;
+		gbc_lblContraseña.gridy = 3;
+		panelMid.add(lblContraseña, gbc_lblContraseña);
+		
+		passwordFieldContraseña = new JPasswordField();
+		passwordFieldContraseña.setMinimumSize(new Dimension(15, 20));
+		GridBagConstraints gbc_passwordFieldContraseña = new GridBagConstraints();
+		gbc_passwordFieldContraseña.anchor = GridBagConstraints.NORTH;
+		gbc_passwordFieldContraseña.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordFieldContraseña.insets = new Insets(0, 0, 5, 5);
+		gbc_passwordFieldContraseña.gridx = 2;
+		gbc_passwordFieldContraseña.gridy = 3;
+		panelMid.add(passwordFieldContraseña, gbc_passwordFieldContraseña);
 		
 		
 		/*

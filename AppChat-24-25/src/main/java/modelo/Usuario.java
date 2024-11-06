@@ -23,7 +23,11 @@ public class Usuario {
         this.saludo = saludo;
     }
 
-    // Métodos para obtener el contacto individual y el chat de mensajes con otro usuario
+    public Usuario(String string, String string2, String string3) {
+		// TODO Auto-generated constructor stub
+	}
+
+	// Métodos para obtener el contacto individual y el chat de mensajes con otro usuario
     public Contacto getContactoIndividual(Usuario otroUsuario) {
         // Implementar la lógica para obtener un contacto individual
         return null;
@@ -33,6 +37,11 @@ public class Usuario {
         // Implementar la lógica para obtener mensajes
         return new ArrayList<>();
     }
+
+	public String getNombre() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
     // Getters y setters
 }
