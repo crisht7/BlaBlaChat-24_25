@@ -26,6 +26,8 @@ import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import javax.swing.JPasswordField;
 import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class VentanaLogin {
 
@@ -104,6 +106,15 @@ public class VentanaLogin {
 		panelMid.setLayout(gbl_panelMid);
 		
 		JLabel lblNewLabel_1 = new JLabel("Teléfono:  ");
+		lblNewLabel_1.addKeyListener(new KeyAdapter() {
+			//Al pulsar la tecla "enter" se salta al siguiente campo
+			
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					passwordField.requestFocus();
+				}
+			}
+		});
 		GridBagConstraints gbc_lblNewLabel_1 = new GridBagConstraints();
 		gbc_lblNewLabel_1.anchor = GridBagConstraints.SOUTHEAST;
 		gbc_lblNewLabel_1.insets = new Insets(0, 0, 5, 5);

@@ -1,20 +1,20 @@
 package repositorio;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 import modelo.Usuario;
 
 public class RepositorioUsuarios {
-    private List<Usuario> usuarios;
+    private Map< Integer,Usuario> usuarios;
     private Usuario usuarioActual;
 
     public RepositorioUsuarios() {
-        usuarios = new ArrayList<>();
+        usuarios = new HashMap<>();
     }
 
-    public void agregarUsuario(Usuario usuario) {
-        usuarios.add(usuario);
+    public void agregarUsuario(int telefono, Usuario usuario) {
+        usuarios.put(telefono, usuario);
     }
 
     public Usuario getUsuarioActual() {
