@@ -18,6 +18,10 @@ public class ControladorAppChat {
 
     // Métodos para coordinar las acciones de la app
     
+	public ControladorAppChat() {
+		// TODO Auto-generated constructor stub
+	}
+
 	public boolean hacerLogin(String Usuario, String Contraseña) {
 		this.repoUsuarios = new RepositorioUsuarios();
 		return true;
