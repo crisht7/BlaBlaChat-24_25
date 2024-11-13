@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<commands>
+	<addCategory
+		id="custom_1730277110142"
+		name="TDS"
+		description=""
+		visible="true"
+		open="true"
+		nextCategory="org.eclipse.wb.swing.components"/>
+	<moveCategory
+		id="custom_1730277110142"
+		nextCategory="org.eclipse.wb.swing.components"/>
+	<addComponent
+		id="custom_1730277504035"
+		name="JDateChooser"
+		visible="true"
+		class="com.toedter.calendar.JDateChooser"
+		category="custom_1730277110142"/>
+</commands>

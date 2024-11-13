@@ -32,9 +32,10 @@ public class VentanaRegistro extends JFrame {
 	private JTextField textFieldApellidos;
 	private JTextField textFieldTelefono;
 	private JPasswordField passwordFieldContraseña;
-	private JPasswordField passwordField_1;
 	private JTextField textFieldSaludo;
 	private JTextField textFieldURL;
+	private JPasswordField passwordFieldRepContraseña;
+	private JTextField textField_3;
 
 	
 	/**
@@ -133,14 +134,14 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelConfirmarContraseña.gridy = 7;
 		contentPane.add(lblNewLabelConfirmarContraseña, gbc_lblNewLabelConfirmarContraseña);
 		
-		passwordField_1 = new JPasswordField();
-		passwordField_1.setColumns(40);
-		GridBagConstraints gbc_passwordField_1 = new GridBagConstraints();
-		gbc_passwordField_1.fill = GridBagConstraints.HORIZONTAL;
-		gbc_passwordField_1.insets = new Insets(0, 0, 5, 5);
-		gbc_passwordField_1.gridx = 4;
-		gbc_passwordField_1.gridy = 7;
-		contentPane.add(passwordField_1, gbc_passwordField_1);
+		passwordFieldRepContraseña = new JPasswordField();
+		passwordFieldRepContraseña.setColumns(40);
+		GridBagConstraints gbc_passwordFieldRepContraseña = new GridBagConstraints();
+		gbc_passwordFieldRepContraseña.fill = GridBagConstraints.HORIZONTAL;
+		gbc_passwordFieldRepContraseña.insets = new Insets(0, 0, 5, 5);
+		gbc_passwordFieldRepContraseña.gridx = 4;
+		gbc_passwordFieldRepContraseña.gridy = 7;
+		contentPane.add(passwordFieldRepContraseña, gbc_passwordFieldRepContraseña);
 		
 		JLabel lblNewLabelFechaNacimiento = new JLabel("Fecha Nacimiento:");
 		GridBagConstraints gbc_lblNewLabelFechaNacimiento = new GridBagConstraints();
@@ -204,6 +205,11 @@ public class VentanaRegistro extends JFrame {
 		textFieldSaludo.setBorder(null);
 		scrollPane.setViewportView(textFieldSaludo);
 		textFieldSaludo.setColumns(10);
+
+		textField_3 = new JTextField();
+		textField_3.setBorder(null);
+		scrollPane.setViewportView(textField_3);
+		textField_3.setColumns(10);
 		
 		JPanel panel = new JPanel();
 		GridBagConstraints gbc_panel = new GridBagConstraints();
@@ -216,16 +222,19 @@ public class VentanaRegistro extends JFrame {
 		
 		JButton btnRegistrar = new JButton("Registrar");
 		btnRegistrar.addActionListener(new ActionListener() {
+
 			public void actionPerformed(ActionEvent e) {
 				
 			}
 		});
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		panel.add(btnRegistrar);
+		panel.add(btnRegistrar);
 		
 		Component horizontalGlue = Box.createHorizontalGlue();
 		panel.add(horizontalGlue);
 		
+	
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -235,6 +244,8 @@ public class VentanaRegistro extends JFrame {
 			}
 		});
 		panel.add(btnCancelar);
+		panel.add(btnCancelar);
+
 		
 	}
 
