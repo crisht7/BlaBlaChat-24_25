@@ -13,7 +13,7 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
-import controlador.ControladorAppChat;
+import controlador.Controlador;
 import modelo.Mensaje;
 
 //Sublclase para renderizar los mensajes en la vista main
@@ -38,39 +38,55 @@ public class MensajeCellRenderer extends JPanel
 		add(imagenLabel, BorderLayout.WEST);
 		add(panelCentro, BorderLayout.CENTER);
 	}
-
+	 
 	@Override
-	public Component getListCellRendererComponent(JList<? extends Mensaje> list, Mensaje mensaje, int index,
-			boolean isSelected, boolean cellHasFocus) {
-		// Set the text
-		textoLabel.setText(mensaje.getTexto());
-		String usuario = "";
-		if (mensaje.getEmisor().getNombre().equals(ControladorAppChat.getUsuarioActual())) {
-			usuario = mensaje.getReceptor().getNombre();
-		} else {
-			usuario = mensaje.getEmisor().getNombre();
-		}
+	public Component getListCellRendererComponent(
+	    JList<? extends Mensaje> list, Mensaje mensaje, int index,
+	    boolean isSelected, boolean cellHasFocus) {
 
-		// Load the image from a random URL (for example, using "https://robohash.org")
-		try {
-			URL imageUrl = new URL("https://robohash.org/" + usuario + "?size=50x50");
-			Image image = ImageIO.read(imageUrl);
-			ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
-			imagenLabel.setIcon(imageIcon);
-		} catch (IOException e) {
-			e.printStackTrace();
-			imagenLabel.setIcon(null); // Default to no image if there was an issue
-		}
+	    // Comprobar si el mensaje es nulo
+	    if (mensaje == null) {
+	        usuarioLabel.setText("Desconocido");
+	        textoLabel.setText("");
+	        imagenLabel.setIcon(null);
+	        return this;
+	    }
 
-		// Set background and foreground based on selection
-		if (isSelected) {
-			setBackground(list.getSelectionBackground());
-			setForeground(list.getSelectionForeground());
-		} else {
-			setBackground(list.getBackground());
-			setForeground(list.getForeground());
-		}
+	    // Establecer el texto del mensaje
+	    textoLabel.setText(mensaje.getTexto());
 
-		return this;
+	    String usuario = "Desconocido"; // Valor predeterminado si no hay datos
+	    if (mensaje.getEmisor() != null && mensaje.getReceptor() != null) {
+	        // Determinar si el usuario actual es emisor o receptor
+	        if (mensaje.getEmisor().getNombre().equals(Controlador.getUsuarioActual())) {
+	            usuario = mensaje.getReceptor().getNombre();
+	        } else {
+	            usuario = mensaje.getEmisor().getNombre();
+	        }
+	    }
+	    usuarioLabel.setText(usuario);
+
+	    // Cargar la imagen del usuario
+	    try {
+	        URL imageUrl = new URL("https://robohash.org/" + usuario + "?size=50x50");
+	        Image image = ImageIO.read(imageUrl);
+	        ImageIcon imageIcon = new ImageIcon(image.getScaledInstance(50, 50, Image.SCALE_SMOOTH));
+	        imagenLabel.setIcon(imageIcon);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	        imagenLabel.setIcon(null); // Icono por defecto en caso de error
+	    }
+
+	    // Cambiar colores según la selección
+	    if (isSelected) {
+	        setBackground(list.getSelectionBackground());
+	        setForeground(list.getSelectionForeground());
+	    } else {
+	        setBackground(list.getBackground());
+	        setForeground(list.getForeground());
+	    }
+
+	    return this;
 	}
+	
 }

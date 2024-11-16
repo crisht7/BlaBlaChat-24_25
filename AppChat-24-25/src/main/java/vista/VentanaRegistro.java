@@ -23,6 +23,8 @@ import java.awt.Label;
 import javax.swing.ImageIcon;
 import javax.swing.JScrollPane;
 import java.awt.ComponentOrientation;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class VentanaRegistro extends JFrame {
 
@@ -37,7 +39,7 @@ public class VentanaRegistro extends JFrame {
 	private JPasswordField passwordFieldRepContraseña;
 	private JTextField textField_3;
 
-	
+
 	/**
 	 * Create the frame.
 	 */
@@ -55,7 +57,7 @@ public class VentanaRegistro extends JFrame {
 		gbl_contentPane.columnWeights = new double[]{0.0, 0.0, 1.0, 0.0, 1.0, 0.0, Double.MIN_VALUE};
 		gbl_contentPane.rowWeights = new double[]{0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0, 1.0, 0.0, Double.MIN_VALUE};
 		contentPane.setLayout(gbl_contentPane);
-		
+
 		JLabel lblNombre = new JLabel("Nombre: ");
 		GridBagConstraints gbc_lblNombre = new GridBagConstraints();
 		gbc_lblNombre.anchor = GridBagConstraints.WEST;
@@ -63,7 +65,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNombre.gridx = 1;
 		gbc_lblNombre.gridy = 1;
 		contentPane.add(lblNombre, gbc_lblNombre);
-		
+
 		textFieldNombre = new JTextField();
 		GridBagConstraints gbc_textFieldNombre = new GridBagConstraints();
 		gbc_textFieldNombre.gridwidth = 3;
@@ -73,7 +75,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_textFieldNombre.gridy = 1;
 		contentPane.add(textFieldNombre, gbc_textFieldNombre);
 		textFieldNombre.setColumns(10);
-		
+
 		JLabel lblApellidos = new JLabel("Apellidos:");
 		GridBagConstraints gbc_lblApellidos = new GridBagConstraints();
 		gbc_lblApellidos.anchor = GridBagConstraints.WEST;
@@ -81,7 +83,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblApellidos.gridx = 1;
 		gbc_lblApellidos.gridy = 3;
 		contentPane.add(lblApellidos, gbc_lblApellidos);
-		
+
 		textFieldApellidos = new JTextField();
 		GridBagConstraints gbc_textFieldApellidos = new GridBagConstraints();
 		gbc_textFieldApellidos.gridwidth = 3;
@@ -91,7 +93,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_textFieldApellidos.gridy = 3;
 		contentPane.add(textFieldApellidos, gbc_textFieldApellidos);
 		textFieldApellidos.setColumns(10);
-		
+
 		JLabel lblNewLabelTelefono = new JLabel("Teléfono:");
 		GridBagConstraints gbc_lblNewLabelTelefono = new GridBagConstraints();
 		gbc_lblNewLabelTelefono.insets = new Insets(0, 0, 5, 5);
@@ -99,7 +101,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelTelefono.gridx = 1;
 		gbc_lblNewLabelTelefono.gridy = 5;
 		contentPane.add(lblNewLabelTelefono, gbc_lblNewLabelTelefono);
-		
+
 		textFieldTelefono = new JTextField();
 		GridBagConstraints gbc_textFieldTelefono = new GridBagConstraints();
 		gbc_textFieldTelefono.fill = GridBagConstraints.HORIZONTAL;
@@ -108,7 +110,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_textFieldTelefono.gridy = 5;
 		contentPane.add(textFieldTelefono, gbc_textFieldTelefono);
 		textFieldTelefono.setColumns(10);
-		
+
 		JLabel lblNewLabelContraseña = new JLabel("Contraseña:");
 		GridBagConstraints gbc_lblNewLabelContraseña = new GridBagConstraints();
 		gbc_lblNewLabelContraseña.anchor = GridBagConstraints.WEST;
@@ -116,7 +118,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelContraseña.gridx = 1;
 		gbc_lblNewLabelContraseña.gridy = 7;
 		contentPane.add(lblNewLabelContraseña, gbc_lblNewLabelContraseña);
-		
+
 		passwordFieldContraseña = new JPasswordField();
 		passwordFieldContraseña.setColumns(40);
 		GridBagConstraints gbc_passwordFieldContraseña = new GridBagConstraints();
@@ -125,7 +127,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_passwordFieldContraseña.gridx = 2;
 		gbc_passwordFieldContraseña.gridy = 7;
 		contentPane.add(passwordFieldContraseña, gbc_passwordFieldContraseña);
-		
+
 		JLabel lblNewLabelConfirmarContraseña = new JLabel("Repetir Contraseña:");
 		GridBagConstraints gbc_lblNewLabelConfirmarContraseña = new GridBagConstraints();
 		gbc_lblNewLabelConfirmarContraseña.anchor = GridBagConstraints.EAST;
@@ -133,7 +135,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelConfirmarContraseña.gridx = 3;
 		gbc_lblNewLabelConfirmarContraseña.gridy = 7;
 		contentPane.add(lblNewLabelConfirmarContraseña, gbc_lblNewLabelConfirmarContraseña);
-		
+
 		passwordFieldRepContraseña = new JPasswordField();
 		passwordFieldRepContraseña.setColumns(40);
 		GridBagConstraints gbc_passwordFieldRepContraseña = new GridBagConstraints();
@@ -142,7 +144,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_passwordFieldRepContraseña.gridx = 4;
 		gbc_passwordFieldRepContraseña.gridy = 7;
 		contentPane.add(passwordFieldRepContraseña, gbc_passwordFieldRepContraseña);
-		
+
 		JLabel lblNewLabelFechaNacimiento = new JLabel("Fecha Nacimiento:");
 		GridBagConstraints gbc_lblNewLabelFechaNacimiento = new GridBagConstraints();
 		gbc_lblNewLabelFechaNacimiento.anchor = GridBagConstraints.WEST;
@@ -150,7 +152,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelFechaNacimiento.gridx = 1;
 		gbc_lblNewLabelFechaNacimiento.gridy = 9;
 		contentPane.add(lblNewLabelFechaNacimiento, gbc_lblNewLabelFechaNacimiento);
-		
+
 		JDateChooser dateChooserFechaNac = new JDateChooser();
 		GridBagConstraints gbc_dateChooserFechaNac = new GridBagConstraints();
 		gbc_dateChooserFechaNac.insets = new Insets(0, 0, 5, 5);
@@ -158,7 +160,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_dateChooserFechaNac.gridx = 2;
 		gbc_dateChooserFechaNac.gridy = 9;
 		contentPane.add(dateChooserFechaNac, gbc_dateChooserFechaNac);
-		
+
 		JLabel lblNewLabelFoto = new JLabel("Imagen:");
 		GridBagConstraints gbc_lblNewLabelFoto = new GridBagConstraints();
 		gbc_lblNewLabelFoto.anchor = GridBagConstraints.WEST;
@@ -166,7 +168,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelFoto.gridx = 3;
 		gbc_lblNewLabelFoto.gridy = 9;
 		contentPane.add(lblNewLabelFoto, gbc_lblNewLabelFoto);
-		
+
 		textFieldURL = new JTextField();
 		GridBagConstraints gbc_textFieldURL = new GridBagConstraints();
 		gbc_textFieldURL.insets = new Insets(0, 0, 5, 5);
@@ -175,7 +177,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_textFieldURL.gridy = 9;
 		contentPane.add(textFieldURL, gbc_textFieldURL);
 		textFieldURL.setColumns(10);
-		
+
 		JLabel lblNewLabelSalidaURL = new JLabel("");
 		lblNewLabelSalidaURL.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/imagenes/usuario.png")));
 		GridBagConstraints gbc_lblNewLabelSalidaURL = new GridBagConstraints();
@@ -184,7 +186,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelSalidaURL.gridx = 4;
 		gbc_lblNewLabelSalidaURL.gridy = 10;
 		contentPane.add(lblNewLabelSalidaURL, gbc_lblNewLabelSalidaURL);
-		
+
 		JLabel lblNewLabelSaludo = new JLabel("Saludo:");
 		GridBagConstraints gbc_lblNewLabelSaludo = new GridBagConstraints();
 		gbc_lblNewLabelSaludo.anchor = GridBagConstraints.NORTHWEST;
@@ -192,7 +194,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelSaludo.gridx = 1;
 		gbc_lblNewLabelSaludo.gridy = 11;
 		contentPane.add(lblNewLabelSaludo, gbc_lblNewLabelSaludo);
-		
+
 		JScrollPane scrollPane = new JScrollPane();
 		GridBagConstraints gbc_scrollPane = new GridBagConstraints();
 		gbc_scrollPane.fill = GridBagConstraints.BOTH;
@@ -200,7 +202,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_scrollPane.gridx = 2;
 		gbc_scrollPane.gridy = 11;
 		contentPane.add(scrollPane, gbc_scrollPane);
-		
+
 		textFieldSaludo = new JTextField();
 		textFieldSaludo.setBorder(null);
 		scrollPane.setViewportView(textFieldSaludo);
@@ -210,7 +212,7 @@ public class VentanaRegistro extends JFrame {
 		textField_3.setBorder(null);
 		scrollPane.setViewportView(textField_3);
 		textField_3.setColumns(10);
-		
+
 		JPanel panel = new JPanel();
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.anchor = GridBagConstraints.SOUTH;
@@ -219,34 +221,42 @@ public class VentanaRegistro extends JFrame {
 		gbc_panel.gridx = 2;
 		gbc_panel.gridy = 12;
 		contentPane.add(panel, gbc_panel);
-		
-		JButton btnRegistrar = new JButton("Registrar");
-		btnRegistrar.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
-				
+		JButton btnRegistrar = new JButton("Registrar");
+		btnRegistrar.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				// Compruebo que los datos introducidos sean correctos
+				if (!datosCorrectos())
+					return;
 			}
+			
+			
 		});
 		panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
 		panel.add(btnRegistrar);
 		panel.add(btnRegistrar);
-		
+
 		Component horizontalGlue = Box.createHorizontalGlue();
 		panel.add(horizontalGlue);
-		
-	
+
+
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				dispose(); // Cierra la ventana actual (VentanaRegistro)
-		        VentanaLogin ventanaLogin = new VentanaLogin(); // Crea una nueva instancia de VentanaLogin
-		        ventanaLogin.frame.setVisible(true); // Muestra la ventana de login
+				VentanaLogin ventanaLogin = new VentanaLogin(); // Crea una nueva instancia de VentanaLogin
+				ventanaLogin.frame.setVisible(true); // Muestra la ventana de login
 			}
 		});
 		panel.add(btnCancelar);
 		panel.add(btnCancelar);
 
-		
+
+	}
+	private boolean datosCorrectos() {
+		// TODO Auto-generated method stub
+		return false;
 	}
 
 }

@@ -1,6 +1,0 @@
-INDEX VERSION 1.134+C:\Users\crist\Desktop\Tercer_Curso\TDS\AppChat-24_25\AppChat\.metadata\.plugins\org.eclipse.jdt.core
-1865797976.index
-846696933.index
-1688904773.index
-2080494139.index
-2574604728.index

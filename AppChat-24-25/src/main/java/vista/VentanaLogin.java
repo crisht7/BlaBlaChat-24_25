@@ -1,6 +1,6 @@
 package vista;
 
-import controlador.ControladorAppChat;
+import controlador.Controlador;
 import java.awt.EventQueue;
 
 import javax.swing.JFrame;
@@ -18,7 +18,7 @@ import javax.swing.JScrollPane;
 import javax.swing.ScrollPaneConstants;
 import javax.swing.border.EtchedBorder;
 
-import controlador.ControladorAppChat;
+import controlador.Controlador;
 
 import javax.swing.SwingConstants;
 import javax.swing.JMenuBar;
@@ -35,30 +35,11 @@ import java.awt.event.KeyEvent;
 
 public class VentanaLogin {
 
-	JFrame frame;
+	public JFrame frame;
 	private String UsuarioUrl;
 	private JTextField textFieldTelefono;
 	private JPasswordField passwordFieldContraseña;
 
-	/**
-	 * Launch the application.
-	 */
-	public static void main(String[] args) {
-		EventQueue.invokeLater(new Runnable() { //Clase anónima que implementa la interfaz Runnable privada para ejecutar el código en un hilo separado
-			public void run() { 
-				try {
-					VentanaLogin window = new VentanaLogin(); //Constructor de la clase actual
-					window.frame.setVisible(true); //Hace visible 
-					
-					// VER VENTANAS DIALOGO PAGINA 73
-					// int JOptionPane.showMessageDialog(window, frame, "Login", JOptionPane.PLAIN_MESSAGE);
-					
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		});
-	}
 
 	/**
 	 * Create the application.
@@ -99,7 +80,7 @@ public class VentanaLogin {
 				String password = passwordFieldContraseña.getText();
 				
 				// Ejecutar negocio por controlador terminar 
-				ControladorAppChat controlador = new ControladorAppChat();
+				Controlador controlador = Controlador.getInstancia();
 				boolean login = controlador.hacerLogin(telefono, password);
 				
 				if (login) {
