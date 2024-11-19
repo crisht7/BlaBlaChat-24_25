@@ -19,8 +19,11 @@ public class Mensaje {
         this.hora = hora;
     }
 
-    public Mensaje(String string, Usuario javier, Usuario mapache) {
-		// TODO Auto-generated constructor stub
+    //Constructor auxiliar mientras no se implementa la base de datos para asignar mensajes al usuario
+    public Mensaje(String string, Usuario us, Usuario us1) {
+		this.texto = string;
+		this.emisor = us;
+		this.receptor = us1;
 	}
 
 	public String getTexto() {
@@ -29,13 +32,13 @@ public class Mensaje {
 	}
 
 	public Usuario getEmisor() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return this.emisor;
 	}
 
 	public Usuario getReceptor() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return this.receptor;
 	}
 
     // Getters y setters

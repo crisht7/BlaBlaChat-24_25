@@ -23,9 +23,12 @@ public class Usuario {
         this.saludo = saludo;
     }
 
+    //Constructor auxiliar mientras no se implementa la base de datos para recoger datos 
     public Usuario(String string, String string2, String string3) {
-		// TODO Auto-generated constructor stub
-	}
+    	this.usuario = string;
+    	this.contraseña = string2;
+    	this.telefono = string3;
+    }
 
 	// Métodos para obtener el contacto individual y el chat de mensajes con otro usuario
     public Contacto getContactoIndividual(Usuario otroUsuario) {
@@ -39,8 +42,8 @@ public class Usuario {
     }
 
 	public String getNombre() {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return this.usuario;
 	}
 
     // Getters y setters
