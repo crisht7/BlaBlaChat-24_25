@@ -26,11 +26,6 @@
 .idea/
 *.iml
 
-# Eclipse files
-.classpath
-.project
-.settings/
-
 # Gradle files
 .gradle/
 build/
