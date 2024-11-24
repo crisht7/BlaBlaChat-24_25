@@ -56,7 +56,7 @@ public class VentanaMain {
      */
     private void initialize() {
         frame = new JFrame();
-        frame.setBounds(100, 100, 773, 433);
+        frame.setBounds(100, 100, 746, 654);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.getContentPane().setLayout(new BorderLayout(0, 0));
 
@@ -70,6 +70,7 @@ public class VentanaMain {
 
         // JList para mensajes recientes con MensajeCellRenderer
         JList<Mensaje> listaChatRecientes = new JList<>();
+        listaChatRecientes.setVisibleRowCount(16);
         listaChatRecientes.setCellRenderer(new MensajeCellRenderer());
 
      // Obtener mensajes recientes desde el controlador
