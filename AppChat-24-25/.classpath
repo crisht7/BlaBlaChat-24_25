@@ -38,5 +38,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="lib/chatWindowLib.jar"/>
+	<classpathentry kind="lib" path="lib/chatWindowLib-JDK8.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
