@@ -44,7 +44,6 @@ public class VentanaMain {
         });
     }
     
-    
     /**
      * Create the application.
      */
