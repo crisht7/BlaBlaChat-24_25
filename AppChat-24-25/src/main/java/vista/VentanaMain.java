@@ -1,6 +1,7 @@
 package vista;
 
 import java.awt.BorderLayout;
+
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
@@ -102,6 +103,14 @@ public class VentanaMain {
         panelNorte.add(btnEnviarMensaje);
 
         JButton btnBuscarMensaje = new JButton("Buscar");
+        btnBuscarMensaje.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VentanaBuscar ventanaBuscar = new VentanaBuscar(frame); // Crear una instancia de VentanaBuscar
+                ventanaBuscar.setVisible(true); 
+            }
+        });
+
         panelNorte.add(btnBuscarMensaje);
 
         JButton btnContactos = new JButton("Contactos");
