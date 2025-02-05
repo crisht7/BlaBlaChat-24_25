@@ -19,8 +19,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import appChat.Mensaje;
 import controlador.Controlador;
-import modelo.Mensaje;
 import tds.BubbleText;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;

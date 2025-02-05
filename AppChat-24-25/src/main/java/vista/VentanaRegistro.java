@@ -179,7 +179,7 @@ public class VentanaRegistro extends JFrame {
 		textFieldURL.setColumns(10);
 
 		JLabel lblNewLabelSalidaURL = new JLabel("");
-		lblNewLabelSalidaURL.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/imagenes/usuario.png")));
+		lblNewLabelSalidaURL.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/recursos/usuario.png")));
 		GridBagConstraints gbc_lblNewLabelSalidaURL = new GridBagConstraints();
 		gbc_lblNewLabelSalidaURL.gridheight = 3;
 		gbc_lblNewLabelSalidaURL.insets = new Insets(0, 0, 5, 5);

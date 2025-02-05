@@ -60,7 +60,7 @@ public class VentanaLogin {
 		frame.getContentPane().add(panelBot, BorderLayout.SOUTH);
 		
 		JButton btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/angel_3434431 (2).png")));
+		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/angel_3434431 (2).png")));
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 		        frame.dispose(); // Cierra la ventana actual
@@ -93,14 +93,14 @@ public class VentanaLogin {
 			}
 		});
 		
-		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/thinking_3434449.png")));
+		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/thinking_3434449.png")));
 		panelBot.add(btnLogin);
 		
 		JPanel panelTop = new JPanel();
 		frame.getContentPane().add(panelTop, BorderLayout.NORTH);
 		
 		JLabel lblFotoLogin = new JLabel("");
-		lblFotoLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/imagenes/scared_3434441.png")));
+		lblFotoLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/scared_3434441.png")));
 		panelTop.add(lblFotoLogin);
 		
 		JPanel panelMid = new JPanel();

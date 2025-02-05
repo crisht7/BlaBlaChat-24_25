@@ -8,7 +8,7 @@ public class Main {
 	/**
 	 * Launch the application.
 	 */
-	//aaaaaaaaaaaaaaaaaaaaaaa
+	//
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() { //Clase anónima que implementa la interfaz Runnable privada para ejecutar el código en un hilo separado
 			public void run() { 

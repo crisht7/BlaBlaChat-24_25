@@ -13,8 +13,8 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.ListCellRenderer;
 
+import appChat.Mensaje;
 import controlador.Controlador;
-import modelo.Mensaje;
 
 //Sublclase para renderizar los mensajes en la vista main
 public class MensajeCellRenderer extends JPanel 
