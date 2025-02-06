@@ -1,6 +1,8 @@
 package appChat;
 
 import java.util.LinkedList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Representa un contacto individual en la aplicación de chat, 
@@ -35,9 +37,54 @@ public class ContactoIndividual extends Contacto {
         this.usuario = usuario;
         this.telefono = telefono;
     }
+
+	//Getters y setters
 	
-	//TODO: Getters y setters
-	//TODO: Obtener mensajes por telefoon
-	//TODO: Obtener mensajes por texto
+	public Usuario getUsuario() {
+		return usuario;
+	}
+
+	public void setUsuario(Usuario usuario) {
+		this.usuario = usuario;
+	}
+
+	public String getTelefono() {
+		return telefono;
+	}
+
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+	
+	
+    /**
+     * Filtra y obtiene los mensajes enviados o recibidos por un número de teléfono específico.
+     * si es emisor comprueba el telefono y si es receptor se comprueba que sea contacto individual (tiene teléfono)
+     * @param telefono Número de teléfono a buscar.
+     * @return Lista de mensajes que involucran el teléfono dado.
+     */
+	public List<Mensaje> obtenerMensajesPorTelefono(String telefono) {
+	    return getMensajes().stream()
+	            .filter(mensaje -> 
+	                mensaje.getEmisor().getTelefono().equals(telefono) || 
+	                (mensaje.getReceptor() instanceof ContactoIndividual &&
+	                 ((ContactoIndividual) mensaje.getReceptor()).getTelefono().equals(telefono))
+	            )
+	            .collect(Collectors.toList());
+	}
+
+
+    /**
+     * Filtra y obtiene los mensajes que contienen un fragmento de texto específico.
+     * @param texto Fragmento de texto a buscar en los mensajes.
+     * @return Lista de mensajes que contienen el texto dado.
+     */
+    public List<Mensaje> obtenerMensajesPorTexto(String texto) {
+        return getMensajes().stream()
+                .filter(mensaje -> mensaje.getTexto().toLowerCase().contains(texto.toLowerCase()))
+                .collect(Collectors.toList());
+    }
+	
+    
 }
 

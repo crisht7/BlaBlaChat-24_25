@@ -117,5 +117,10 @@ public class Usuario {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	public String getTelefono() {
+		return telefono;
+	}
+	
+	
 
 }
