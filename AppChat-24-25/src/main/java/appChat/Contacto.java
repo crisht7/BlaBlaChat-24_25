@@ -80,7 +80,11 @@ public class Contacto {
 
 	
 
-	//TODO: Envia un mensaje y lo añade a la lista
+	  /**
+     * Añade un mensaje a la lista de mensajes del contacto.
+     * 
+     * @param mensaje Mensaje a añadir.
+     */
     public void enviarMensaje(Mensaje mensaje) {
         if (mensaje != null) {
             mensajes.add(mensaje);
@@ -88,6 +92,10 @@ public class Contacto {
     }
 
   //TODO: eliminar mensajes enviados por un usuario  (??)
+    /**
+     * Elimina todos los mensajes enviados por un usuario específico.
+     * @param usuario Usuario cuyos mensajes enviados serán eliminados.
+     */
     public void eliminarMensajesEnviadosPor(Usuario usuario) {
         if (usuario != null) {
             mensajes.removeIf(mensaje -> mensaje.getEmisor().equals(usuario));
@@ -95,18 +103,29 @@ public class Contacto {
     }
     
     
-  //TODO: Elimina un mensaje de la lista
+    /**
+     * Elimina un mensaje específico de la lista.
+     * 
+     * @param mensaje Mensaje a eliminar.
+     * @return true si se eliminó con éxito, false en caso contrario.
+     */
     public boolean eliminarMensaje(Mensaje mensaje) {
         return mensajes.remove(mensaje);
     }
 
-  //TODO: Borra todos los mensajes
+    /**
+     * Borra todos los mensajes del contacto.
+     */
     public void borrarTodosLosMensajes() {
         mensajes.clear();
     }
 
     
-  //TODO: Añade lista de mensajes al contacto
+    /**
+     * Añade una lista de mensajes al contacto.
+     * 
+     * @param nuevosMensajes Lista de mensajes a añadir.
+     */
     public void añadirListaMensajes(List<Mensaje> nuevosMensajes) {
         if (nuevosMensajes != null) {
             mensajes.addAll(nuevosMensajes);
