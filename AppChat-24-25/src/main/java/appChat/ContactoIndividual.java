@@ -59,7 +59,7 @@ public class ContactoIndividual extends Contacto {
 	
     /**
      * Filtra y obtiene los mensajes enviados o recibidos por un número de teléfono específico.
-     * si es emisor comprueba el telefono y si es receptor se comprueba que sea contacto individual (tiene teléfono)
+     * si es emisor comprueba el telefono y si es receptor se comprueba que sea contacto individual (tiene teléfono) y luego el telefono 
      * @param telefono Número de teléfono a buscar.
      * @return Lista de mensajes que involucran el teléfono dado.
      */
