@@ -46,8 +46,7 @@ public class Contacto {
     
   //Getters y setters
     public String getNombre() {
-		// TODO Auto-generated method stub
-		return null;
+		return nombre;
 	}
     
     public void setNombre(String nombre) {
