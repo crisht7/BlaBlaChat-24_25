@@ -101,6 +101,7 @@ public class Contacto {
         return mensajes.remove(mensaje);
     }
 
+
     /**
      * Borra todos los mensajes del contacto.
      */
@@ -108,7 +109,6 @@ public class Contacto {
         mensajes.clear();
     }
 
-    //TODO: eliminar mensajes enviados por un usuario  (??)
     /**
      * Elimina todos los mensajes enviados por un usuario específico.
      * @param usuario Usuario cuyos mensajes enviados serán eliminados.
@@ -119,6 +119,7 @@ public class Contacto {
         }
     }
     
+
     /**
      * Añade una lista de mensajes al contacto.
      * 
