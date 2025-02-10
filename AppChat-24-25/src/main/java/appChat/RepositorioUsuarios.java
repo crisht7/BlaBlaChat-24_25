@@ -61,6 +61,10 @@ public class RepositorioUsuarios {
 	//TODO: Buscar usuario
 	//TODO: Existe usuario
 	
+	public Usuario getUsuario(String telefono) {
+		return usuarios.get(telefono);
+	}
+
     /**
 	 * Carga todos los usuarios desde la base de datos y los almacena en el
 	 * catálogo.
