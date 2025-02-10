@@ -56,7 +56,12 @@ public class Controlador {
 		// TODO Auto-generated method stub
 	}
 
-	
+	public static Controlador getInstancia() {
+		if (unicaInstancia == null) {
+			unicaInstancia = new Controlador();
+		}
+		return unicaInstancia;
+	}
 	/**
 	 * Realiza el inicio de sesion con telefono y contraseña
 	 * 
