@@ -58,26 +58,131 @@ public class Mensaje {
 		this.emoticono = emoticono;
 		this.hora = hora;
 	}
-
-	//TODO: Getters y setters bien hechos
-	//TODO: Comparar mensajes por fecha y hora
-	//TODO: Verificar si el mensaje es de grupo
-	//TODO: Establecer si el mensaje es de grupo
 	
+	/**
+	 * Devuelve el texto del mensaje
+	 * @return
+	 */
 	public String getTexto() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.texto;
 	}
-
+	
+	/**
+	 * Devuelve el emisor del mensaje
+	 * @return
+	 */
 	public Usuario getEmisor() {
-		
 		return this.emisor;
 	}
 
+	/** 
+	 * Devuelve el receptor del mensaje
+	 * @return
+	 */
 	public Contacto getReceptor() {
-		
 		return this.receptor;
 	}
+	
+	/**
+	 * Devuelve la fecha y hora en la que se envió el mensaje
+	 * @return
+	 */
+	public LocalDateTime getHora() {
+		return this.hora;
+	}
+	
+	/**
+	 * Devuelve el identificador del emoticono del mensaje
+	 * @return
+	 */
+	public int getEmoticono() {
+		return this.emoticono;
+	}
+	
+	/**
+	 * Devuelve el usuario asociaod al recceptor del mensaje
+	 * @return
+	 */
+	public Usuario getUsuarioReceptor() {
+        return ((ContactoIndividual) this.receptor).getUsuario();
+    }
+	
+	/**
+	 * Devuelve el codigo unico del mensaje
+	 * @return
+	 */
+	public int getCodigo() {
+		return this.codigo;
+	}
+	
+	/**
+	 * Establece el codigo unico del mensaje
+	 * @param codigo
+	 */
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+	
+	/**
+	 * Establece el contacto que reicibira el mensaje
+	 * @param receptor
+	 */
+	public void setReceptor(Contacto receptor) {
+		this.receptor = receptor;
+	}
+	
+	/**
+	 * Establece el texto del mensaje
+	 * @param texto
+	 */
+	public void setTexto(String texto) {
+		this.texto = texto;
+	}
+	
+	/**
+	 * Establece el emisor del mensaje
+	 * @param emisor
+	 */
+	public void setEmisor(Usuario emisor) {
+		this.emisor = emisor;
+	}
+	
+	/**
+	 * Establece si el mensaje a un grupo
+	 * 
+	 * @param grupo
+	 */
+	public void setGroup(boolean grupo) {
+		this.grupo = grupo;
+	}
 
-    // Getters y setters
+	/**
+	 * Devuelve si el mensaje pertenece a un grupo
+	 * 
+	 * @return
+	 */
+	public boolean isGroup() {
+		return this.grupo;
+	}
+	
+	/**
+	 * Representa el mensaje como una cadena de texto.
+	 *
+	 * @return una representación textual del mensaje.
+	 */
+	@Override
+	public String toString() {
+		return "Message [codigo=" + codigo + ", texto=" + texto + ", emisor=" + emisor + ", receptor=" + receptor
+				+ ", hora=" + hora + ", emoticono=" + emoticono + "]";
+	}
+	
+	/**
+	 * Compara dos mensajes por la fecha y hora en que fueron enviados.
+	 *
+	 * @param o el mensaje a comparar.
+	 * @return un valor negativo, cero o positivo dependiendo del orden temporal.
+	 */
+	public int compareTo(Mensaje o) {
+		return this.hora.compareTo(o.hora);
+	}
 }
