@@ -2,7 +2,7 @@ package persistencia;
 
 public abstract class FactoriaDAO {
 
-	public static final String DAO_TDS = null;
+	public static final String DAO_TDS = "umu.tds.FactoriaDAO";
 	
 	private static FactoriaDAO unicaInstancia = null;
 

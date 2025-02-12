@@ -1,5 +1,5 @@
 package persistencia;
 
-public class MensajeDAO {
+public interface MensajeDAO {
 
 }

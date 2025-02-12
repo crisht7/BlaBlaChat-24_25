@@ -1,5 +1,5 @@
 package persistencia;
 
-public class ContactoIndividualDAO {
+public interface ContactoIndividualDAO {
 
 }

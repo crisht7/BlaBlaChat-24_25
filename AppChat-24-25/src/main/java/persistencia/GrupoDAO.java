@@ -1,5 +1,6 @@
 package persistencia;
 
-public class GrupoDAO {
+public interface GrupoDAO {
 
+	
 }

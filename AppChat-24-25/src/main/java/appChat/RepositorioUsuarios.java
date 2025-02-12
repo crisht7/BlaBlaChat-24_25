@@ -11,12 +11,17 @@ import persistencia.FactoriaDAO;
 import persistencia.UsuarioDAO;
 
 public class RepositorioUsuarios {
-    private Map<String,Usuario> usuarios;
+    
+	private Map<String,Usuario> usuarios;
     private static RepositorioUsuarios instanciaUnica;
     private FactoriaDAO factoria;
     private UsuarioDAO daoUsuario;
 
-    
+    /**
+     * Constructor privado
+     * Carga los usuarios de la base de datos
+     * Inicializa la instancia unica
+     */
     private RepositorioUsuarios() {
 		try {
 			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
@@ -39,8 +44,6 @@ public class RepositorioUsuarios {
 		return instanciaUnica;
 	}
 	
-
-
     /**
      * Agrega un usuario al repositorio
      * 
@@ -71,6 +74,7 @@ public class RepositorioUsuarios {
 				filter(u -> u.getTelefono().equals(telefono)).
 				findFirst();
 	}
+	
 	/**
 	 * Devuelve una lista con todos los usuarios del repositorio.
 	 * 
@@ -103,6 +107,7 @@ public class RepositorioUsuarios {
 				.filter(u -> u.getTelefono().equals(telefono))
 				.findAny().orElse(null);
 	}
+	
 	/**
 	 * Comprueba si un usuario existe en el repositorio.
 	 *
