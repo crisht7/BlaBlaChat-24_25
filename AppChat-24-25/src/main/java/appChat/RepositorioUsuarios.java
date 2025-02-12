@@ -1,8 +1,10 @@
 package appChat;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import persistencia.DAOException;
 import persistencia.FactoriaDAO;
@@ -36,6 +38,8 @@ public class RepositorioUsuarios {
 			instanciaUnica = new RepositorioUsuarios();
 		return instanciaUnica;
 	}
+	
+
 
     /**
      * Agrega un usuario al repositorio
@@ -44,7 +48,7 @@ public class RepositorioUsuarios {
      * @param usuario
      */
     public void agregarUsuario(int telefono, Usuario usuario) {
-        usuarios.put(usuario.getNumero(), usuario);
+        usuarios.put(usuario.getTelefono(), usuario);
     }
     
     /**
@@ -53,18 +57,63 @@ public class RepositorioUsuarios {
 	 * @param user Usuario a eliminar.
 	 */
 	public void removeUser(Usuario user) {
-		usuarios.remove(user.getNumero());
+		usuarios.remove(user.getTelefono());
+	}
+	
+	/**
+	 * Busca un usuario en el repositorio por su teléfono.
+	 * 
+	 * @param telefono
+	 * @return Un optional que tiene el usuario si existe.
+	 */
+	public Optional<Usuario> buscarUsuario(String telefono) {
+		return usuarios.values().stream().
+				filter(u -> u.getTelefono().equals(telefono)).
+				findFirst();
+	}
+	/**
+	 * Devuelve una lista con todos los usuarios del repositorio.
+	 * 
+	 * @return Lista de usuarios.
+	 */
+	public List<Usuario> getUsuarios() {
+		return new ArrayList<>(usuarios.values());
+	}
+	
+	/**
+	 * Devuelve un usuario del repositorio por el codigo.
+	 * 
+	 * @param codigo
+	 * @return Usuario
+	 */
+	public Usuario getUsuario(int codigo) {
+		return usuarios.values().stream().
+				filter(u -> u.getCodigo() == codigo).
+				findAny().orElse(null);
 	}
 
-	
-	//TODO: Getters y setters
-	//TODO: Buscar usuario
-	//TODO: Existe usuario
-	
+	/**
+	 * Devuelve un usuario del repositorio por el telefono.
+	 * 
+	 * @param codigo
+	 * @return Usuario
+	 */
 	public Usuario getUsuario(String telefono) {
-		return usuarios.get(telefono);
+		return usuarios.values().stream()
+				.filter(u -> u.getTelefono().equals(telefono))
+				.findAny().orElse(null);
 	}
-
+	/**
+	 * Comprueba si un usuario existe en el repositorio.
+	 *
+	 * @param usuario Usuario a comprobar.
+	 * @return `true` si el usuario existe, `false` en caso contrario.
+	 */
+	
+	public boolean existeUsuario(Usuario usuario) {
+		return usuarios.containsKey(usuario.getTelefono());
+	}
+	
     /**
 	 * Carga todos los usuarios desde la base de datos y los almacena en el
 	 * catálogo.
@@ -76,7 +125,7 @@ public class RepositorioUsuarios {
     private void cargarRepositorio() throws DAOException {
 		List<Usuario> usuariosBD = daoUsuario.recuperarTodosUsuarios();
 		for (Usuario usuario : usuariosBD) {
-			usuarios.put(usuario.getNumero(), usuario);
+			usuarios.put(usuario.getTelefono(), usuario);
 		}
 	}
 }
