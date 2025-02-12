@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
@@ -90,40 +91,250 @@ public class Usuario {
     
     }
     
-    //TODO: Getters y setters bien hechos
-    //TODO: Añadir contacto
-    //TODO: Verificar si el usaurio tiene un contacto individual por nombre 
-    //TODO: Verificar si el usuario riene un grupo por nombre
-    //TODO: MEtodo que cuente el total de mensajes enviados para poder calcular el descuento
-    //TODO: A traves del numero de telefono y el @override del equal comprobar su dos usuarios son iguales
-    
-    //TODO: ¿Devuelve Contacto o devuelve ContactoIndividual?
-    public Contacto getContactoIndividual(Usuario otroUsuario) {
-        // Implementar la lógica para obtener un contacto individual
-        return null;
-    }
-
-    public List<Mensaje> getChatMensajes(Usuario otroUsuario) {
-        // Implementar la lógica para obtener mensajes
-        return new ArrayList<>();
-    }
-
-	public String getNombre() {
-		
-		return this.nombre;
+    /**
+     * Verifica si el usuario tiene un contacto individual por nombre
+     * 
+     * @param nombreContacto
+     * @return true si el usuario tiene un contacto individual con ese nombre
+     */
+	public boolean tieneContactoIndividual(String nombreContacto) {
+		return contactos.stream().
+				anyMatch(c -> c instanceof ContactoIndividual && c.getNombre().equals(nombreContacto));
 	}
 	
-	public String getNumero() {
-		// TODO Auto-generated method stub
-		return null;
+	/**
+	 * Verifica si el usuario tiene un grupo por nombre
+	 * 
+	 * @param nombre
+	 * @return true si el usuario tiene un grupo con ese nombre
+	 */
+	public boolean tieneGrupo(String nombre) {
+		return contactos.stream().
+				anyMatch(c -> c instanceof Grupo && c.getNombre().equals(nombre));
 	}
+	
+	/**
+	 * Añade un contacto a la lista de contactos del usuario
+	 * 
+	 * @param contacto
+	 */
+	public void añadirContacto(Contacto contacto) {
+		this.contactos.add(contacto);
+	}
+	
+	/**
+	 * Cuenta el total de mensajes enviados por el usuario actual 
+	 * a todos sus contactos
+	 * 
+	 * @return numero de mensajes enviados por el usuario
+	 */
+	public int totalMensajesEnviados() {
+		int totalMensajes=0;
+		for (Contacto contacto : this.getContactos()) {
+			for (Mensaje mensaje : contacto.getMensajes()) {
+				if (mensaje.getEmisor().equals(this)) {
+					totalMensajes++;
+				}
+			}
+		}
+		
+		return totalMensajes;
+	}
+    
+    /**
+     * Añade un contacto a la lista de contactos del usuario
+     * 
+     * @return nombre
+     */
+    public String getNombre() {
+    	return this.nombre;
+    }
+	
+    /**
+     * Devuelve la fecha de nacimiento del usuario
+     * 
+     * @return fecha
+     */
+	public LocalDate getFecha() {
+		return this.fecha;
+	}
+	
+	/**
+	 * Devuelve el telefono del usuario
+	 * 
+	 * @return telefono
+	 */
 	public String getTelefono() {
-		return telefono;
+		return this.telefono;
 	}
+	
+	/**
+	 * Devuelve el saludo del usuario
+	 * 
+	 * @return saludo
+	 */
+	public String getSaludo() {
+		return this.saludo;
+	}
+	
+	/**
+	 * Devuelve la contraseña del usuario
+	 * 
+	 * @return contraseña
+	 */
 	public String getContraseña() {
 		return this.contraseña;
 	}
 	
+	/**
+	 * Devuelve si el usuario es premium
+	 * 
+	 * @return premium
+	 */
+	public boolean isPremium() {
+		return this.premium;
+	}
 	
-
+	/**
+     * Devuelve la lista de contactos del usuario
+     * 
+     * @return contactos
+     */
+	public List<Contacto> getContactos() {
+		return this.contactos;
+	}
+	
+	/**
+	 * Devuelve la lista de grupos del usuario
+	 * 
+	 * @return grupos
+	 */
+	public List<Grupo> getGrupos(){
+		return contactos.stream().
+				filter(c -> c instanceof Grupo).
+				map(c -> (Grupo) c).
+				collect(Collectors.toList());
+	}
+	
+	/**
+	 * Devuelve la lista de contactos individuales del usuario
+	 * 
+	 * @return contactos individuales
+	 */
+	public List<ContactoIndividual> getContactosIndividuales() {
+		return contactos.stream().
+				filter(c -> c instanceof ContactoIndividual).
+				map(c -> (ContactoIndividual) c)
+				.collect(Collectors.toList());
+	}
+	
+	/**
+	 * Devuelve la fecha de registro del usuario
+	 * 
+	 * @return fechaRegistro
+	 */
+	public LocalDate getFechaRegistro() {
+		return this.fechaRegistro;
+	}
+	
+	/**
+     * Devuelve la imagen del usuario
+     * 
+     * @return imagen
+     */
+	public ImageIcon getImagen() {
+        return this.imagen;
+    }
+	
+	/**
+	 * Devuelve el codigo del usuario
+	 * 
+	 * @return codigo
+	 */
+	public int getCodigo() {
+		return this.codigo;
+	}
+	
+	/**
+	 * Establece un nombre al usuario
+	 * 
+	 * @param nombre
+	 */
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+	
+	/**
+	 * Establece una fecha de nacimiento al usuario
+	 * 
+	 * @param fecha
+	 */
+	public void setFecha(LocalDate fecha) {
+		this.fecha = fecha;
+	}
+	
+	/**
+	 * Establece el codigo al usuario
+	 * 
+	 * @param codigo
+	 */
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+	
+	/**
+	 * Establece un saludo al usuario
+	 * 
+	 * @param saludo
+	 */
+	public void setSaludo(String saludo) {
+		this.saludo = saludo;
+	}
+	
+	/**
+	 * Establece el numero de telefono del usuario
+	 * 
+	 * @param telefono
+	 */
+	public void setTelefono(String telefono) {
+		this.telefono = telefono;
+	}
+	
+	
+	/**
+	 * Establece si el usuario es premium
+	 * 
+	 * @param premium
+	 */
+	public void setPremium(boolean premium) {
+        this.premium = premium;
+    }
+	
+	/**
+	 * Establece una nueva imagen de perfil al usuario
+	 * 
+	 * @param imagen
+	 */
+	public void setImagen(ImageIcon imagen) {
+		this.imagen = imagen;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (obj == null || getClass() != obj.getClass()) {
+			return false;
+		}
+		Usuario other = (Usuario) obj;
+		return this.telefono.equals(other.telefono);
+	}
+	
+	@Override
+	public String toString() {
+		return "Usuario [nombre=" + nombre + ", fecha=" + fecha + ", imagen=" + imagen + ", contraseña=" + contraseña
+                + ", telefono=" + telefono + ", saludo=" + saludo + ", premium=" + premium + ", fechaRegistro="
+                + fechaRegistro + ", codigo=" + codigo + ", contactos=" + contactos + "]";
+	}
 }
