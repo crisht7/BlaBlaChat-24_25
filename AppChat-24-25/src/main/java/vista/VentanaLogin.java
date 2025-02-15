@@ -65,7 +65,7 @@ public class VentanaLogin {
 		panelBot.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(245, 222, 179));
+		panel_1.setBackground(new Color(236, 215, 176));
 		panelBot.add(panel_1, BorderLayout.NORTH);
 		
 		JButton btnLogin = new JButton("Login");
@@ -103,7 +103,7 @@ public class VentanaLogin {
 		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/login.png")));
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(245, 222, 179));
+		panel.setBackground(new Color(236, 215, 176));
 		panelBot.add(panel, BorderLayout.SOUTH);
 		
 		
@@ -118,7 +118,7 @@ public class VentanaLogin {
 		btnRegistrar.setContentAreaFilled(true);
 		btnRegistrar.setBorderPainted(false);
 		btnRegistrar.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
-		btnRegistrar.setBackground(new Color(238, 143, 15));
+		btnRegistrar.setBackground(new Color(244, 97, 34));
 		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/register.png")));
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -128,18 +128,41 @@ public class VentanaLogin {
 			}
 		});
 		
+		
 		JPanel panelTop = new JPanel();
 		panelTop.setBackground(new Color(236, 215, 176));
 		frmLogin.getContentPane().add(panelTop, BorderLayout.NORTH);
-		panelTop.setLayout(new FlowLayout(FlowLayout.LEFT, 100, 5));
+		
+		panelTop.setLayout(new GridBagLayout());
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		gbc.weightx = 1.0;  // Expande horizontalmente
+		gbc.weighty = 1.0;  // Expande verticalmente
+		gbc.anchor = GridBagConstraints.CENTER; // Centra los elementos
+		gbc.insets = new Insets(10, 10, 10, 10); // Margen
+
+		
+		
 		
 		JLabel lblFotoLogin = new JLabel("");
+		
+		
 		lblFotoLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/chat150v2.PNG")));
-		panelTop.add(lblFotoLogin);
+		GridBagConstraints gbc_lblFotoLogin = new GridBagConstraints();
+		gbc_lblFotoLogin.anchor = GridBagConstraints.NORTHWEST;
+		gbc_lblFotoLogin.insets = new Insets(0, 0, 0, 5);
+		gbc_lblFotoLogin.gridx = 1;
+		gbc_lblFotoLogin.gridy = 0;
+		panelTop.add(lblFotoLogin, gbc_lblFotoLogin);
 		
 		JLabel lblNewLabel = new JLabel("BlaBlaChat");
 		lblNewLabel.setFont(new Font("Constantia", Font.BOLD, 35));
-		panelTop.add(lblNewLabel);
+		GridBagConstraints gbc_lblNewLabel = new GridBagConstraints();
+		gbc_lblNewLabel.anchor = GridBagConstraints.WEST;
+		gbc_lblNewLabel.gridx = 3;
+		gbc_lblNewLabel.gridy = 0;
+		panelTop.add(lblNewLabel, gbc_lblNewLabel);
 		
 		JPanel panelMid = new JPanel();
 		panelMid.setBackground(new Color(236, 215, 176));
