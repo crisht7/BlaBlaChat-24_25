@@ -246,7 +246,7 @@ public class VentanaRegistro extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				dispose(); // Cierra la ventana actual (VentanaRegistro)
 				VentanaLogin ventanaLogin = new VentanaLogin(); // Crea una nueva instancia de VentanaLogin
-				ventanaLogin.frame.setVisible(true); // Muestra la ventana de login
+				ventanaLogin.frmLogin.setVisible(true); // Muestra la ventana de login
 			}
 		});
 		panel.add(btnCancelar);

@@ -14,7 +14,7 @@ public class Main {
 			public void run() { 
 				try {
 					VentanaLogin window = new VentanaLogin(); //Constructor de la clase actual
-					window.frame.setVisible(true); //Hace visible 
+					window.frmLogin.setVisible(true); //Hace visible 
 					
 					// VER VENTANAS DIALOGO PAGINA 73
 					// int JOptionPane.showMessageDialog(window, frame, "Login", JOptionPane.PLAIN_MESSAGE);

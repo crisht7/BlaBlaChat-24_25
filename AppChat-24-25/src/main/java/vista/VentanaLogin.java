@@ -32,10 +32,12 @@ import javax.swing.JPasswordField;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.FlowLayout;
+import java.awt.Color;
 
 public class VentanaLogin {
 
-	public JFrame frame;
+	public JFrame frmLogin;
 	private String UsuarioUrl;
 	private JTextField textFieldTelefono;
 	private JPasswordField passwordFieldContraseña;
@@ -52,25 +54,30 @@ public class VentanaLogin {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		frame = new JFrame();
-		frame.setBounds(100, 100, 720, 480); //Establece el tamaño de la ventana
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //Establece la operación por defecto cuando se cierra la ventana
+		frmLogin = new JFrame();
+		frmLogin.setTitle("Login");
+		frmLogin.setBounds(100, 100, 720, 480); //Establece el tamaño de la ventana
+		frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		
 		JPanel panelBot = new JPanel();
-		frame.getContentPane().add(panelBot, BorderLayout.SOUTH);
+		panelBot.setBackground(new Color(236, 215, 176));
+		frmLogin.getContentPane().add(panelBot, BorderLayout.SOUTH);
+		panelBot.setLayout(new BorderLayout(0, 0));
 		
-		JButton btnRegistrar = new JButton("Registrar");
-		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/angel_3434431 (2).png")));
-		btnRegistrar.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-		        frame.dispose(); // Cierra la ventana actual
-		        VentanaRegistro ventanaRegistro = new VentanaRegistro(); // Crea una nueva instancia de VentanaRegistro
-		        ventanaRegistro.setVisible(true); // Muestra la ventana de registro
-			}
-		});
-		panelBot.add(btnRegistrar);
+		JPanel panel_1 = new JPanel();
+		panel_1.setBackground(new Color(245, 222, 179));
+		panelBot.add(panel_1, BorderLayout.NORTH);
 		
 		JButton btnLogin = new JButton("Login");
+		panel_1.add(btnLogin);
+		btnLogin.setOpaque(true);
+		btnLogin.setContentAreaFilled(true);
+		btnLogin.setBorderPainted(false);
+		btnLogin.setBackground(new Color(159, 213, 192));
+		btnLogin.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
+		btnLogin.setForeground(new Color(0, 0, 0));
+		btnLogin.setPreferredSize(new Dimension(250, 40)); // 150px de ancho, 40px de alto
+
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Recuperar datos ADAPTAR A BASE DE DATOS 
@@ -86,25 +93,57 @@ public class VentanaLogin {
 				if (login) {
 					VentanaMain ventanaMain = new VentanaMain();
 					ventanaMain.frame.setVisible(true);
-					VentanaLogin.this.frame.setVisible(false);
+					VentanaLogin.this.frmLogin.setVisible(false);
 				} else {
-					JOptionPane.showMessageDialog(frame, "Login incorrecto", "Login", JOptionPane.ERROR_MESSAGE);
+					JOptionPane.showMessageDialog(frmLogin, "Login incorrecto", "Login", JOptionPane.ERROR_MESSAGE);
 				}
 			}
 		});
 		
-		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/thinking_3434449.png")));
-		panelBot.add(btnLogin);
+		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/login.png")));
+		
+		JPanel panel = new JPanel();
+		panel.setBackground(new Color(245, 222, 179));
+		panelBot.add(panel, BorderLayout.SOUTH);
+		
+		
+		JLabel lblNewLabel_1 = new JLabel("No tienes cuenta?");
+		panel.add(lblNewLabel_1);
+		lblNewLabel_1.setFont(new Font("Sitka Subheading", Font.BOLD, 14));
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.LEFT);
+		
+		JButton btnRegistrar = new JButton("Regístrate");
+		panel.add(btnRegistrar);
+		btnRegistrar.setOpaque(true);
+		btnRegistrar.setContentAreaFilled(true);
+		btnRegistrar.setBorderPainted(false);
+		btnRegistrar.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
+		btnRegistrar.setBackground(new Color(238, 143, 15));
+		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/register.png")));
+		btnRegistrar.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+		        frmLogin.dispose(); // Cierra la ventana actual
+		        VentanaRegistro ventanaRegistro = new VentanaRegistro(); // Crea una nueva instancia de VentanaRegistro
+		        ventanaRegistro.setVisible(true); // Muestra la ventana de registro
+			}
+		});
 		
 		JPanel panelTop = new JPanel();
-		frame.getContentPane().add(panelTop, BorderLayout.NORTH);
+		panelTop.setBackground(new Color(236, 215, 176));
+		frmLogin.getContentPane().add(panelTop, BorderLayout.NORTH);
+		panelTop.setLayout(new FlowLayout(FlowLayout.LEFT, 100, 5));
 		
 		JLabel lblFotoLogin = new JLabel("");
-		lblFotoLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/scared_3434441.png")));
+		lblFotoLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/chat150v2.PNG")));
 		panelTop.add(lblFotoLogin);
 		
+		JLabel lblNewLabel = new JLabel("BlaBlaChat");
+		lblNewLabel.setFont(new Font("Constantia", Font.BOLD, 35));
+		panelTop.add(lblNewLabel);
+		
 		JPanel panelMid = new JPanel();
-		frame.getContentPane().add(panelMid, BorderLayout.CENTER);
+		panelMid.setBackground(new Color(236, 215, 176));
+		frmLogin.getContentPane().add(panelMid, BorderLayout.CENTER);
 		GridBagLayout gbl_panelMid = new GridBagLayout();
 		gbl_panelMid.columnWidths = new int[]{30, 90, 275, 50, 0};
 		gbl_panelMid.rowHeights = new int[]{10, 0, 2, 0, 10, 0};
@@ -113,6 +152,7 @@ public class VentanaLogin {
 		panelMid.setLayout(gbl_panelMid);
 		
 		JLabel lblTelefono = new JLabel("Teléfono:  ");
+		lblTelefono.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 11));
 		
 		GridBagConstraints gbc_lblTelefono = new GridBagConstraints();
 		gbc_lblTelefono.anchor = GridBagConstraints.SOUTHEAST;
@@ -122,6 +162,7 @@ public class VentanaLogin {
 		panelMid.add(lblTelefono, gbc_lblTelefono);
 		
 		textFieldTelefono = new JTextField();
+		textFieldTelefono.setBackground(new Color(226, 168, 109));
 		GridBagConstraints gbc_textFieldTelefono = new GridBagConstraints();
 		gbc_textFieldTelefono.anchor = GridBagConstraints.SOUTH;
 		gbc_textFieldTelefono.fill = GridBagConstraints.HORIZONTAL;
@@ -131,6 +172,7 @@ public class VentanaLogin {
 		panelMid.add(textFieldTelefono, gbc_textFieldTelefono);
 		
 		JLabel lblContraseña = new JLabel("Contraseña:  ");
+		lblContraseña.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 11));
 		GridBagConstraints gbc_lblContraseña = new GridBagConstraints();
 		gbc_lblContraseña.anchor = GridBagConstraints.NORTHEAST;
 		gbc_lblContraseña.insets = new Insets(0, 0, 5, 5);
@@ -139,6 +181,7 @@ public class VentanaLogin {
 		panelMid.add(lblContraseña, gbc_lblContraseña);
 		
 		passwordFieldContraseña = new JPasswordField();
+		passwordFieldContraseña.setBackground(new Color(226, 168, 109));
 		passwordFieldContraseña.setMinimumSize(new Dimension(15, 20));
 		GridBagConstraints gbc_passwordFieldContraseña = new GridBagConstraints();
 		gbc_passwordFieldContraseña.anchor = GridBagConstraints.NORTH;
