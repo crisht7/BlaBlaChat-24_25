@@ -100,7 +100,17 @@ public class VentanaLogin {
 					ventanaMain.frame.setVisible(true);
 					VentanaLogin.this.frmLogin.setVisible(false);
 				} else {
-					JOptionPane.showMessageDialog(frmLogin, "Login incorrecto", "Login", JOptionPane.ERROR_MESSAGE);
+					
+					JPanel panel = new JPanel(new BorderLayout());
+					JLabel mensaje = new JLabel("Login incorrecto", SwingConstants.CENTER);
+					ImageIcon icono = new ImageIcon(VentanaLogin.class.getResource("/recursos/cancel.png"));
+					panel.setBackground(new Color(245, 210, 158));
+					panel.add(mensaje, BorderLayout.CENTER);
+					panel.add(new JLabel(icono), BorderLayout.WEST);
+					UIManager.put("Button.background", new Color(244, 97, 34)); 
+					UIManager.put("Panel.background", new Color(245, 210, 158)); 
+					UIManager.put("OptionPane.background", new Color(245, 210, 158));
+					JOptionPane.showMessageDialog(frmLogin, panel, "Login failed", JOptionPane.PLAIN_MESSAGE);
 				}
 			}
 		});
