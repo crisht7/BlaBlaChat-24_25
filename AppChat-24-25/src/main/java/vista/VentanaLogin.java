@@ -21,6 +21,8 @@ import javax.swing.border.EtchedBorder;
 import controlador.Controlador;
 
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JMenu;
@@ -34,6 +36,10 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.FlowLayout;
 import java.awt.Color;
+import javax.swing.border.SoftBevelBorder;
+import javax.swing.border.BevelBorder;
+import java.awt.Cursor;
+import java.awt.ComponentOrientation;
 
 public class VentanaLogin {
 
@@ -41,8 +47,6 @@ public class VentanaLogin {
 	private String UsuarioUrl;
 	private JTextField textFieldTelefono;
 	private JPasswordField passwordFieldContraseña;
-
-
 	/**
 	 * Create the application.
 	 */
@@ -65,18 +69,19 @@ public class VentanaLogin {
 		panelBot.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(236, 215, 176));
+		panel_1.setBackground(new Color(245, 210, 158));
 		panelBot.add(panel_1, BorderLayout.NORTH);
 		
 		JButton btnLogin = new JButton("Login");
+		btnLogin.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
+		btnLogin.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel_1.add(btnLogin);
 		btnLogin.setOpaque(true);
-		btnLogin.setContentAreaFilled(true);
-		btnLogin.setBorderPainted(false);
 		btnLogin.setBackground(new Color(159, 213, 192));
 		btnLogin.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
 		btnLogin.setForeground(new Color(0, 0, 0));
 		btnLogin.setPreferredSize(new Dimension(250, 40)); // 150px de ancho, 40px de alto
+
 
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -103,7 +108,7 @@ public class VentanaLogin {
 		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/login.png")));
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(236, 215, 176));
+		panel.setBackground(new Color(245, 210, 158));
 		panelBot.add(panel, BorderLayout.SOUTH);
 		
 		
@@ -115,8 +120,6 @@ public class VentanaLogin {
 		JButton btnRegistrar = new JButton("Regístrate");
 		panel.add(btnRegistrar);
 		btnRegistrar.setOpaque(true);
-		btnRegistrar.setContentAreaFilled(true);
-		btnRegistrar.setBorderPainted(false);
 		btnRegistrar.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
 		btnRegistrar.setBackground(new Color(244, 97, 34));
 		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/register.png")));
@@ -130,7 +133,7 @@ public class VentanaLogin {
 		
 		
 		JPanel panelTop = new JPanel();
-		panelTop.setBackground(new Color(236, 215, 176));
+		panelTop.setBackground(new Color(245, 210, 158));
 		frmLogin.getContentPane().add(panelTop, BorderLayout.NORTH);
 		
 		panelTop.setLayout(new GridBagLayout());
@@ -165,7 +168,7 @@ public class VentanaLogin {
 		panelTop.add(lblNewLabel, gbc_lblNewLabel);
 		
 		JPanel panelMid = new JPanel();
-		panelMid.setBackground(new Color(236, 215, 176));
+		panelMid.setBackground(new Color(245, 210, 158));
 		frmLogin.getContentPane().add(panelMid, BorderLayout.CENTER);
 		GridBagLayout gbl_panelMid = new GridBagLayout();
 		gbl_panelMid.columnWidths = new int[]{30, 90, 275, 50, 0};
@@ -185,7 +188,8 @@ public class VentanaLogin {
 		panelMid.add(lblTelefono, gbc_lblTelefono);
 		
 		textFieldTelefono = new JTextField();
-		textFieldTelefono.setBackground(new Color(226, 168, 109));
+		textFieldTelefono.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		textFieldTelefono.setBackground(new Color(237, 165, 112));
 		GridBagConstraints gbc_textFieldTelefono = new GridBagConstraints();
 		gbc_textFieldTelefono.anchor = GridBagConstraints.SOUTH;
 		gbc_textFieldTelefono.fill = GridBagConstraints.HORIZONTAL;
@@ -204,7 +208,8 @@ public class VentanaLogin {
 		panelMid.add(lblContraseña, gbc_lblContraseña);
 		
 		passwordFieldContraseña = new JPasswordField();
-		passwordFieldContraseña.setBackground(new Color(226, 168, 109));
+		passwordFieldContraseña.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
+		passwordFieldContraseña.setBackground(new Color(237, 165, 112));
 		passwordFieldContraseña.setMinimumSize(new Dimension(15, 20));
 		GridBagConstraints gbc_passwordFieldContraseña = new GridBagConstraints();
 		gbc_passwordFieldContraseña.anchor = GridBagConstraints.NORTH;
