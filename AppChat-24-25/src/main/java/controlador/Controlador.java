@@ -1,9 +1,11 @@
 package controlador;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.ImageIcon;
 import javax.swing.JList;
 
 import appChat.Contacto;
@@ -29,7 +31,7 @@ public class Controlador {
 	private UsuarioDAO adaptadorUsuario;
 	
 	//Adaptadores de la base de datos para los contactos
-	private ContactoIndividualDAO adaptadorContacto;
+	private ContactoIndividualDAO adaptadorContactoIndividual;
 	
 	//Usuario actual autenticado usando la aplicación
 	private Usuario usuarioActual;
@@ -49,11 +51,20 @@ public class Controlador {
 	}
 	
 	private void inicializarAdaptadores() {
-		// TODO Auto-generated method stub
+		FactoriaDAO factoria = null;
+		try {
+			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		adaptadorGrupo = factoria.getGrupoDAO();
+		adaptadorMensaje = factoria.getMensajeDAO();
+		adaptadorUsuario = factoria.getUsuarioDAO();
+		adaptadorContactoIndividual = factoria.getContactoIndividualDAO();
 	}
 
 	private void inicializarRepositorios() {
-		// TODO Auto-generated method stub
+		this.repoUsuarios = RepositorioUsuarios.getUnicaInstancia();
 	}
 
 	public static Controlador getInstancia() {
@@ -75,7 +86,7 @@ public class Controlador {
 			return resultado;
 		}
 		//Si están los dos campos llenos
-		Usuario usuario = repoUsuarios.getUsuario(telefono);
+		Usuario usuario = repoUsuarios.getUsuario(telefono); 
 		
 		//Comprobaciónes del usuario
 		if (usuario ==null) {
@@ -87,6 +98,29 @@ public class Controlador {
 		}
 		return resultado;
     }
+	
+	public boolean registrarUsuario(String nombre, LocalDate fecha, ImageIcon foto, String numero, 
+									String saludo, String contraseña) {
+		Usuario usuarioExistente = repoUsuarios.getUsuario(numero);
+		if (usuarioExistente != null) {
+			return false;
+		}
+		
+		LocalDate fechaRegistro = LocalDate.now();
+		
+		Usuario nuevoUsuario = new Usuario(nombre, fecha, foto, contraseña, numero, saludo, fechaRegistro, false);
+		
+		//Añadimos al repositorio si no existe
+		if (!repoUsuarios.existeUsuario(nuevoUsuario)) {
+			repoUsuarios.agregarUsuario(nuevoUsuario);
+			adaptadorUsuario.registrarUsuario(nuevoUsuario);
+			
+			//Devuelve true si se ha registrado correctamente
+			return hacerLogin(nuevoUsuario.getTelefono(), nuevoUsuario.getContraseña());
+		}
+		return false;
+	}
+	
 	public static Object getUsuarioActual() {
 		// TODO Auto-generated method stub
 		return "Mapache";

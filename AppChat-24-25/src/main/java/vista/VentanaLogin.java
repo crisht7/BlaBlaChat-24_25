@@ -42,16 +42,22 @@ import java.awt.Cursor;
 import java.awt.ComponentOrientation;
 
 public class VentanaLogin {
-
+	/**
+	 * Ventana de login
+	 */
 	public JFrame frmLogin;
-	private String UsuarioUrl;
+	
 	private JTextField textFieldTelefono;
+	
 	private JPasswordField passwordFieldContraseña;
+	
+	private Controlador controlador;
 	/**
 	 * Create the application.
 	 */
 	public VentanaLogin() {
-		initialize(); //Inicializa la ventana
+		
+		initialize(); 
 	}
 
 	/**
@@ -230,19 +236,6 @@ public class VentanaLogin {
 		panelMid.add(passwordFieldContraseña, gbc_passwordFieldContraseña);
 		
 		
-		/*
-		String path = UsuarioUrl;
-		try {	
-			url = new URL(UsuarioUrl)
-			ImageIcon icon = new ImageIcon(path);
-			JLabel label = new JLabel(icon);
-			panel_1.add(label);
-		}
-			catch (Exception e) {
-            e.printStackTrace();
-        }
-	
-	*/
 	}
 
 	public void setVisible(boolean b) {

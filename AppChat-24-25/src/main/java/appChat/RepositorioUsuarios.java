@@ -50,7 +50,7 @@ public class RepositorioUsuarios {
      * @param telefono
      * @param usuario
      */
-    public void agregarUsuario(int telefono, Usuario usuario) {
+    public void agregarUsuario(Usuario usuario) {
         usuarios.put(usuario.getTelefono(), usuario);
     }
     

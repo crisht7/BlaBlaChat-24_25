@@ -6,6 +6,8 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+
 import java.awt.GridBagLayout;
 import javax.swing.JButton;
 import java.awt.GridBagConstraints;
@@ -13,6 +15,9 @@ import java.awt.Insets;
 import javax.swing.JTextField;
 import javax.swing.JPasswordField;
 import com.toedter.calendar.JDateChooser;
+
+import controlador.Controlador;
+
 import javax.swing.JSplitPane;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
@@ -25,6 +30,8 @@ import javax.swing.JScrollPane;
 import java.awt.ComponentOrientation;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.time.ZoneId;
+
 import javax.swing.SwingConstants;
 import java.awt.Color;
 import javax.swing.border.BevelBorder;
@@ -35,6 +42,7 @@ import javax.swing.border.MatteBorder;
 import javax.swing.border.SoftBevelBorder;
 import javax.swing.border.TitledBorder;
 import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.BorderLayout;
@@ -51,6 +59,7 @@ public class VentanaRegistro extends JFrame {
 	private JTextField textFieldURL;
 	private JPasswordField passwordFieldRepContraseña;
 	private JTextField textField_3;
+	private JFrame frame;
 
 
 	/**
@@ -294,7 +303,28 @@ public class VentanaRegistro extends JFrame {
 		btnRegistrar.setContentAreaFilled(true);
 		btnRegistrar.setBackground(new Color(128, 225, 189));
 		btnRegistrar.addActionListener(new ActionListener() {
+			/**
+			 * Permite registrar
+			 */
 			public void actionPerformed(ActionEvent e) {
+				if(!datosCorrectos()) {
+					return;
+				}
+				boolean creado = Controlador.getInstancia().registrarUsuario(textFieldNombre.getText(), 
+						dateChooserFechaNac.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(), 
+						new ImageIcon(textFieldURL.getText()), textFieldTelefono.getText(), textFieldSaludo.getText(), 
+						passwordFieldContraseña.getText());
+				if (!creado) {
+					JOptionPane.showMessageDialog(frame, "El usuario ya existe", "Crea una cuenta", JOptionPane.ERROR_MESSAGE);
+				} else {
+					//Registro exitoso
+					JOptionPane.showMessageDialog(frame, "Usuario registrado correctamente", "Registro", JOptionPane.INFORMATION_MESSAGE);
+					Toolkit.getDefaultToolkit().beep();
+					frame.dispose();
+					VentanaLogin login = new VentanaLogin();
+					login.setVisible(true);
+				}
+				
 			}
 		});
 		panel.add(btnRegistrar);
@@ -311,7 +341,7 @@ public class VentanaRegistro extends JFrame {
 	}
 	private boolean datosCorrectos() {
 		// TODO Auto-generated method stub
-		return false;
+		return true;
 	}
 
 }
