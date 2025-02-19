@@ -24,9 +24,12 @@ public class RepositorioUsuarios {
      */
     private RepositorioUsuarios() {
 		try {
-			factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
-			daoUsuario = factoria.getUsuarioDAO();
-			usuarios = new HashMap<>();
+			this.factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
+			if (factoria == null) {
+			    throw new RuntimeException("Error: FactoriaDAO no está inicializada correctamente."); //Comprobación depuración
+			}
+			this.daoUsuario = factoria.getUsuarioDAO();
+			this.usuarios = new HashMap<>();
 			this.cargarRepositorio();
 		} catch (DAOException eDAO) {
 			eDAO.printStackTrace();
