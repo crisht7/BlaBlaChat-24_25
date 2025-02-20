@@ -30,8 +30,9 @@ public interface UsuarioDAO {
 	 * Recupera el usuario de la base de datos a traves del codigo
 	 * 
 	 * @param codigo
+	 * @return 
 	 */
-	public void recuperarUsuario(int codigo);
+	public Usuario recuperarUsuario(int codigo);
 	
 	/**
 	 * Recupera los usuarios almacenados en la base de datos

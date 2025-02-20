@@ -13,7 +13,7 @@ import com.toedter.calendar.JDateChooser;
 public class Usuario {
     private String nombre;
     private LocalDate fecha;
-    private ImageIcon imagen;
+    private ImageIcon fotoPerfil;
     private String contraseña;
     private String telefono;
     private String saludo;
@@ -32,7 +32,7 @@ public class Usuario {
      * Constructor que inicializa los atributos básicos
      * @param nombre
      * @param fecha
-     * @param imagen
+     * @param fotoPerfil
      * @param contraseña
      * @param telefono
      * @param saludo
@@ -43,7 +43,7 @@ public class Usuario {
     	this.codigo = 0;
     	this.nombre = nombre;
     	this.fecha = fecha;
-    	this.imagen = imagen;
+    	this.fotoPerfil = imagen;
     	this.contraseña = contraseña;
     	this.telefono = telefono;
     	this.saludo = saludo;
@@ -58,7 +58,7 @@ public class Usuario {
      * 
      * @param nombre
      * @param fecha
-     * @param imagen
+     * @param fotoPerfil
      * @param contraseña
      * @param telefono
      * @param saludo
@@ -77,7 +77,7 @@ public class Usuario {
      * 
      * @param nombre
      * @param fecha
-     * @param imagen
+     * @param fotoPerfil
      * @param contraseña
      * @param telefono
      * @param saludo
@@ -238,12 +238,12 @@ public class Usuario {
 	}
 	
 	/**
-     * Devuelve la imagen del usuario
+     * Devuelve la fotoPerfil del usuario
      * 
-     * @return imagen
+     * @return fotoPerfil
      */
-	public ImageIcon getImagen() {
-        return this.imagen;
+	public ImageIcon getFotoPerfil() {
+        return this.fotoPerfil;
     }
 	
 	/**
@@ -311,12 +311,12 @@ public class Usuario {
     }
 	
 	/**
-	 * Establece una nueva imagen de perfil al usuario
+	 * Establece una nueva fotoPerfil de perfil al usuario
 	 * 
-	 * @param imagen
+	 * @param fotoPerfil
 	 */
-	public void setImagen(ImageIcon imagen) {
-		this.imagen = imagen;
+	public void setFotoPerfil(ImageIcon imagen) {
+		this.fotoPerfil = imagen;
 	}
 	
 	@Override
@@ -333,7 +333,7 @@ public class Usuario {
 	
 	@Override
 	public String toString() {
-		return "Usuario [nombre=" + nombre + ", fecha=" + fecha + ", imagen=" + imagen + ", contraseña=" + contraseña
+		return "Usuario [nombre=" + nombre + ", fecha=" + fecha + ", fotoPerfil=" + fotoPerfil + ", contraseña=" + contraseña
                 + ", telefono=" + telefono + ", saludo=" + saludo + ", premium=" + premium + ", fechaRegistro="
                 + fechaRegistro + ", codigo=" + codigo + ", contactos=" + contactos + "]";
 	}
