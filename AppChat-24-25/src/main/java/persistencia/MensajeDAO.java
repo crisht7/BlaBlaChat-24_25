@@ -42,10 +42,5 @@ public interface MensajeDAO {
 	 */
 	public List<Mensaje> recuperarTodosMensajes();
 	
-	/**
-	 * Recupera los mensajes de un usuario
-	 * @param codigo
-	 * @return lista de mensajes
-	 */
-	public List<Mensaje> recuperarMensajesUsuario(int codigo);
+
 }

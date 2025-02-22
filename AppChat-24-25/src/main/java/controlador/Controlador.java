@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
-import javax.swing.JList;
 
 import appChat.Contacto;
 import appChat.Mensaje;
@@ -131,8 +130,8 @@ public class Controlador {
 		Usuario Mapache = new Usuario("Mapache", null, null, "1234", "12345678", null, null);
 		Contacto Javier = new Contacto("Javier");
 		ArrayList<Mensaje> resultado = new ArrayList<Mensaje>();
-		resultado.add(new Mensaje("Hola Mapache",0, LocalDateTime.now(), Mapache, Javier));
-		resultado.add(new Mensaje("Hola Javier",0 , LocalDateTime.now(), Mapache, Javier));
+		resultado.add(new Mensaje("Hola Mapache",0, LocalDateTime.now()));
+		resultado.add(new Mensaje("Hola Javier",0 , LocalDateTime.now()));
  		
 		return resultado;
 	}

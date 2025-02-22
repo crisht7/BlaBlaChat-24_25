@@ -1,14 +1,15 @@
 package persistencia;
 
-import java.lang.reflect.Array;
+import appChat.*;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
 
-import appChat.Usuario;
 import beans.Entidad;
 import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
@@ -31,7 +32,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	 * Garantiza Singleton
 	 * @return unicaInstancia
 	 */
-	public static UsuarioDAO getUnicaInstancia() {
+	public static AdaptadorUsuario getUnicaInstancia() {
 		if (unicaInstancia == null)
 			unicaInstancia = new AdaptadorUsuario();
 		return unicaInstancia;
@@ -42,6 +43,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	 * 
 	 * @param usuario a registrar
 	 */
+	@Override
 	public void registrarUsuario(Usuario usuario) {
 		Entidad eUsuario = null;
 		
@@ -53,7 +55,9 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		if(eUsuario != null) 
 			return;
 		
-		//TODO: REGISTRAR CONTACTOS
+		usuario.getContactos().forEach(c -> {
+            AdaptadorContactoIndividual.getUnicaInstancia().registrarContacto((ContactoIndividual) c);
+            });
 		
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
@@ -82,8 +86,9 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 	@Override
 	public Usuario recuperarUsuario(int codigo) {
-		if (PoolDAO.getUnicaInstancia().contieneID(codigo))
+		if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
 			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(codigo);
+		}
 		
 		Entidad eUsuario = servPersistencia.recuperarEntidad(codigo);
 		
@@ -110,18 +115,55 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 	@Override
 	public List<Usuario> recuperarTodosUsuarios() {
-		List<Usuario> usuarios = new ArrayList<Usuario>();
+		List<Usuario> usuarios = new LinkedList<>();
 		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
-		
+
 		for (Entidad eUsuario : eUsuarios) {
 			usuarios.add(recuperarUsuario(eUsuario.getId()));
 		}
+	
 		return usuarios;
 	}
 
 	@Override
 	public void modificarUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
+		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
+		
+		for (Propiedad p : eUsuario.getPropiedades()) {
+			switch (p.getNombre()) {
+			case "nombre":
+				p.setValor(usuario.getNombre());
+				break;
+			case "fecha":
+				p.setValor(usuario.getFecha().toString());
+				break;
+			case "telefono":
+				p.setValor(usuario.getTelefono());
+				break;
+			case "contraseña":
+				p.setValor(usuario.getContraseña());
+				break;
+			case "saludo":
+				p.setValor(usuario.getSaludo());
+				break;
+			case "premium":
+				p.setValor(String.valueOf(usuario.isPremium()));
+				break;
+			case "foto":
+				p.setValor(usuario.getFotoPerfil().getDescription());
+				break;
+			case "contactos":
+				p.setValor(usuario.getContactos().toString());
+				break;
+			case "fechaRegistro":
+				p.setValor(usuario.getFechaRegistro().toString());
+				break;
+			case "grupos":
+				p.setValor(usuario.getGrupos().toString());
+				break;
+			}
+			servPersistencia.modificarPropiedad(p);
+		}
 		
 	}
 

@@ -53,7 +53,7 @@ public class Mensaje {
 	 * @param emoticono identificador
 	 * @param hora en la que se envió
 	 */
-	public Mensaje(String texto, int emoticono, LocalDateTime hora, Usuario emisor, Contacto receptor) {
+	public Mensaje(String texto, int emoticono, LocalDateTime hora) {
 		this.texto = texto;
 		this.emoticono = emoticono;
 		this.hora = hora;
