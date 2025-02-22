@@ -64,7 +64,7 @@ public class PoolDAO {
 	 * 
 	 * @param id único del objeto a eliminar.
 	 */
-	public void EliminarObjeto(int id) {
+	public void eliminarObjeto(int id) {
 		pool.remove(id);
 	}
 }
