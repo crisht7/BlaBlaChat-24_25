@@ -79,7 +79,8 @@ public class VentanaMain {
         JList<Mensaje> listaChatRecientes = new JList<>();
         listaChatRecientes.setBackground(new Color(236, 163, 96));
         listaChatRecientes.setVisibleRowCount(16);
-        listaChatRecientes.setCellRenderer(new MensajeCellRenderer());
+        
+        
 
      // Obtener mensajes recientes desde el controlador
         List<Mensaje> mensajes = Controlador.getMensajesRecientesPorUsuario();

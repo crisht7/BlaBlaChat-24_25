@@ -98,16 +98,16 @@ public class Controlador {
 		return resultado;
     }
 	
-	public boolean registrarUsuario(String nombre, LocalDate fecha, ImageIcon foto, String numero, 
+	public boolean registrarUsuario(String nombre, LocalDate fecha, ImageIcon foto, String telefono, 
 									String saludo, String contraseña) {
-		Usuario usuarioExistente = repoUsuarios.getUsuario(numero);
+		Usuario usuarioExistente = repoUsuarios.getUsuario(telefono);
 		if (usuarioExistente != null) {
 			return false;
 		}
 		
 		LocalDate fechaRegistro = LocalDate.now();
 		
-		Usuario nuevoUsuario = new Usuario(nombre, fecha, foto, contraseña, numero, saludo, fechaRegistro, false);
+		Usuario nuevoUsuario = new Usuario(nombre, fecha, foto, contraseña, telefono, saludo, fechaRegistro, false);
 		
 		//Añadimos al repositorio si no existe
 		if (!repoUsuarios.existeUsuario(nuevoUsuario)) {
@@ -120,9 +120,8 @@ public class Controlador {
 		return false;
 	}
 	
-	public static Object getUsuarioActual() {
-		// TODO Auto-generated method stub
-		return "Mapache";
+	public Usuario getUsuarioActual() {
+		return this.usuarioActual;
 
 	}
 
@@ -135,4 +134,5 @@ public class Controlador {
  		
 		return resultado;
 	}
+	
 }
