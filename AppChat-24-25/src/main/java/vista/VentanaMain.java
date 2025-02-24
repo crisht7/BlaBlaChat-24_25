@@ -35,6 +35,7 @@ public class VentanaMain {
 
     public JFrame frame;
 
+
     /**
      * Launch the application.
      */
@@ -110,10 +111,6 @@ public class VentanaMain {
         comboPanelRecientes.setEditable(true);
         panelNorte.add(comboPanelRecientes);
 
-        JButton btnEnviarMensaje = new JButton("Enviar");
-        btnEnviarMensaje.setBackground(new Color(234, 158, 66));
-        panelNorte.add(btnEnviarMensaje);
-
         JButton btnBuscarMensaje = new JButton("Buscar");
         btnBuscarMensaje.setBackground(new Color(234, 158, 66));
         btnBuscarMensaje.addActionListener(new ActionListener() {
@@ -140,6 +137,9 @@ public class VentanaMain {
         btnNewButton.setBackground(new Color(234, 158, 66));
         btnNewButton.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		// aquí quiero que se inviertan los colores, rollo que el naranja se vuelva azul y eso, para cambiar el tema 
+        		// pero ya es mas capricho que otra cosa 
+        		
         	}
         });
         panelNorte.add(btnNewButton);
@@ -149,7 +149,7 @@ public class VentanaMain {
         panelNorte.add(horizontalGlue);
 
         JButton btnPremium = new JButton("Premium");
-        btnPremium.setBackground(new Color(140, 240, 227));
+        btnPremium.setBackground(new Color(159, 213, 192));
         panelNorte.add(btnPremium);
 
         JLabel lblFoto = new JLabel("Usuario");
@@ -170,11 +170,11 @@ public class VentanaMain {
         chat.setPreferredSize(new Dimension(400, 700));
 
         // Mensajes de ejemplo para el chat actual
-        BubbleText burbuja1 = new BubbleText(chat, "Hola grupo!!", Color.GREEN, "J.Ramón", BubbleText.SENT);
+        BubbleText burbuja1 = new BubbleText(chat, "Hola grupo!!", Color.getColor("turquesa", new Color(159, 213, 192)), "J.Ramón", BubbleText.SENT);
         chat.add(burbuja1);
 
         BubbleText burbuja2 = new BubbleText(chat,
-                "Hola, ¿Está seguro de que la burbuja usa varias líneas si es necesario?", Color.LIGHT_GRAY, "Alumno",
+                "Hola, ¿Está seguro de que la burbuja usa varias líneas si es necesario?", Color.getColor("turquesa oscuro", new Color(16, 154, 137)), "Alumno",
                 BubbleText.RECEIVED);
         chat.add(burbuja2);
 
@@ -228,9 +228,11 @@ public class VentanaMain {
         btnEnviar.addActionListener(e -> {
             String texto = txtMensaje.getText().trim();
             if (!texto.isEmpty()) {
-                System.out.println("Mensaje enviado: " + texto); // Aquí puedes añadirlo al chat
+            	BubbleText mensajeEnviado = new BubbleText(chat, texto, Color.getColor("turquesa", new Color(159, 213, 192)), "Tú", BubbleText.SENT); // en tú imagino que pondremos usuario.getNombre 
+                chat.add(mensajeEnviado);
                 txtMensaje.setText(""); // Vaciar el campo después de enviar
             }
         });
+    
     }
 }

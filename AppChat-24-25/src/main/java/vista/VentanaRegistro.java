@@ -60,6 +60,8 @@ public class VentanaRegistro extends JFrame {
 	private JPasswordField passwordFieldRepContraseña;
 	private JTextField textField_3;
 	private JFrame frame;
+	private JDateChooser dateChooserFechaNac;
+
 
 
 	/**
@@ -218,7 +220,7 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblNewLabelFechaNacimiento.gridy = 10;
 		contentPane.add(lblNewLabelFechaNacimiento, gbc_lblNewLabelFechaNacimiento);
 
-		JDateChooser dateChooserFechaNac = new JDateChooser();
+		dateChooserFechaNac = new JDateChooser();
 		dateChooserFechaNac.setFocusTraversalPolicyProvider(true);
 		dateChooserFechaNac.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		dateChooserFechaNac.setBackground(new Color(237, 165, 112));
@@ -320,9 +322,10 @@ public class VentanaRegistro extends JFrame {
 					//Registro exitoso
 					JOptionPane.showMessageDialog(frame, "Usuario registrado correctamente", "Registro", JOptionPane.INFORMATION_MESSAGE);
 					Toolkit.getDefaultToolkit().beep();
-					frame.dispose();
+					VentanaRegistro.this.dispose();  // Cierra la ventana de registro correctamente
 					VentanaLogin login = new VentanaLogin();
-					login.setVisible(true);
+					login.frmLogin.setVisible(true);  // Asegura que la ventana login sea visible
+
 				}
 				
 			}
@@ -340,8 +343,34 @@ public class VentanaRegistro extends JFrame {
 
 	}
 	private boolean datosCorrectos() {
-		// TODO Auto-generated method stub
-		return true;
+		 String nombre = textFieldNombre.getText().trim();
+		    String telefono = textFieldTelefono.getText().trim();
+		    String contraseña = new String(passwordFieldContraseña.getPassword());
+		    String repetirContraseña = new String(passwordFieldRepContraseña.getPassword());
+		    
+
+		    if (nombre.isEmpty()) {
+		        JOptionPane.showMessageDialog(this, "El nombre no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return false;
+		    }
+		    if (!telefono.matches("\\d{9}")) {
+		        JOptionPane.showMessageDialog(this, "El teléfono debe contener 9 dígitos.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return false;
+		    }
+		    if (contraseña.length() < 6) {
+		        JOptionPane.showMessageDialog(this, "La contraseña debe tener al menos 6 caracteres.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return false;
+		    }
+		    if (!contraseña.equals(repetirContraseña)) {
+		        JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return false;
+		    }
+		    if (dateChooserFechaNac == null) {
+		        JOptionPane.showMessageDialog(this, "Debe seleccionar una fecha de nacimiento.", "Error", JOptionPane.ERROR_MESSAGE);
+		        return false;
+		    }
+
+		    return true;  // Si pasa todas las validaciones
 	}
 
 }
