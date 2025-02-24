@@ -338,6 +338,11 @@ public class VentanaRegistro extends JFrame {
 		btnCancelar.setBackground(new Color(238, 96, 34));
 		btnCancelar.setOpaque(true);
 		btnCancelar.setContentAreaFilled(true);
+		btnCancelar.addActionListener(e -> {
+		    VentanaRegistro.this.dispose();  // Cierra la ventana de registro
+		    VentanaLogin login = new VentanaLogin();
+		    login.frmLogin.setVisible(true);  // Muestra la ventana de login
+		});
 		panel.add(btnCancelar);
 
 
