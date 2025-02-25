@@ -61,7 +61,7 @@ public class Contacto {
 		this.codigo = codigo;
 	}
 
-	public List<Mensaje> getMensajes() {
+	public List<Mensaje> getMensajesEnviados() {
 		return mensajes;
 	}
 

@@ -2,6 +2,7 @@ package appChat;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -56,7 +57,15 @@ public class ContactoIndividual extends Contacto {
 		this.telefono = telefono;
 	}
 	
+	public boolean isUsuario(Usuario otroUsuario) {
+		return this.usuario.equals(otroUsuario);
+	}
 	
+	public ContactoIndividual getContacto(Usuario usuario) {
+		return this.usuario.getContactos().stream().filter(c -> c instanceof ContactoIndividual)
+				.map(c -> (ContactoIndividual) c).
+				filter(c -> c.getUsuario().equals(usuario)).findAny().orElse(null);
+	}
     /**
      * Filtra y obtiene los mensajes enviados o recibidos por un número de teléfono específico.
      * si es emisor comprueba el telefono y si es receptor se comprueba que sea contacto individual (tiene teléfono) y luego el telefono 
@@ -64,13 +73,9 @@ public class ContactoIndividual extends Contacto {
      * @return Lista de mensajes que involucran el teléfono dado.
      */
 	public List<Mensaje> obtenerMensajesPorTelefono(String telefono) {
-	    return getMensajes().stream()
-	            .filter(mensaje -> 
-	                mensaje.getEmisor().getTelefono().equals(telefono) || 
-	                (mensaje.getReceptor() instanceof ContactoIndividual &&
-	                 ((ContactoIndividual) mensaje.getReceptor()).getTelefono().equals(telefono))
-	            )
-	            .collect(Collectors.toList());
+		 List<Mensaje> lista = new LinkedList<>();
+	        lista.stream().filter(m-> m.getEmisor().getTelefono().equals(telefono ));
+	        return lista;
 	}
 
 
@@ -80,11 +85,19 @@ public class ContactoIndividual extends Contacto {
      * @return Lista de mensajes que contienen el texto dado.
      */
     public List<Mensaje> obtenerMensajesPorTexto(String texto) {
-        return getMensajes().stream()
-                .filter(mensaje -> mensaje.getTexto().toLowerCase().contains(texto.toLowerCase()))
-                .collect(Collectors.toList());
+        List<Mensaje> lista = new LinkedList<>();
+        lista.stream().filter(m-> m.getTexto().contains(texto));
+        return lista;
     }
 	
+	public List<Mensaje> getMensajesRecibidos(Optional<Usuario> usuario) {
+		
+        ContactoIndividual contacto = getContacto(usuario.orElse(null));
+        if (contacto == null) 
+        	return contacto.getMensajesEnviados();
+        else
+        	return new LinkedList<>();
+    }
     
 }
 

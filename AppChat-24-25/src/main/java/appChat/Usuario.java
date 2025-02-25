@@ -131,7 +131,7 @@ public class Usuario {
 	public int totalMensajesEnviados() {
 		int totalMensajes=0;
 		for (Contacto contacto : this.getContactos()) {
-			for (Mensaje mensaje : contacto.getMensajes()) {
+			for (Mensaje mensaje : contacto.getMensajesEnviados()) {
 				if (mensaje.getEmisor().equals(this)) {
 					totalMensajes++;
 				}

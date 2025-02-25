@@ -84,7 +84,8 @@ public class VentanaMain {
         
 
      // Obtener mensajes recientes desde el controlador
-        List<Mensaje> mensajes = Controlador.getMensajesRecientesPorUsuario();
+        //TODO: Cambiar null por el usuario actual
+        List<Mensaje> mensajes = Controlador.getInstancia().getMensajesUsuario(null); 
         DefaultListModel<Mensaje> model = new DefaultListModel<>();
         for (Mensaje mensaje : mensajes) {
             if (mensaje != null && mensaje.getEmisor() != null && mensaje.getReceptor() != null) {

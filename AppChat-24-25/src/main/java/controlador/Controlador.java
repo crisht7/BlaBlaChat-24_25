@@ -4,10 +4,14 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import javax.swing.ImageIcon;
 
 import appChat.Contacto;
+import appChat.ContactoIndividual;
 import appChat.Mensaje;
 import appChat.RepositorioUsuarios;
 import appChat.Usuario;
@@ -125,14 +129,21 @@ public class Controlador {
 
 	}
 
-	public static List<Mensaje> getMensajesRecientesPorUsuario() {
-		Usuario Mapache = new Usuario("Mapache", null, null, "1234", "12345678", null, null);
-		Contacto Javier = new Contacto("Javier");
-		ArrayList<Mensaje> resultado = new ArrayList<Mensaje>();
-		resultado.add(new Mensaje("Hola Mapache",0, LocalDateTime.now()));
-		resultado.add(new Mensaje("Hola Javier",0 , LocalDateTime.now()));
- 		
-		return resultado;
+	public List<Mensaje> getMensajesUsuario(Contacto contacto) {
+		if (contacto instanceof ContactoIndividual && !((ContactoIndividual) contacto).isUsuario(usuarioActual)) {
+			List<Mensaje> mensajes = Stream
+					.concat(((ContactoIndividual) contacto).getMensajesEnviados().stream(),
+                    ((ContactoIndividual) contacto).getMensajesRecibidos(Optional.of(usuarioActual)).stream()).
+					sorted().collect(Collectors.toList());
+		return mensajes.stream()
+				.filter(m-> !(m.getEmisor().getTelefono()
+				.equals(usuarioActual.getTelefono()) && m.isGroup()))
+				.collect(Collectors.toList());
+		}
+		else {
+			return contacto.getMensajesEnviados();
+		}
 	}
-	
 }
+	
+
