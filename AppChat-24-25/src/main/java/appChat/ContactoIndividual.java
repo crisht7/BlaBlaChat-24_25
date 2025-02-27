@@ -99,5 +99,6 @@ public class ContactoIndividual extends Contacto {
         	return new LinkedList<>();
     }
     
+	
 }
 

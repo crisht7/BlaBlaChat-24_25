@@ -98,7 +98,7 @@ public class VentanaLogin {
 				String password = passwordFieldContraseña.getText();
 				
 				// Ejecutar negocio por controlador terminar 
-				Controlador controlador = Controlador.getInstancia();	
+				Controlador controlador = Controlador.getInstancia();
 				boolean login = controlador.hacerLogin(telefono, password);
 				
 				if (login) {

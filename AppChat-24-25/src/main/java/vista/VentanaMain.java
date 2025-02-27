@@ -7,23 +7,11 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
 import java.util.List;
+import java.util.Map;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.DefaultListModel;
-import javax.swing.JButton;
-import javax.swing.JComboBox;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JList;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
-import javax.swing.JTextArea;
-import javax.swing.JTextField;
-import javax.swing.ScrollPaneConstants;
+import javax.swing.*;
 
+import appChat.Contacto;
 import appChat.Mensaje;
 import controlador.Controlador;
 import tds.BubbleText;
@@ -34,7 +22,12 @@ import javax.swing.ImageIcon;
 public class VentanaMain {
 
     public JFrame frame;
+    
+    public Chat chat;
+    
+	private Map<Contacto, Chat> chatsRecientes;
 
+	private JScrollPane scrollBarChat;
 
     /**
      * Launch the application.
@@ -59,6 +52,68 @@ public class VentanaMain {
         initialize();
     }
 
+    
+    /**
+     * Cargar los mensajes recientes en la lista de chats
+     * 
+     * @param contacto cuyo chat se debe cargar
+     */
+     
+	private void cargarMensajesRecientes(Contacto contacto) {
+    	 if(contacto == null)
+    		 return;
+    	 
+    	 chat = chatsRecientes.get(contacto);
+    	 if (chat == null) {
+ 			chat = new Chat();
+ 			chat.setBackground(new Color(241, 192, 133));
+ 			scrollBarChat.setViewportView(chat);
+ 			chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
+ 			chat.setSize(400, 700);
+ 			scrollBarChat.getViewport().setBackground(new Color(159, 213, 192));
+ 			// Coloca las burbujas en el panel nuevo
+ 			Controlador.getInstancia().getMensajesUsuario(contacto).stream().map(m -> {
+ 				String emisor;
+ 				int direccionMensaje;
+ 				Color colorBurbuja;
+ 				if (m.getEmisor().equals(Controlador.getInstancia().getUsuarioActual())) {
+ 					colorBurbuja = new Color(159, 213, 192);
+ 					emisor = "You";
+ 					direccionMensaje = BubbleText.SENT;
+ 				} else {
+ 					colorBurbuja = new Color(16, 154, 137);
+ 					emisor = Controlador.getInstancia().getContactoDelUsuarioActual(m.getEmisor()).get().getNombre();
+ 					direccionMensaje = BubbleText.RECEIVED;
+ 				}
+
+ 				if (m.getTexto().isEmpty()) {
+ 					return new BubbleText(chat, m.getEmoticono(), colorBurbuja, emisor, direccionMensaje, 12);
+ 				}
+ 				return new BubbleText(chat, m.getTexto(), colorBurbuja, emisor, direccionMensaje, 12); //12 REFIERE AL TAMAÑO 
+ 			}).forEach(b -> chat.add(b));
+
+ 			// Si no hay espacio en los chats recientes es necesario borrar uno
+ 			if (chatsRecientes.size() >= 4) {
+ 				chatsRecientes.remove(chatsRecientes.keySet().stream().findFirst().orElse(null));
+ 			}
+
+ 			chatsRecientes.put(contacto, chat);
+ 		} else {
+ 			chat.setBackground(new Color(241, 192, 133));
+ 			scrollBarChat.setViewportView(chat);
+ 			chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
+ 			chat.setSize(400, 700);
+ 			scrollBarChat.getViewport().setBackground(new Color(241, 192, 133));
+ 		}
+
+ 		scrollBarChat.setViewportView(chat);
+ 		// Asegurarse de que el scroll esté al final utilizando invokeLater
+ 		SwingUtilities.invokeLater(() -> {
+ 			JScrollBar vertical = scrollBarChat.getVerticalScrollBar();
+ 			vertical.setValue(vertical.getMaximum());
+ 		});
+ 	}
+
     /**
      * Initialize the contents of the frame.
      */
@@ -82,10 +137,10 @@ public class VentanaMain {
         listaChatRecientes.setVisibleRowCount(16);
         
         
-
+        
      // Obtener mensajes recientes desde el controlador
         //TODO: Cambiar null por el usuario actual
-        List<Mensaje> mensajes = Controlador.getInstancia().getMensajesUsuario(null); 
+        List<Mensaje> mensajes = Controlador.getInstancia().getMensajesUsuarioActual();
         DefaultListModel<Mensaje> model = new DefaultListModel<>();
         for (Mensaje mensaje : mensajes) {
             if (mensaje != null && mensaje.getEmisor() != null && mensaje.getReceptor() != null) {

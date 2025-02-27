@@ -62,7 +62,8 @@ public class Contacto {
 	}
 
 	public List<Mensaje> getMensajesEnviados() {
-		return mensajes;
+		
+		return this.mensajes;
 	}
 
 	public void setMensajes(List<Mensaje> mensajes) {

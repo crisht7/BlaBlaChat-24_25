@@ -2,6 +2,7 @@ package appChat;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -329,6 +330,10 @@ public class Usuario {
 		}
 		Usuario other = (Usuario) obj;
 		return this.telefono.equals(other.telefono);
+	}
+	
+	public List<Contacto> getContactosOrdenadosPorMensaje() {
+		return null;
 	}
 	
 	@Override

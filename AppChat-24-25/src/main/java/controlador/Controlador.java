@@ -3,6 +3,7 @@ package controlador;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -144,6 +145,65 @@ public class Controlador {
 			return contacto.getMensajesEnviados();
 		}
 	}
+	
+	public List<Mensaje> getMensajesUsuarioActual() {
+	    Contacto contacto = buscarContactoDelUsuario(); // Buscar el contacto del usuario autenticado
+
+	    if (contacto == null) {
+	        return new ArrayList<>(); // Si no hay contacto, devolver una lista vacía
+	    }
+
+	    List<Mensaje> mensajesEnviados = contacto.getMensajesEnviados();
+	    
+	    // Si se gestionan mensajes recibidos, hay que agregarlos (ver cómo se implementa en Contacto)
+	    List<Mensaje> mensajesRecibidos = new ArrayList<>();
+	    if (contacto instanceof ContactoIndividual) {
+	        mensajesRecibidos = ((ContactoIndividual) contacto).getMensajesRecibidos(Optional.of(usuarioActual));
+	    }
+
+	    return Stream.concat(mensajesEnviados.stream(), mensajesRecibidos.stream())
+	            .sorted()
+	            .collect(Collectors.toList());
+	}
+
+	
+	private Contacto buscarContactoDelUsuario() {
+	    if (usuarioActual == null) {
+	        System.err.println("Error: No hay un usuario autenticado.");
+	        return null;
+	    }
+
+	    // Buscar el contacto que representa al usuario autenticado
+		for (ContactoIndividual c : usuarioActual.getContactos().stream().filter(c -> c instanceof ContactoIndividual)
+				.map(c -> (ContactoIndividual) c).collect(Collectors.toList())) {
+	        if (c.isUsuario(usuarioActual)) { // Método para verificar si es el usuario
+	            return c;
+	        }
+	    }
+
+	    System.err.println("Error: No se encontró un contacto asociado al usuario actual.");
+	    return null;
+	}
+
+	public List<Contacto> getContactosUsuarioActual() {
+		if (usuarioActual == null)
+			return new LinkedList<Contacto>();
+
+		return usuarioActual.getContactosOrdenadosPorMensaje();
+
+	}
+	public Optional<ContactoIndividual> getContactoDelUsuarioActual(Usuario usuario) {
+		// Buscar el contacto del usuario actual con el nombre correspondiente
+		List<ContactoIndividual> contactosIndividuales = Controlador.getInstancia().getContactosUsuarioActual().stream()
+				.filter(c -> c instanceof ContactoIndividual).map(c -> (ContactoIndividual) c)
+				.collect(Collectors.toList());
+
+		// Buscar si el emisor es uno de los contactos y comparar el nombre
+		return contactosIndividuales.stream().filter(c -> c.getUsuario().getCodigo() == usuario.getCodigo()).findAny();
+
+	}
+	
+	
 }
 	
 
