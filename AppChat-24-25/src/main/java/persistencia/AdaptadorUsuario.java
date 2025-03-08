@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.StringTokenizer;
 
 import javax.swing.ImageIcon;
 
@@ -105,10 +106,17 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		
 		Usuario usuario = new Usuario(nombre, fecha, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
 		
+		// Recuperar contactos y grupos asociados
+		List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(
+				servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"));
+			contactos.forEach(usuario::añadirContacto);
+
+		List<Grupo> grupos = obtenerGruposDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "grupos"));
+		grupos.forEach(usuario::añadirContacto
+				);
+		
 		PoolDAO.getUnicaInstancia().añadirObjeto(codigo, usuario);
-		
-		//TODO:Recuperar contaxtos	
-		
+				
 		return usuario;
 		
 	}
@@ -166,5 +174,28 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		}
 		
 	}
+	
+	private List<ContactoIndividual> obtenerContactosDesdeCodigos(String codigos) {
+		List<ContactoIndividual> contactos = new LinkedList<>();
+		if (codigos != null) {
+			StringTokenizer strTok = new StringTokenizer(codigos, " ");
+			AdaptadorContactoIndividual adaptadorC = AdaptadorContactoIndividual.getUnicaInstancia();
+			while (strTok.hasMoreTokens()) {
+				contactos.add(adaptadorC.recuperarContacto(Integer.parseInt(strTok.nextToken())));
+			}
+		}
+		return contactos;
+	}
+	
+	private List<Grupo> obtenerGruposDesdeCodigos(String codigos) {
+		List<Grupo> contactos = new LinkedList<>();
+		StringTokenizer strTok = new StringTokenizer(codigos, " ");
+		AdaptadorGrupo adaptadorC = AdaptadorGrupo.getUnicaInstancia();
+		while (strTok.hasMoreTokens()) {
+			contactos.add(adaptadorC.recuperarGrupo(Integer.parseInt(strTok.nextToken())));
+		}
+		return contactos;
+	}
+	
 
 }

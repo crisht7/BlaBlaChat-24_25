@@ -131,6 +131,7 @@ public class VentanaMain {
         JLabel lblTitulo = new JLabel("Chats Recientes", JLabel.CENTER);
         panelRecientes.add(lblTitulo, BorderLayout.NORTH);
 
+        /*
         // JList para mensajes recientes con MensajeCellRenderer
         JList<Mensaje> listaChatRecientes = new JList<>();
         listaChatRecientes.setBackground(new Color(236, 163, 96));
@@ -176,7 +177,68 @@ public class VentanaMain {
                 ventanaBuscar.setVisible(true); 
             }
         });
+         */
+        
+        JList<Contacto> listaContactosRecientes = new JList<>();
+        listaContactosRecientes.setBackground(new Color(236, 163, 96));
+        listaContactosRecientes.setVisibleRowCount(16);
+        
+        // JList para mensajes recientes con MensajeCellRenderer
+        JList<Mensaje> listaChatRecientes = new JList<>();
+        
+        // Obtener contactos recientes desde el controlador
+        List<Contacto> contactos = Controlador.getInstancia().getContactosUsuarioActual();
+        DefaultListModel<Contacto> modelContactos = new DefaultListModel<>();
 
+        for (Contacto contacto : contactos) {
+            modelContactos.addElement(contacto);
+        }
+        listaContactosRecientes.setModel(modelContactos);
+
+        listaChatRecientes.setBackground(new Color(236, 163, 96));
+        listaChatRecientes.setVisibleRowCount(16);
+        
+        
+        
+     // Obtener mensajes recientes desde el controlador
+        //TODO: Cambiar null por el usuario actual
+        List<Mensaje> mensajes = Controlador.getInstancia().getMensajesUsuarioActual();
+        DefaultListModel<Mensaje> model = new DefaultListModel<>();
+        for (Mensaje mensaje : mensajes) {
+            if (mensaje != null && mensaje.getEmisor() != null && mensaje.getReceptor() != null) {
+                model.addElement(mensaje);
+            } else {
+                System.err.println("Mensaje inválido: " + mensaje);
+            }
+        }
+        listaChatRecientes.setModel(model);
+        // Agregar la lista a un JScrollPane
+        JScrollPane scrollPane = new JScrollPane(listaChatRecientes);
+        panelRecientes.add(scrollPane, BorderLayout.CENTER);
+
+        
+        // Panel superior para botones y opciones
+        JPanel panelNorte = new JPanel();
+        panelNorte.setBackground(new Color(242, 190, 142));
+        frame.getContentPane().add(panelNorte, BorderLayout.NORTH);
+        panelNorte.setLayout(new BoxLayout(panelNorte, BoxLayout.X_AXIS));
+
+        @SuppressWarnings("rawtypes")
+        JComboBox comboPanelRecientes = new JComboBox();
+        comboPanelRecientes.setBackground(new Color(234, 158, 66));
+        comboPanelRecientes.setEditable(true);
+        panelNorte.add(comboPanelRecientes);
+
+        JButton btnBuscarMensaje = new JButton("Buscar");
+        btnBuscarMensaje.setBackground(new Color(234, 158, 66));
+        btnBuscarMensaje.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                VentanaBuscar ventanaBuscar = new VentanaBuscar(frame); // Crear una instancia de VentanaBuscar
+                ventanaBuscar.setVisible(true); 
+            }
+        });
+        
         panelNorte.add(btnBuscarMensaje);
 
         JButton btnContactos = new JButton("Contactos");
@@ -198,6 +260,7 @@ public class VentanaMain {
         		
         	}
         });
+        
         panelNorte.add(btnNewButton);
         
 

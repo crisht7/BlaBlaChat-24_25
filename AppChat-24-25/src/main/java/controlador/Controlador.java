@@ -147,6 +147,13 @@ public class Controlador {
 	}
 	
 	public List<Mensaje> getMensajesUsuarioActual() {
+		List<Contacto> contactos = Controlador.getInstancia().getContactosUsuarioActual();
+		if (contactos.isEmpty()) {
+		    System.err.println("⚠️ El usuario no tiene contactos en la base de datos.");
+		} else {
+		    System.out.println("✅ Contactos cargados: " + contactos.size());
+		}
+
 	    Contacto contacto = buscarContactoDelUsuario(); // Buscar el contacto del usuario autenticado
 
 	    if (contacto == null) {
@@ -184,7 +191,7 @@ public class Controlador {
 	    System.err.println("Error: No se encontró un contacto asociado al usuario actual.");
 	    return null;
 	}
-
+	
 	public List<Contacto> getContactosUsuarioActual() {
 		if (usuarioActual == null)
 			return new LinkedList<Contacto>();
@@ -192,6 +199,9 @@ public class Controlador {
 		return usuarioActual.getContactosOrdenadosPorMensaje();
 
 	}
+	
+
+	
 	public Optional<ContactoIndividual> getContactoDelUsuarioActual(Usuario usuario) {
 		// Buscar el contacto del usuario actual con el nombre correspondiente
 		List<ContactoIndividual> contactosIndividuales = Controlador.getInstancia().getContactosUsuarioActual().stream()
@@ -201,6 +211,14 @@ public class Controlador {
 		// Buscar si el emisor es uno de los contactos y comparar el nombre
 		return contactosIndividuales.stream().filter(c -> c.getUsuario().getCodigo() == usuario.getCodigo()).findAny();
 
+	}
+	
+	public RepositorioUsuarios getRepoUsuarios() {
+	    return this.repoUsuarios;
+	}
+
+	public ContactoIndividualDAO getAdaptadorContactoIndividual() {
+	    return this.adaptadorContactoIndividual;
 	}
 	
 	
