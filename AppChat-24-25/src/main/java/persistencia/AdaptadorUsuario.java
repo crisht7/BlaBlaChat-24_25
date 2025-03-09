@@ -56,9 +56,11 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		if(eUsuario != null) 
 			return;
 		
-		usuario.getContactos().forEach(c -> {
-            AdaptadorContactoIndividual.getUnicaInstancia().registrarContacto((ContactoIndividual) c);
-            });
+		if (existeUsuario(usuario)) {
+	        System.out.println("ℹ️ El usuario ya está registrado: " + usuario.getNombre());
+	        return;
+	    }
+		
 		
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
@@ -73,6 +75,10 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				new Propiedad("contactos", usuario.getContactos().toString()), //TODO: ¿Es la forma?
 				new Propiedad("fechaRegistro", usuario.getFechaRegistro().toString()),
 				new Propiedad("Grupos", usuario.getGrupos().toString()))));
+		
+		usuario.getContactos().forEach(c -> {
+            AdaptadorContactoIndividual.getUnicaInstancia().registrarContacto((ContactoIndividual) c);
+            });
 		
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		usuario.setCodigo(eUsuario.getId());
@@ -105,6 +111,8 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
 		
 		Usuario usuario = new Usuario(nombre, fecha, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
+		
+	    usuario.setContactos(new LinkedList<>());
 		
 		// Recuperar contactos y grupos asociados
 		List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(
@@ -176,26 +184,54 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	}
 	
 	private List<ContactoIndividual> obtenerContactosDesdeCodigos(String codigos) {
-		List<ContactoIndividual> contactos = new LinkedList<>();
-		if (codigos != null) {
-			StringTokenizer strTok = new StringTokenizer(codigos, " ");
-			AdaptadorContactoIndividual adaptadorC = AdaptadorContactoIndividual.getUnicaInstancia();
-			while (strTok.hasMoreTokens()) {
-				contactos.add(adaptadorC.recuperarContacto(Integer.parseInt(strTok.nextToken())));
-			}
-		}
-		return contactos;
+	    List<ContactoIndividual> contactos = new LinkedList<>();
+
+	    // Verificar si la cadena está vacía, es null o contiene "[]"
+	    if (codigos == null || codigos.isEmpty() || codigos.equals("[]")) {
+	        return contactos; // Devolver una lista vacía en lugar de procesar "[]"
+	    }
+
+	    StringTokenizer strTok = new StringTokenizer(codigos, " ");
+	    AdaptadorContactoIndividual adaptadorC = AdaptadorContactoIndividual.getUnicaInstancia();
+
+	    while (strTok.hasMoreTokens()) {
+	        String token = strTok.nextToken().trim(); // Eliminar espacios en blanco
+	        try {
+	            int codigo = Integer.parseInt(token); // Intentar convertir en número
+	            contactos.add(adaptadorC.recuperarContacto(codigo));
+	        } catch (NumberFormatException e) {
+	            System.err.println("⚠️ Error al convertir el código de contacto: " + token);
+	        }
+	    }
+	    return contactos;
 	}
-	
+
 	private List<Grupo> obtenerGruposDesdeCodigos(String codigos) {
-		List<Grupo> contactos = new LinkedList<>();
-		StringTokenizer strTok = new StringTokenizer(codigos, " ");
-		AdaptadorGrupo adaptadorC = AdaptadorGrupo.getUnicaInstancia();
-		while (strTok.hasMoreTokens()) {
-			contactos.add(adaptadorC.recuperarGrupo(Integer.parseInt(strTok.nextToken())));
-		}
-		return contactos;
+	    List<Grupo> grupos = new LinkedList<>();
+
+	    // Verificar que el string no sea null, vacío o contenga valores incorrectos
+	    if (codigos == null || codigos.isEmpty() || codigos.equals("[]")) {
+	        return grupos; // Devuelve una lista vacía en lugar de procesar un null
+	    }
+
+	    StringTokenizer strTok = new StringTokenizer(codigos, " ");
+	    AdaptadorGrupo adaptadorC = AdaptadorGrupo.getUnicaInstancia();
+
+	    while (strTok.hasMoreTokens()) {
+	        String token = strTok.nextToken().trim(); // Eliminar espacios en blanco
+	        try {
+	            int codigo = Integer.parseInt(token); // Intentar convertir en número
+	            grupos.add(adaptadorC.recuperarGrupo(codigo));
+	        } catch (NumberFormatException e) {
+	            System.err.println("⚠️ Error al convertir el código de grupo: " + token);
+	        }
+	    }
+	    return grupos;
 	}
-	
+
+	private boolean existeUsuario(Usuario usuario) {
+	    return servPersistencia.recuperarEntidad(usuario.getCodigo()) != null;
+	}
+
 
 }

@@ -55,6 +55,12 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		
 		if (eContacto != null) return;
 		
+		 // 🔹 Verificar si el contacto ya existe antes de registrarlo
+        if (existeContacto(contacto)) {
+            System.out.println("ℹ️ Contacto ya existe: " + contacto.getNombre());
+            return;
+        }
+		
 		registrarSiNoExiste(contacto.getUsuario());
 		
 		registrarSiNoExisteMensaje(contacto.getMensajesEnviados());
@@ -69,6 +75,15 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		eContacto = servPersistencia.registrarEntidad(eContacto);
 		contacto.setCodigo(eContacto.getId());
 		
+		// 🔹 Verificar si la lista de mensajes es null antes de registrar mensajes
+	    if (contacto.getMensajesEnviados() == null) {
+	        contacto.setMensajes(new LinkedList<>());
+	    }
+
+	    contacto.getMensajesEnviados().forEach(mensaje -> {
+	        AdaptadorMensaje.getUnicaInstancia().registrarSiNoExiste(mensaje);
+	    });
+	    
 		PoolDAO.getUnicaInstancia().añadirObjeto(contacto.getCodigo(), contacto);
     }
 
@@ -197,6 +212,11 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		}
 		return mensajes;
 	}
+	
+	private boolean existeContacto(ContactoIndividual contacto) {
+	    return servPersistencia.recuperarEntidad(contacto.getCodigo()) != null;
+	}
+
 	
 }
 

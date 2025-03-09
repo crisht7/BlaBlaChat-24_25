@@ -333,8 +333,25 @@ public class Usuario {
 	}
 	
 	public List<Contacto> getContactosOrdenadosPorMensaje() {
-		return null;
+	    if (contactos == null || contactos.isEmpty()) {
+	        return new LinkedList<>(); // 🔹 Si no hay contactos, devuelve una lista vacía
+	    }
+
+	    // Ordenar contactos por el número total de mensajes enviados
+	    return contactos.stream()
+	            .sorted(Comparator.comparing(c -> c.getMensajesEnviados().size(), Comparator.reverseOrder()))
+	            .collect(Collectors.toList());
 	}
+
+	
+	public void setContactos(List<Contacto> contactos) {
+	    if (contactos == null) {
+	        this.contactos = new LinkedList<>(); // 🔹 Asegurar que nunca sea null
+	    } else {
+	        this.contactos = contactos;
+	    }
+	}
+
 	
 	@Override
 	public String toString() {

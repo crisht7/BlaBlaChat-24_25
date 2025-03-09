@@ -107,10 +107,36 @@ public class VentanaContacto extends JDialog {
         btnAnadirContacto.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                String nuevoContacto = JOptionPane.showInputDialog("Ingrese el nombre del nuevo contacto:");
-                if (nuevoContacto != null && !nuevoContacto.trim().isEmpty()) {
-                    modeloContactos.addElement(nuevoContacto);
+                // Pedir número de teléfono del nuevo contacto
+                String telefonoNuevo = JOptionPane.showInputDialog("Ingrese el número de teléfono del nuevo contacto:");
+
+                if (telefonoNuevo == null || telefonoNuevo.trim().isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "El número de teléfono no puede estar vacío.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
+
+                // Buscar si el usuario con ese número existe en la base de datos
+                Optional<Usuario> usuarioEncontrado = Controlador.getInstancia().getRepoUsuarios().buscarUsuario(telefonoNuevo);
+
+                if (!usuarioEncontrado.isPresent()) {
+                    JOptionPane.showMessageDialog(null, "No se encontró un usuario con ese número de teléfono.", "Error", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+
+                Usuario usuario = usuarioEncontrado.get();
+
+                // Crear un nuevo contacto y añadirlo al usuario actual
+                ContactoIndividual nuevoContacto = new ContactoIndividual(usuario.getNombre(), usuario, telefonoNuevo);
+                Controlador.getInstancia().getUsuarioActual().añadirContacto(nuevoContacto);
+
+                // Guardar el nuevo contacto en la base de datos
+                Controlador.getInstancia().getAdaptadorContactoIndividual().registrarContacto(nuevoContacto);
+
+                // 🔹 Notificar a VentanaMain que hay un nuevo contacto usando cargarMensajesRecientes()
+                VentanaMain ventanaMain = new VentanaMain();
+                ventanaMain.cargarMensajesRecientes(nuevoContacto);
+
+                JOptionPane.showMessageDialog(null, "Contacto agregado con éxito.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
             }
         });
 

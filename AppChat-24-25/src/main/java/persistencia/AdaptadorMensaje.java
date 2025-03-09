@@ -172,6 +172,21 @@ public class AdaptadorMensaje implements MensajeDAO {
 		return mensajes;
 	}
 
+	public void registrarSiNoExiste(Mensaje mensaje) {
+	    if (mensaje == null) return;
+
+	    // 🔹 Verificar si el mensaje ya existe en la base de datos antes de registrarlo
+	    if (existeMensaje(mensaje)) {
+	        System.out.println("ℹ️ Mensaje ya registrado: " + mensaje.getTexto());
+	        return;
+	    }
+
+	}
+
+	private boolean existeMensaje(Mensaje mensaje) {
+	    return servPersistencia.recuperarEntidad(mensaje.getCodigo()) != null;
+	}
+
 
 
 }

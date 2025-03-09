@@ -25,6 +25,11 @@ public class VentanaMain {
     
     public Chat chat;
     
+    private static VentanaMain instancia; // 🔹 Permite actualizar la lista de contactos dinámicamente
+
+    private DefaultListModel<Contacto> modeloListaContactos;
+    private JList<Contacto> listaContactosRecientes;
+    
 	private Map<Contacto, Chat> chatsRecientes;
 
 	private JScrollPane scrollBarChat;
@@ -49,6 +54,7 @@ public class VentanaMain {
      * Create the application.
      */
     public VentanaMain() {
+        instancia = this; // 🔹 Guarda la instancia actual para actualizaciones dinámicas
         initialize();
     }
 
@@ -59,61 +65,87 @@ public class VentanaMain {
      * @param contacto cuyo chat se debe cargar
      */
      
-	private void cargarMensajesRecientes(Contacto contacto) {
-    	 if(contacto == null)
-    		 return;
-    	 
-    	 chat = chatsRecientes.get(contacto);
-    	 if (chat == null) {
- 			chat = new Chat();
- 			chat.setBackground(new Color(241, 192, 133));
- 			scrollBarChat.setViewportView(chat);
- 			chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
- 			chat.setSize(400, 700);
- 			scrollBarChat.getViewport().setBackground(new Color(159, 213, 192));
- 			// Coloca las burbujas en el panel nuevo
- 			Controlador.getInstancia().getMensajesUsuario(contacto).stream().map(m -> {
- 				String emisor;
- 				int direccionMensaje;
- 				Color colorBurbuja;
- 				if (m.getEmisor().equals(Controlador.getInstancia().getUsuarioActual())) {
- 					colorBurbuja = new Color(159, 213, 192);
- 					emisor = "You";
- 					direccionMensaje = BubbleText.SENT;
- 				} else {
- 					colorBurbuja = new Color(16, 154, 137);
- 					emisor = Controlador.getInstancia().getContactoDelUsuarioActual(m.getEmisor()).get().getNombre();
- 					direccionMensaje = BubbleText.RECEIVED;
- 				}
+    void cargarMensajesRecientes(Contacto contacto) {
+        if (contacto == null) return;
 
- 				if (m.getTexto().isEmpty()) {
- 					return new BubbleText(chat, m.getEmoticono(), colorBurbuja, emisor, direccionMensaje, 12);
- 				}
- 				return new BubbleText(chat, m.getTexto(), colorBurbuja, emisor, direccionMensaje, 12); //12 REFIERE AL TAMAÑO 
- 			}).forEach(b -> chat.add(b));
+        chat = chatsRecientes.get(contacto);
+        
+        if (chat == null) {
+            chat = new Chat();
+            chat.setBackground(new Color(241, 192, 133));
+            scrollBarChat.setViewportView(chat);
+            chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
+            chat.setSize(400, 700);
+            scrollBarChat.getViewport().setBackground(new Color(159, 213, 192));
 
- 			// Si no hay espacio en los chats recientes es necesario borrar uno
- 			if (chatsRecientes.size() >= 4) {
- 				chatsRecientes.remove(chatsRecientes.keySet().stream().findFirst().orElse(null));
- 			}
+            // Obtener mensajes del contacto
+            Controlador.getInstancia().getMensajesUsuario(contacto).stream().map(m -> {
+                String emisor;
+                int direccionMensaje;
+                Color colorBurbuja;
+                if (m.getEmisor().equals(Controlador.getInstancia().getUsuarioActual())) {
+                    colorBurbuja = new Color(159, 213, 192);
+                    emisor = "You";
+                    direccionMensaje = BubbleText.SENT;
+                } else {
+                    colorBurbuja = new Color(16, 154, 137);
+                    emisor = Controlador.getInstancia().getContactoDelUsuarioActual(m.getEmisor()).get().getNombre();
+                    direccionMensaje = BubbleText.RECEIVED;
+                }
 
- 			chatsRecientes.put(contacto, chat);
- 		} else {
- 			chat.setBackground(new Color(241, 192, 133));
- 			scrollBarChat.setViewportView(chat);
- 			chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
- 			chat.setSize(400, 700);
- 			scrollBarChat.getViewport().setBackground(new Color(241, 192, 133));
- 		}
+                if (m.getTexto().isEmpty()) {
+                    return new BubbleText(chat, m.getEmoticono(), colorBurbuja, emisor, direccionMensaje, 12);
+                }
+                return new BubbleText(chat, m.getTexto(), colorBurbuja, emisor, direccionMensaje, 12); 
+            }).forEach(b -> chat.add(b));
 
- 		scrollBarChat.setViewportView(chat);
- 		// Asegurarse de que el scroll esté al final utilizando invokeLater
- 		SwingUtilities.invokeLater(() -> {
- 			JScrollBar vertical = scrollBarChat.getVerticalScrollBar();
- 			vertical.setValue(vertical.getMaximum());
- 		});
- 	}
+            // Si no hay espacio en los chats recientes es necesario borrar uno
+            if (chatsRecientes.size() >= 4) {
+                chatsRecientes.remove(chatsRecientes.keySet().stream().findFirst().orElse(null));
+            }
 
+            chatsRecientes.put(contacto, chat);
+        } else {
+            chat.setBackground(new Color(241, 192, 133));
+            scrollBarChat.setViewportView(chat);
+            chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
+            chat.setSize(400, 700);
+            scrollBarChat.getViewport().setBackground(new Color(241, 192, 133));
+        }
+
+        scrollBarChat.setViewportView(chat);
+
+        // 🔹 ACTUALIZAR LA LISTA DE CONTACTOS
+        actualizarListaContactos();
+        
+        // Asegurarse de que el scroll esté al final utilizando invokeLater
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar vertical = scrollBarChat.getVerticalScrollBar();
+            vertical.setValue(vertical.getMaximum());
+        });
+    }
+
+    private void actualizarListaContactos() {
+        List<Contacto> contactos = Controlador.getInstancia().getContactosUsuarioActual();
+
+        // Verificar si la lista de contactos es nula
+        if (contactos == null) {
+            System.err.println("⚠️ No hay contactos disponibles para este usuario.");
+            return;
+        }
+
+        // Limpiar y actualizar la lista de contactos
+        DefaultListModel<Contacto> modelContactos = new DefaultListModel<>();
+        for (Contacto contacto : contactos) {
+            modelContactos.addElement(contacto);
+        }
+
+        // Aplicar el modelo actualizado a la lista de contactos recientes
+        listaContactosRecientes.setModel(modelContactos);
+
+        System.out.println("✅ Lista de contactos actualizada en VentanaMain.");
+    }
+    
     /**
      * Initialize the contents of the frame.
      */
@@ -130,54 +162,6 @@ public class VentanaMain {
 
         JLabel lblTitulo = new JLabel("Chats Recientes", JLabel.CENTER);
         panelRecientes.add(lblTitulo, BorderLayout.NORTH);
-
-        /*
-        // JList para mensajes recientes con MensajeCellRenderer
-        JList<Mensaje> listaChatRecientes = new JList<>();
-        listaChatRecientes.setBackground(new Color(236, 163, 96));
-        listaChatRecientes.setVisibleRowCount(16);
-        
-        
-        
-     // Obtener mensajes recientes desde el controlador
-        //TODO: Cambiar null por el usuario actual
-        List<Mensaje> mensajes = Controlador.getInstancia().getMensajesUsuarioActual();
-        DefaultListModel<Mensaje> model = new DefaultListModel<>();
-        for (Mensaje mensaje : mensajes) {
-            if (mensaje != null && mensaje.getEmisor() != null && mensaje.getReceptor() != null) {
-                model.addElement(mensaje);
-            } else {
-                System.err.println("Mensaje inválido: " + mensaje);
-            }
-        }
-        listaChatRecientes.setModel(model);
-        // Agregar la lista a un JScrollPane
-        JScrollPane scrollPane = new JScrollPane(listaChatRecientes);
-        panelRecientes.add(scrollPane, BorderLayout.CENTER);
-
-        
-        // Panel superior para botones y opciones
-        JPanel panelNorte = new JPanel();
-        panelNorte.setBackground(new Color(242, 190, 142));
-        frame.getContentPane().add(panelNorte, BorderLayout.NORTH);
-        panelNorte.setLayout(new BoxLayout(panelNorte, BoxLayout.X_AXIS));
-
-        @SuppressWarnings("rawtypes")
-        JComboBox comboPanelRecientes = new JComboBox();
-        comboPanelRecientes.setBackground(new Color(234, 158, 66));
-        comboPanelRecientes.setEditable(true);
-        panelNorte.add(comboPanelRecientes);
-
-        JButton btnBuscarMensaje = new JButton("Buscar");
-        btnBuscarMensaje.setBackground(new Color(234, 158, 66));
-        btnBuscarMensaje.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                VentanaBuscar ventanaBuscar = new VentanaBuscar(frame); // Crear una instancia de VentanaBuscar
-                ventanaBuscar.setVisible(true); 
-            }
-        });
-         */
         
         JList<Contacto> listaContactosRecientes = new JList<>();
         listaContactosRecientes.setBackground(new Color(236, 163, 96));
@@ -354,4 +338,6 @@ public class VentanaMain {
         });
     
     }
+
+ 
 }

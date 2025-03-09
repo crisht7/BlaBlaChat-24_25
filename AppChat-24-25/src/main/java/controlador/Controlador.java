@@ -197,17 +197,17 @@ public class Controlador {
 			return new LinkedList<Contacto>();
 
 		return usuarioActual.getContactosOrdenadosPorMensaje();
-
 	}
 	
 
 	
 	public Optional<ContactoIndividual> getContactoDelUsuarioActual(Usuario usuario) {
 		// Buscar el contacto del usuario actual con el nombre correspondiente
+
 		List<ContactoIndividual> contactosIndividuales = Controlador.getInstancia().getContactosUsuarioActual().stream()
 				.filter(c -> c instanceof ContactoIndividual).map(c -> (ContactoIndividual) c)
 				.collect(Collectors.toList());
-
+		
 		// Buscar si el emisor es uno de los contactos y comparar el nombre
 		return contactosIndividuales.stream().filter(c -> c.getUsuario().getCodigo() == usuario.getCodigo()).findAny();
 
