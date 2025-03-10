@@ -202,8 +202,20 @@ public class Usuario {
      * @return contactos
      */
 	public List<Contacto> getContactos() {
-		return this.contactos;
+	    if (this.contactos == null) {
+	        System.err.println("⚠️ Advertencia: La lista de contactos es null para el usuario " + this.nombre);
+	        return new LinkedList<>();
+	    }
+
+	    // Detectar contactos nulos antes de devolver la lista
+	    for (Contacto c : this.contactos) {
+	        if (c == null) {
+	            System.err.println("❌ Error: Se encontró un contacto NULL en la lista de " + this.nombre);
+	        }
+	    }
+	    return this.contactos;
 	}
+
 	
 	/**
 	 * Devuelve la lista de grupos del usuario
@@ -339,8 +351,10 @@ public class Usuario {
 
 	    // Ordenar contactos por el número total de mensajes enviados
 	    return contactos.stream()
+	            .filter(c -> c != null) // 🔹 Evita contactos nulos
 	            .sorted(Comparator.comparing(c -> c.getMensajesEnviados().size(), Comparator.reverseOrder()))
 	            .collect(Collectors.toList());
+
 	}
 
 	

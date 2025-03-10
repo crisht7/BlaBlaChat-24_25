@@ -93,7 +93,7 @@ public class ContactoIndividual extends Contacto {
 	public List<Mensaje> getMensajesRecibidos(Optional<Usuario> usuario) {
 		
         ContactoIndividual contacto = getContacto(usuario.orElse(null));
-        if (contacto == null) 
+        if (contacto != null) 
         	return contacto.getMensajesEnviados();
         else
         	return new LinkedList<>();

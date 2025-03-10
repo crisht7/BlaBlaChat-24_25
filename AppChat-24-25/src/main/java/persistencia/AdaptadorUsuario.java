@@ -8,6 +8,7 @@ import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.StringTokenizer;
+import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
@@ -57,10 +58,13 @@ public class AdaptadorUsuario implements UsuarioDAO {
 			return;
 		
 		if (existeUsuario(usuario)) {
-	        System.out.println("ℹ️ El usuario ya está registrado: " + usuario.getNombre());
 	        return;
 	    }
 		
+		System.out.println("➕ Registrando nuevo usuario en persistencia:");
+	    System.out.println("   🔹 Nombre: " + usuario.getNombre());
+	    System.out.println("   🔹 Teléfono: " + usuario.getTelefono());
+	    System.out.println("   🔹 Contactos: " + usuario.getContactos().size());
 		
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
@@ -72,7 +76,9 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				new Propiedad("saludo", usuario.getSaludo()),
 				new Propiedad("premium", String.valueOf(usuario.isPremium())),
 				new Propiedad("foto", usuario.getFotoPerfil().getDescription()),
-				new Propiedad("contactos", usuario.getContactos().toString()), //TODO: ¿Es la forma?
+				new Propiedad("contactos", usuario.getContactos().stream()
+				        .map(c -> String.valueOf(c.getCodigo()))
+				        .collect(Collectors.joining(" "))),
 				new Propiedad("fechaRegistro", usuario.getFechaRegistro().toString()),
 				new Propiedad("Grupos", usuario.getGrupos().toString()))));
 		
@@ -98,6 +104,21 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		}
 		
 		Entidad eUsuario = servPersistencia.recuperarEntidad(codigo);
+
+		if (eUsuario == null) {
+		    System.err.println("❌ Error: No se encontró un usuario con código " + codigo);
+		    return null; // Retorna null para manejar el error en la llamada superior
+		}
+		
+		System.out.println("🟢 Recuperando usuario con código: " + codigo);
+		System.out.println("🟢 Propiedades de usuario en la BD: ");
+		for (Propiedad p : eUsuario.getPropiedades()) {
+		    System.out.println(p.getNombre() + " = " + p.getValor());
+		    
+		}
+		
+		String fechaStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha");
+		System.out.println("🟡 Valor de 'fecha' en la BD: " + fechaStr);
 		
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
 		LocalDate fecha = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha"));
@@ -115,9 +136,23 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	    usuario.setContactos(new LinkedList<>());
 		
 		// Recuperar contactos y grupos asociados
-		List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(
-				servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"));
-			contactos.forEach(usuario::añadirContacto);
+	    String contactosStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos");
+	    System.out.println("🔍 Contactos en BD para usuario " + nombre + ": " + contactosStr);
+
+	    if (contactosStr == null) {
+	        System.err.println("⚠️ Usuario " + nombre + " no tiene contactos registrados.");
+	        contactosStr = ""; // Evita errores
+	    }
+
+	    List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(contactosStr);
+	    List<ContactoIndividual> contactosFiltrados = contactos.stream()
+	            .filter(c -> c != null) // 🔹 Evita contactos nulos
+	            .collect(Collectors.toList());
+
+	    System.out.println("✅ Contactos filtrados para usuario " + nombre + ": " + contactosFiltrados.size());
+
+	    contactosFiltrados.forEach(usuario::añadirContacto);
+
 
 		List<Grupo> grupos = obtenerGruposDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "grupos"));
 		grupos.forEach(usuario::añadirContacto
@@ -151,7 +186,11 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				p.setValor(usuario.getNombre());
 				break;
 			case "fecha":
-				p.setValor(usuario.getFecha().toString());
+				String codigosContactos = usuario.getContactos().stream()
+		        .map(c -> String.valueOf(c.getCodigo()))
+		        .collect(Collectors.joining(" ")); // 🔹 Almacena solo los códigos separados por espacio
+				p.setValor(codigosContactos);
+
 				break;
 			case "telefono":
 				p.setValor(usuario.getTelefono());
@@ -182,29 +221,79 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		}
 		
 	}
-	
+	/*
 	private List<ContactoIndividual> obtenerContactosDesdeCodigos(String codigos) {
 	    List<ContactoIndividual> contactos = new LinkedList<>();
 
-	    // Verificar si la cadena está vacía, es null o contiene "[]"
-	    if (codigos == null || codigos.isEmpty() || codigos.equals("[]")) {
-	        return contactos; // Devolver una lista vacía en lugar de procesar "[]"
+	    if (codigos == null || codigos.trim().isEmpty() || codigos.equals("[]")) {
+	        System.err.println("⚠️ Lista de contactos vacía o inválida en la BD.");
+	        return contactos;
 	    }
+
+	    System.out.println("🔍 Procesando contactos desde BD: " + codigos);
 
 	    StringTokenizer strTok = new StringTokenizer(codigos, " ");
 	    AdaptadorContactoIndividual adaptadorC = AdaptadorContactoIndividual.getUnicaInstancia();
 
 	    while (strTok.hasMoreTokens()) {
-	        String token = strTok.nextToken().trim(); // Eliminar espacios en blanco
+	        String token = strTok.nextToken().trim();
+
 	        try {
-	            int codigo = Integer.parseInt(token); // Intentar convertir en número
-	            contactos.add(adaptadorC.recuperarContacto(codigo));
+	            int codigo = Integer.parseInt(token);
+	            ContactoIndividual contacto = adaptadorC.recuperarContacto(codigo);
+
+	            if (contacto == null) {
+	                System.err.println("❌ Contacto con código " + codigo + " no encontrado en BD.");
+	            } else {
+	                System.out.println("✅ Contacto recuperado: " + contacto.getNombre());
+	                contactos.add(contacto);
+	            }
 	        } catch (NumberFormatException e) {
-	            System.err.println("⚠️ Error al convertir el código de contacto: " + token);
+	            System.err.println("⚠️ Error al convertir código de contacto: " + token);
 	        }
 	    }
+
+	    System.out.println("✅ Contactos recuperados: " + contactos.size());
 	    return contactos;
 	}
+	*/
+	private List<ContactoIndividual> obtenerContactosDesdeCodigos(String codigos) {
+	    List<ContactoIndividual> contactos = new LinkedList<>();
+
+	    if (codigos == null || codigos.trim().isEmpty() || codigos.equals("[]")) {
+	        System.err.println("⚠️ Lista de contactos vacía o inválida en la BD.");
+	        return contactos;
+	    }
+
+	    System.out.println("🔍 Procesando contactos desde BD: " + codigos);
+
+	    StringTokenizer strTok = new StringTokenizer(codigos, " ");
+	    AdaptadorContactoIndividual adaptadorC = AdaptadorContactoIndividual.getUnicaInstancia();
+
+	    while (strTok.hasMoreTokens()) {
+	        String token = strTok.nextToken().trim();
+
+	        try {
+	            int codigo = Integer.parseInt(token);
+	            ContactoIndividual contacto = adaptadorC.recuperarContacto(codigo);
+
+	            if (contacto == null) {
+	                System.err.println("❌ Contacto con código " + codigo + " no encontrado en BD.");
+	            } else {
+	                System.out.println("✅ Contacto recuperado: " + contacto.getNombre());
+	                contactos.add(contacto);
+	            }
+	        } catch (NumberFormatException e) {
+	            System.err.println("⚠️ Error al convertir código de contacto: " + token);
+	        }
+	    }
+
+	    System.out.println("✅ Contactos recuperados: " + contactos.size());
+	    return contactos;
+	}
+
+
+
 
 	private List<Grupo> obtenerGruposDesdeCodigos(String codigos) {
 	    List<Grupo> grupos = new LinkedList<>();
@@ -232,6 +321,9 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	private boolean existeUsuario(Usuario usuario) {
 	    return servPersistencia.recuperarEntidad(usuario.getCodigo()) != null;
 	}
+	
+	
+
 
 
 }

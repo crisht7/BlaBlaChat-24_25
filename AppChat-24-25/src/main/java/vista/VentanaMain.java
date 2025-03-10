@@ -6,12 +6,16 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.swing.*;
 
 import appChat.Contacto;
+import appChat.ContactoIndividual;
 import appChat.Mensaje;
 import controlador.Controlador;
 import tds.BubbleText;
@@ -27,8 +31,7 @@ public class VentanaMain {
     
     private static VentanaMain instancia; // 🔹 Permite actualizar la lista de contactos dinámicamente
 
-    private DefaultListModel<Contacto> modeloListaContactos;
-    private JList<Contacto> listaContactosRecientes;
+    private PanelListaContactos panelListaContactos;
     
 	private Map<Contacto, Chat> chatsRecientes;
 
@@ -54,9 +57,11 @@ public class VentanaMain {
      * Create the application.
      */
     public VentanaMain() {
-        instancia = this; // 🔹 Guarda la instancia actual para actualizaciones dinámicas
+        chatsRecientes = new HashMap<>(); 
+        instancia = this; 
         initialize();
     }
+
 
     
     /**
@@ -66,10 +71,13 @@ public class VentanaMain {
      */
      
     void cargarMensajesRecientes(Contacto contacto) {
-        if (contacto == null) return;
+        if (contacto == null) {
+            System.err.println("⚠️ Error: No se encontró un contacto asociado al usuario actual.");
+            return;
+        }
 
         chat = chatsRecientes.get(contacto);
-        
+
         if (chat == null) {
             chat = new Chat();
             chat.setBackground(new Color(241, 192, 133));
@@ -78,28 +86,35 @@ public class VentanaMain {
             chat.setSize(400, 700);
             scrollBarChat.getViewport().setBackground(new Color(159, 213, 192));
 
-            // Obtener mensajes del contacto
-            Controlador.getInstancia().getMensajesUsuario(contacto).stream().map(m -> {
+            // Obtener mensajes del contacto si no es null
+            List<Mensaje> mensajes = Controlador.getInstancia().getMensajesUsuario(contacto);
+            if (mensajes == null) {
+                System.err.println("⚠️ La lista de mensajes del contacto es null.");
+                mensajes = new LinkedList<>(); // Evitar fallos al iterar
+            }
+
+            mensajes.stream().map(m -> {
                 String emisor;
                 int direccionMensaje;
-                Color colorBurbuja;
+                Color colorBurbuja = new Color(159, 213, 192);
+
                 if (m.getEmisor().equals(Controlador.getInstancia().getUsuarioActual())) {
                     colorBurbuja = new Color(159, 213, 192);
                     emisor = "You";
                     direccionMensaje = BubbleText.SENT;
                 } else {
-                    colorBurbuja = new Color(16, 154, 137);
-                    emisor = Controlador.getInstancia().getContactoDelUsuarioActual(m.getEmisor()).get().getNombre();
+                    // 🔹 Obtener el contacto de forma segura con Optional
+                    Optional<ContactoIndividual> contactoOpcional = Controlador.getInstancia().getContactoDelUsuarioActual(m.getEmisor());
+                    emisor = contactoOpcional.map(ContactoIndividual::getNombre).orElse("Desconocido");
                     direccionMensaje = BubbleText.RECEIVED;
                 }
 
                 if (m.getTexto().isEmpty()) {
                     return new BubbleText(chat, m.getEmoticono(), colorBurbuja, emisor, direccionMensaje, 12);
                 }
-                return new BubbleText(chat, m.getTexto(), colorBurbuja, emisor, direccionMensaje, 12); 
+                return new BubbleText(chat, m.getTexto(), colorBurbuja, emisor, direccionMensaje, 12);
             }).forEach(b -> chat.add(b));
 
-            // Si no hay espacio en los chats recientes es necesario borrar uno
             if (chatsRecientes.size() >= 4) {
                 chatsRecientes.remove(chatsRecientes.keySet().stream().findFirst().orElse(null));
             }
@@ -115,37 +130,38 @@ public class VentanaMain {
 
         scrollBarChat.setViewportView(chat);
 
-        // 🔹 ACTUALIZAR LA LISTA DE CONTACTOS
-        actualizarListaContactos();
-        
-        // Asegurarse de que el scroll esté al final utilizando invokeLater
         SwingUtilities.invokeLater(() -> {
             JScrollBar vertical = scrollBarChat.getVerticalScrollBar();
             vertical.setValue(vertical.getMaximum());
         });
     }
 
-    private void actualizarListaContactos() {
+
+
+    public void actualizarListaContactos() {
         List<Contacto> contactos = Controlador.getInstancia().getContactosUsuarioActual();
 
-        // Verificar si la lista de contactos es nula
-        if (contactos == null) {
-            System.err.println("⚠️ No hay contactos disponibles para este usuario.");
-            return;
+        if (contactos == null || contactos.isEmpty()) {
+            System.err.println("⚠️ No se encontraron contactos para mostrar en la ventana principal.");
+            contactos = new LinkedList<>();
+        } else {
+            System.out.println("✅ Contactos cargados en la ventana principal: " + contactos.size());
         }
 
-        // Limpiar y actualizar la lista de contactos
-        DefaultListModel<Contacto> modelContactos = new DefaultListModel<>();
-        for (Contacto contacto : contactos) {
-            modelContactos.addElement(contacto);
-        }
-
-        // Aplicar el modelo actualizado a la lista de contactos recientes
-        listaContactosRecientes.setModel(modelContactos);
-
-        System.out.println("✅ Lista de contactos actualizada en VentanaMain.");
+        panelListaContactos.actualizarLista(contactos);
     }
-    
+
+
+
+  
+    //############################################################################
+    //############################################################################
+    //############################################################################
+    //############################################################################
+    //############################################################################
+    //############################################################################
+    //############################################################################
+    //############################################################################
     /**
      * Initialize the contents of the frame.
      */
@@ -162,10 +178,11 @@ public class VentanaMain {
 
         JLabel lblTitulo = new JLabel("Chats Recientes", JLabel.CENTER);
         panelRecientes.add(lblTitulo, BorderLayout.NORTH);
-        
-        JList<Contacto> listaContactosRecientes = new JList<>();
-        listaContactosRecientes.setBackground(new Color(236, 163, 96));
-        listaContactosRecientes.setVisibleRowCount(16);
+
+        panelListaContactos = new PanelListaContactos();
+        panelRecientes.add(panelListaContactos, BorderLayout.CENTER);
+       
+        actualizarListaContactos();
         
         // JList para mensajes recientes con MensajeCellRenderer
         JList<Mensaje> listaChatRecientes = new JList<>();
@@ -177,7 +194,6 @@ public class VentanaMain {
         for (Contacto contacto : contactos) {
             modelContactos.addElement(contacto);
         }
-        listaContactosRecientes.setModel(modelContactos);
 
         listaChatRecientes.setBackground(new Color(236, 163, 96));
         listaChatRecientes.setVisibleRowCount(16);
@@ -260,6 +276,8 @@ public class VentanaMain {
 
         // Panel principal para el chat actual
         JPanel panelChatActual = new JPanel();
+        scrollBarChat = new JScrollPane();
+        frame.getContentPane().add(scrollBarChat, BorderLayout.CENTER);
         frame.getContentPane().add(panelChatActual, BorderLayout.CENTER);
         panelChatActual.setLayout(new BorderLayout(0, 0));
 

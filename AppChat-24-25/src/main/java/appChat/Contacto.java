@@ -1,5 +1,6 @@
 package appChat;
 
+import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -62,7 +63,9 @@ public class Contacto {
 	}
 
 	public List<Mensaje> getMensajesEnviados() {
-		
+		if (this.mensajes == null) {
+			return new LinkedList<Mensaje>();
+		}
 		return this.mensajes;
 	}
 

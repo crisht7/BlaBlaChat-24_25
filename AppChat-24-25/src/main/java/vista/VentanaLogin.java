@@ -101,8 +101,10 @@ public class VentanaLogin {
 				Controlador controlador = Controlador.getInstancia();
 				boolean login = controlador.hacerLogin(telefono, password);
 				
+				
 				if (login) {
 					VentanaMain ventanaMain = new VentanaMain();
+				    ventanaMain.actualizarListaContactos();
 					ventanaMain.frame.setVisible(true);
 					VentanaLogin.this.frmLogin.setVisible(false);
 				} else {

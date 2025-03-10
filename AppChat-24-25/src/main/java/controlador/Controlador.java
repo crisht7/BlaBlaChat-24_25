@@ -84,24 +84,32 @@ public class Controlador {
 	 * @param Contraseña
 	 */
 	public boolean hacerLogin(String telefono, String Contraseña) {
-		boolean resultado = false;
-		
-		if (telefono.isEmpty() || Contraseña.isEmpty()) {
-			return resultado;
-		}
-		//Si están los dos campos llenos
-		Usuario usuario = repoUsuarios.getUsuario(telefono); 
-		
-		//Comprobaciónes del usuario
-		if (usuario ==null) {
-			return resultado;
-		}
-		if (usuario.getContraseña().equals(Contraseña)) {
-			this.usuarioActual = usuario;
-			resultado = true;
-		}
-		return resultado;
-    }
+	    boolean resultado = false;
+	    
+	    if (telefono.isEmpty() || Contraseña.isEmpty()) {
+	        System.err.println("❌ Error: Teléfono o contraseña vacíos.");
+	        return resultado;
+	    }
+	    
+	    Usuario usuario = repoUsuarios.getUsuario(telefono);
+	    
+	    if (usuario == null) {
+	        System.err.println("❌ Error: No se encontró un usuario con el teléfono " + telefono);
+	        return resultado;
+	    }
+	    
+	    if (usuario.getContraseña().equals(Contraseña)) {
+	        this.usuarioActual = usuario;
+	        System.out.println("✅ Usuario autenticado: " + usuario.getNombre());
+	        System.out.println("🔹 Contactos del usuario autenticado: " + usuario.getContactos().size());
+	        resultado = true;
+	    } else {
+	        System.err.println("❌ Error: Contraseña incorrecta.");
+	    }
+	    
+	    return resultado;
+	}
+
 	
 	public boolean registrarUsuario(String nombre, LocalDate fecha, ImageIcon foto, String telefono, 
 									String saludo, String contraseña) {
@@ -131,6 +139,11 @@ public class Controlador {
 	}
 
 	public List<Mensaje> getMensajesUsuario(Contacto contacto) {
+		 if (contacto == null) {
+		        System.err.println("⚠️ Error en getMensajesUsuario(): Contacto es null.");
+		        return new LinkedList<>();
+		    }
+		
 		if (contacto instanceof ContactoIndividual && !((ContactoIndividual) contacto).isUsuario(usuarioActual)) {
 			List<Mensaje> mensajes = Stream
 					.concat(((ContactoIndividual) contacto).getMensajesEnviados().stream(),
@@ -142,8 +155,9 @@ public class Controlador {
 				.collect(Collectors.toList());
 		}
 		else {
-			return contacto.getMensajesEnviados();
-		}
+	        System.err.println("⚠️ Error: Contacto no es de tipo ContactoIndividual.");
+	        return new LinkedList<>();
+	    }
 	}
 	
 	public List<Mensaje> getMensajesUsuarioActual() {
@@ -193,25 +207,39 @@ public class Controlador {
 	}
 	
 	public List<Contacto> getContactosUsuarioActual() {
-		if (usuarioActual == null)
-			return new LinkedList<Contacto>();
+	    if (usuarioActual == null) {
+	        System.err.println("❌ Error: usuarioActual es NULL en getContactosUsuarioActual.");
+	        return new LinkedList<>();
+	    }
 
-		return usuarioActual.getContactosOrdenadosPorMensaje();
+	    List<Contacto> contactos = usuarioActual.getContactosOrdenadosPorMensaje();
+	    System.out.println("🔹 Contactos obtenidos para " + usuarioActual.getNombre() + ": " + contactos.size());
+	    return contactos;
 	}
-	
 
+	
 	
 	public Optional<ContactoIndividual> getContactoDelUsuarioActual(Usuario usuario) {
-		// Buscar el contacto del usuario actual con el nombre correspondiente
+	    if (usuario == null) {
+	        System.err.println("⚠️ Usuario es null en getContactoDelUsuarioActual().");
+	        return Optional.empty();
+	    }
 
-		List<ContactoIndividual> contactosIndividuales = Controlador.getInstancia().getContactosUsuarioActual().stream()
-				.filter(c -> c instanceof ContactoIndividual).map(c -> (ContactoIndividual) c)
-				.collect(Collectors.toList());
-		
-		// Buscar si el emisor es uno de los contactos y comparar el nombre
-		return contactosIndividuales.stream().filter(c -> c.getUsuario().getCodigo() == usuario.getCodigo()).findAny();
+	    List<ContactoIndividual> contactosIndividuales = Controlador.getInstancia().getContactosUsuarioActual().stream()
+	            .filter(c -> c instanceof ContactoIndividual)
+	            .map(c -> (ContactoIndividual) c)
+	            .collect(Collectors.toList());
 
+	    if (contactosIndividuales.isEmpty()) {
+	        System.err.println("⚠️ No se encontraron contactos individuales para el usuario.");
+	        return Optional.empty();
+	    }
+
+	    return contactosIndividuales.stream()
+	            .filter(c -> c.getUsuario() != null && c.getUsuario().getCodigo() == usuario.getCodigo())
+	            .findAny();
 	}
+
 	
 	public RepositorioUsuarios getRepoUsuarios() {
 	    return this.repoUsuarios;
@@ -219,6 +247,11 @@ public class Controlador {
 
 	public ContactoIndividualDAO getAdaptadorContactoIndividual() {
 	    return this.adaptadorContactoIndividual;
+	}
+
+	public UsuarioDAO getAdaptadorUsuario() {
+		// TODO Auto-generated method stub
+		return this.adaptadorUsuario;
 	}
 	
 	

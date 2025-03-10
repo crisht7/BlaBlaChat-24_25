@@ -12,6 +12,7 @@ import appChat.Mensaje;
 import appChat.Usuario;
 import beans.Entidad;
 import beans.Propiedad;
+import controlador.Controlador;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -43,7 +44,7 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		return unicaInstancia;
 	}
 	
-
+	/*
 	public void registrarContacto(ContactoIndividual contacto) {
 		Entidad eContacto = null;
 		
@@ -60,10 +61,11 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
             System.out.println("ℹ️ Contacto ya existe: " + contacto.getNombre());
             return;
         }
+        
+        System.out.println("➕ Registrando nuevo contacto en persistencia: " + contacto.getNombre());
 		
-		registrarSiNoExiste(contacto.getUsuario());
 		
-		registrarSiNoExisteMensaje(contacto.getMensajesEnviados());
+		registrarSiNoExisteMensaje(contacto);
 		
 		eContacto = new Entidad();
 		eContacto.setNombre("contacto");
@@ -84,8 +86,42 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	        AdaptadorMensaje.getUnicaInstancia().registrarSiNoExiste(mensaje);
 	    });
 	    
+	    Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
+	    usuarioActual.añadirContacto(contacto);
+	    
+	    Controlador.getInstancia().getAdaptadorUsuario().registrarUsuario(usuarioActual);
+
+	    
 		PoolDAO.getUnicaInstancia().añadirObjeto(contacto.getCodigo(), contacto);
-    }
+    }*/
+	
+	public void registrarContacto(ContactoIndividual contacto) {
+	    System.out.println("➕ Registrando nuevo contacto en persistencia:");
+	    System.out.println("   🔹 Nombre: " + contacto.getNombre());
+	    System.out.println("   🔹 Teléfono: " + contacto.getTelefono());
+	    System.out.println("   🔹 Usuario dueño: " + contacto.getUsuario().getCodigo());
+
+	    Entidad eContacto = new Entidad();
+	    eContacto.setNombre("contacto");
+	    eContacto.setPropiedades(new ArrayList<>(Arrays.asList(
+	        new Propiedad("nombre", contacto.getNombre()),
+	        new Propiedad("usuario", String.valueOf(contacto.getUsuario().getCodigo())),
+	        new Propiedad("mensajesRecibidos", obtenerCodigosMensajesRecibidos(contacto.getMensajesEnviados())),
+	        new Propiedad("telefono", contacto.getTelefono())
+	    )));
+
+	    eContacto = servPersistencia.registrarEntidad(eContacto);
+	    contacto.setCodigo(eContacto.getId());
+
+	    System.out.println("✅ Contacto registrado con ID: " + contacto.getCodigo());
+
+	    Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
+	    usuarioActual.añadirContacto(contacto);
+	    Controlador.getInstancia().getAdaptadorUsuario().modificarUsuario(usuarioActual);
+
+	    PoolDAO.getUnicaInstancia().añadirObjeto(contacto.getCodigo(), contacto);
+	}
+
 
 
 	
@@ -135,35 +171,51 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 
 	@Override
 	public ContactoIndividual recuperarContacto(int codigo) {
-		if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
-			return (ContactoIndividual) PoolDAO.getUnicaInstancia().getObjeto(codigo);
-		}
-		
-		Entidad eContacto = servPersistencia.recuperarEntidad(codigo);
-		
-		String nombre = servPersistencia.recuperarPropiedadEntidad(eContacto, "nombre");
-		String telefono = servPersistencia.recuperarPropiedadEntidad(eContacto, "telefono");
+	    System.out.println("🔍 Intentando recuperar contacto con código: " + codigo);
 
-		ContactoIndividual contacto = new ContactoIndividual(nombre, new LinkedList<Mensaje>(), telefono, null);
-		contacto.setCodigo(codigo);
-		
-		PoolDAO.getUnicaInstancia().añadirObjeto(codigo, contacto);
-		
-		List<Mensaje> mensajes = obtenerMensajesConCodigo(
-				servPersistencia.recuperarPropiedadEntidad(eContacto, "mensajesRecibidos"));
-		
-		String codigoUsuario = servPersistencia.recuperarPropiedadEntidad(eContacto, "usuario");
-		
-		Usuario usuario = AdaptadorUsuario.getUnicaInstancia().recuperarUsuario(Integer.valueOf(codigoUsuario));
-		contacto.setUsuario(usuario);
-		
-		for (Mensaje mensaje : mensajes) {
-			contacto.enviarMensaje(mensaje);
-		}
-		
-		return contacto;
+	    if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
+	        System.out.println("✅ Contacto obtenido desde PoolDAO.");
+	        return (ContactoIndividual) PoolDAO.getUnicaInstancia().getObjeto(codigo);
+	    }
 
+	    Entidad eContacto = servPersistencia.recuperarEntidad(codigo);
+	    if (eContacto == null) {
+	        System.err.println("❌ No se encontró la entidad para el contacto con código: " + codigo);
+	        return null;
+	    }
+
+	    System.out.println("🟢 Propiedades de contacto en BD: ");
+	    for (Propiedad p : eContacto.getPropiedades()) {
+	        System.out.println(p.getNombre() + " = " + p.getValor());
+	    }
+
+	    String nombre = servPersistencia.recuperarPropiedadEntidad(eContacto, "nombre");
+	    String telefono = servPersistencia.recuperarPropiedadEntidad(eContacto, "telefono");
+	    String codigoUsuarioStr = servPersistencia.recuperarPropiedadEntidad(eContacto, "usuario");
+
+	    if (codigoUsuarioStr == null || codigoUsuarioStr.isEmpty()) {
+	        System.err.println("⚠️ Contacto sin usuario asignado.");
+	        return null;
+	    }
+
+	    int codigoUsuario = Integer.parseInt(codigoUsuarioStr);
+	    Usuario usuario = AdaptadorUsuario.getUnicaInstancia().recuperarUsuario(codigoUsuario);
+
+	    if (usuario == null) {
+	        System.err.println("❌ No se pudo recuperar el usuario con código " + codigoUsuario);
+	        return null;
+	    }
+
+	    ContactoIndividual contacto = new ContactoIndividual(nombre, new LinkedList<>(), telefono, usuario);
+	    contacto.setCodigo(codigo);
+	    usuario.añadirContacto(contacto);
+
+	    PoolDAO.getUnicaInstancia().añadirObjeto(codigo, contacto);
+	    System.out.println("✅ Contacto recuperado y asignado al usuario: " + usuario.getNombre());
+
+	    return contacto;
 	}
+
 
 
 
@@ -184,11 +236,21 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	 * 
 	 * @param mensajes registrar
 	 */
-	private void registrarSiNoExisteMensaje(List<Mensaje> mensajes) {
+	public void registrarSiNoExisteMensaje(ContactoIndividual contacto) {
+	    if (contacto == null) return;
 
-		AdaptadorMensaje adaptadorMensaje = AdaptadorMensaje.getUnicaInstancia();
-		mensajes.forEach(adaptadorMensaje::registrarMensaje);
+	    // 🔹 Verificar si la lista de mensajes es null y corregirlo antes de recorrerla
+	    if (contacto.getMensajesEnviados() == null) {
+	        System.err.println("⚠️ La lista de mensajes del contacto era null. Inicializando lista vacía.");
+	        contacto.setMensajes(new LinkedList<>());
+	    }
+
+	    // Registrar solo si el mensaje no existe
+	    contacto.getMensajesEnviados().forEach(mensaje -> {
+	        AdaptadorMensaje.getUnicaInstancia().registrarSiNoExiste(mensaje);
+	    });
 	}
+
 
 	
 	private void registrarSiNoExiste(Usuario usuario) {
@@ -199,7 +261,7 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	
 	private String obtenerCodigosMensajesRecibidos(List<Mensaje> mensajesRecibidos) {
 		return mensajesRecibidos.stream().map(m -> String.valueOf(m.getCodigo()))
-										.reduce("", (l, m) -> l + m + " ").trim();
+				.reduce("", (l, m) -> l + m + " ").trim();
 	}
 
 	
