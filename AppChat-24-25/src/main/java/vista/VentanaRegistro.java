@@ -63,7 +63,13 @@ public class VentanaRegistro extends JFrame {
 	private JDateChooser dateChooserFechaNac;
 
 
+	private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+	private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	private final Color turquesa = Colores.TURQUESA.getColor();
+	private final Color boton = Colores.NARANJA_BOTON.getColor();
 
+
+	
 	/**
 	 * Create the frame.
 	 */
@@ -74,7 +80,7 @@ public class VentanaRegistro extends JFrame {
 		contentPane = new JPanel();
 		contentPane.setAlignmentY(Component.BOTTOM_ALIGNMENT);
 		contentPane.setAlignmentX(Component.RIGHT_ALIGNMENT);
-		contentPane.setBackground(new Color(245, 210, 158));
+		contentPane.setBackground(naranjaClaro);
 		contentPane.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 
@@ -96,7 +102,7 @@ public class VentanaRegistro extends JFrame {
 
 		textFieldNombre = new JTextField();
 		textFieldNombre.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textFieldNombre.setBackground(new Color(237, 165, 112));
+		textFieldNombre.setBackground(naranjaOscuro);
 		GridBagConstraints gbc_textFieldNombre = new GridBagConstraints();
 		gbc_textFieldNombre.gridwidth = 2;
 		gbc_textFieldNombre.insets = new Insets(0, 0, 5, 5);
@@ -116,7 +122,7 @@ public class VentanaRegistro extends JFrame {
 		lblNewLabel.setAlignmentY(2.0f);
 		lblNewLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel.setBackground(new Color(245, 210, 158));
+		lblNewLabel.setBackground(naranjaClaro);
 		lblNewLabel.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/recursos/logo.PNG")));
 
 		JLabel lblApellidos = new JLabel("Apellidos:");
@@ -129,7 +135,7 @@ public class VentanaRegistro extends JFrame {
 
 		textFieldApellidos = new JTextField();
 		textFieldApellidos.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textFieldApellidos.setBackground(new Color(237, 165, 112));
+		textFieldApellidos.setBackground(naranjaOscuro);
 		GridBagConstraints gbc_textFieldApellidos = new GridBagConstraints();
 		gbc_textFieldApellidos.gridwidth = 2;
 		gbc_textFieldApellidos.insets = new Insets(0, 0, 5, 5);
@@ -165,7 +171,7 @@ public class VentanaRegistro extends JFrame {
 
 		textFieldTelefono = new JTextField();
 		textFieldTelefono.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textFieldTelefono.setBackground(new Color(237, 165, 112));
+		textFieldTelefono.setBackground(naranjaOscuro);
 		GridBagConstraints gbc_textFieldTelefono = new GridBagConstraints();
 		gbc_textFieldTelefono.fill = GridBagConstraints.HORIZONTAL;
 		gbc_textFieldTelefono.insets = new Insets(0, 0, 5, 5);
@@ -184,7 +190,7 @@ public class VentanaRegistro extends JFrame {
 
 		passwordFieldContraseña = new JPasswordField();
 		passwordFieldContraseña.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		passwordFieldContraseña.setBackground(new Color(237, 165, 112));
+		passwordFieldContraseña.setBackground(naranjaOscuro);
 		passwordFieldContraseña.setColumns(40);
 		GridBagConstraints gbc_passwordFieldContraseña = new GridBagConstraints();
 		gbc_passwordFieldContraseña.insets = new Insets(0, 0, 5, 5);
@@ -203,7 +209,7 @@ public class VentanaRegistro extends JFrame {
 
 		passwordFieldRepContraseña = new JPasswordField();
 		passwordFieldRepContraseña.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		passwordFieldRepContraseña.setBackground(new Color(237, 165, 112));
+		passwordFieldRepContraseña.setBackground(naranjaOscuro);
 		passwordFieldRepContraseña.setColumns(40);
 		GridBagConstraints gbc_passwordFieldRepContraseña = new GridBagConstraints();
 		gbc_passwordFieldRepContraseña.fill = GridBagConstraints.HORIZONTAL;
@@ -223,7 +229,7 @@ public class VentanaRegistro extends JFrame {
 		dateChooserFechaNac = new JDateChooser();
 		dateChooserFechaNac.setFocusTraversalPolicyProvider(true);
 		dateChooserFechaNac.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		dateChooserFechaNac.setBackground(new Color(237, 165, 112));
+		dateChooserFechaNac.setBackground(naranjaOscuro);
 		
 		
 		GridBagConstraints gbc_dateChooserFechaNac = new GridBagConstraints();
@@ -244,7 +250,7 @@ public class VentanaRegistro extends JFrame {
 
 		textFieldURL = new JTextField();
 		textFieldURL.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		textFieldURL.setBackground(new Color(237, 165, 112));
+		textFieldURL.setBackground(naranjaOscuro);
 		GridBagConstraints gbc_textFieldURL = new GridBagConstraints();
 		gbc_textFieldURL.insets = new Insets(0, 0, 5, 5);
 		gbc_textFieldURL.fill = GridBagConstraints.HORIZONTAL;
@@ -284,13 +290,13 @@ public class VentanaRegistro extends JFrame {
 		textFieldSaludo.setColumns(10);
 
 		textField_3 = new JTextField();
-		textField_3.setBackground(new Color(237, 165, 112));
+		textField_3.setBackground(naranjaOscuro);
 		textField_3.setBorder(new SoftBevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		scrollPane.setViewportView(textField_3);
 		textField_3.setColumns(10);
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(245, 210, 158));
+		panel.setBackground(naranjaClaro);
 		GridBagConstraints gbc_panel = new GridBagConstraints();
 		gbc_panel.insets = new Insets(0, 0, 5, 5);
 		gbc_panel.fill = GridBagConstraints.BOTH;
@@ -303,7 +309,7 @@ public class VentanaRegistro extends JFrame {
 		btnRegistrar.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		btnRegistrar.setOpaque(true);
 		btnRegistrar.setContentAreaFilled(true);
-		btnRegistrar.setBackground(new Color(128, 225, 189));
+		btnRegistrar.setBackground(turquesa);
 		btnRegistrar.addActionListener(new ActionListener() {
 			/**
 			 * Permite registrar
@@ -335,7 +341,7 @@ public class VentanaRegistro extends JFrame {
 		JButton btnCancelar = new JButton("Cancelar");
 		btnCancelar.setPreferredSize(new Dimension(87, 33));
 		btnCancelar.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
-		btnCancelar.setBackground(new Color(238, 96, 34));
+		btnCancelar.setBackground(boton);
 		btnCancelar.setOpaque(true);
 		btnCancelar.setContentAreaFilled(true);
 		btnCancelar.addActionListener(e -> {

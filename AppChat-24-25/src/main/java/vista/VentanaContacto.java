@@ -40,6 +40,11 @@ public class VentanaContacto extends JFrame {
     private JTextField textFieldTelf;
     private DefaultListModel<Contacto> modelContacts;
 
+	private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+	private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	private final Color turquesa = Colores.TURQUESA.getColor();
+	private final Color boton = Colores.NARANJA_BOTON.getColor();
+    
     /**
      * Crea la ventana
      */
@@ -49,7 +54,7 @@ public class VentanaContacto extends JFrame {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setBounds(100, 100, 558, 334);
         contentPane = new JPanel();
-        contentPane.setBackground(new Color(255, 140, 0)); // Naranja oscuro
+        contentPane.setBackground(naranjaClaro); 
         contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
         setContentPane(contentPane);
         GridBagLayout gbl_contentPane = new GridBagLayout();
@@ -60,7 +65,7 @@ public class VentanaContacto extends JFrame {
         contentPane.setLayout(gbl_contentPane);
 
         JPanel panel_1 = new JPanel();
-        panel_1.setBackground(new Color(255, 165, 0)); // Naranja medio
+        panel_1.setBackground(naranjaOscuro); 
         GridBagConstraints gbc_panel_1 = new GridBagConstraints();
         gbc_panel_1.fill = GridBagConstraints.HORIZONTAL;
         gbc_panel_1.insets = new Insets(0, 0, 5, 5);
@@ -73,7 +78,7 @@ public class VentanaContacto extends JFrame {
         panel_1.add(label);
 
         JPanel panel = new JPanel();
-        panel.setBackground(new Color(255, 130, 0)); // Naranja más oscuro
+        panel.setBackground(naranjaOscuro);
         GridBagConstraints gbc_panel = new GridBagConstraints();
         gbc_panel.fill = GridBagConstraints.HORIZONTAL;
         gbc_panel.insets = new Insets(0, 0, 5, 5);
@@ -88,7 +93,8 @@ public class VentanaContacto extends JFrame {
         panel.setLayout(gbl_panel);
 
         JLabel lblName = new JLabel("Nombre");
-        lblName.setForeground(new Color(255, 255, 255)); // Texto en blanco
+        lblName.setBackground(new Color(255, 255, 255));
+        lblName.setForeground(new Color(0, 0, 0)); // Texto en blanco
         GridBagConstraints gbc_lblName = new GridBagConstraints();
         gbc_lblName.anchor = GridBagConstraints.EAST;
         gbc_lblName.insets = new Insets(0, 0, 5, 5);
@@ -100,7 +106,7 @@ public class VentanaContacto extends JFrame {
         textFieldName.addActionListener(e -> addContact());
         textFieldName.setForeground(new Color(255, 255, 255));
         textFieldName.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-        textFieldName.setCaretColor(new Color(255, 255, 255));
+        textFieldName.setCaretColor(new Color(245, 210, 158));
         textFieldName.setBackground(new Color(255, 255, 255)); // Naranja oscuro
         textFieldName.addFocusListener(new FocusAdapter() {
             @Override
@@ -117,7 +123,7 @@ public class VentanaContacto extends JFrame {
         textFieldName.setColumns(10);
 
         JLabel lblPhoneNumber = new JLabel("Telefono");
-        lblPhoneNumber.setForeground(new Color(255, 255, 255));
+        lblPhoneNumber.setForeground(new Color(0, 0, 0));
         GridBagConstraints gbc_lblPhoneNumber = new GridBagConstraints();
         gbc_lblPhoneNumber.anchor = GridBagConstraints.EAST;
         gbc_lblPhoneNumber.insets = new Insets(0, 0, 0, 5);
@@ -129,7 +135,7 @@ public class VentanaContacto extends JFrame {
         textFieldTelf.addActionListener(e -> addContact());
         textFieldTelf.setForeground(new Color(255, 255, 255));
         textFieldTelf.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
-        textFieldTelf.setCaretColor(new Color(255, 255, 255));
+        textFieldTelf.setCaretColor(new Color(245, 210, 158));
         textFieldTelf.setBackground(new Color(255, 255, 255));
         textFieldTelf.addFocusListener(new FocusAdapter() {
             @Override
@@ -145,7 +151,7 @@ public class VentanaContacto extends JFrame {
         textFieldTelf.setColumns(10);
 
         JPanel panel_2 = new JPanel();
-        panel_2.setBackground(new Color(255, 140, 0)); 
+        panel_2.setBackground(naranjaClaro); 
         GridBagConstraints gbc_panel_2 = new GridBagConstraints();
         gbc_panel_2.insets = new Insets(0, 0, 0, 5);
         gbc_panel_2.fill = GridBagConstraints.HORIZONTAL;
@@ -156,7 +162,7 @@ public class VentanaContacto extends JFrame {
 
         JButton btnAdd = new JButton("ADD");
         btnAdd.addActionListener(arg0 -> addContact());
-        btnAdd.setBackground(new Color(255, 120, 0)); // Botón naranja más oscuro
+        btnAdd.setBackground(boton); // Botón naranja más oscuro
         panel_2.add(btnAdd);
     }
 

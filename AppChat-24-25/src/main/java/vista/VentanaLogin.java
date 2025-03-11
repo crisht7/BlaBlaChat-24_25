@@ -52,6 +52,13 @@ public class VentanaLogin {
 	private JPasswordField passwordFieldContraseña;
 	
 	private Controlador controlador;
+	
+	
+	private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+	private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	private final Color turquesa = Colores.TURQUESA.getColor();
+	private final Color boton = Colores.NARANJA_BOTON.getColor();
+
 	/**
 	 * Create the application.
 	 */
@@ -75,7 +82,7 @@ public class VentanaLogin {
 		panelBot.setLayout(new BorderLayout(0, 0));
 		
 		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(new Color(245, 210, 158));
+		panel_1.setBackground(naranjaClaro);
 		panelBot.add(panel_1, BorderLayout.NORTH);
 		
 		JButton btnLogin = new JButton("Login");
@@ -83,7 +90,7 @@ public class VentanaLogin {
 		btnLogin.setBorder(new BevelBorder(BevelBorder.LOWERED, null, null, null, null));
 		panel_1.add(btnLogin);
 		btnLogin.setOpaque(true);
-		btnLogin.setBackground(new Color(159, 213, 192));
+		btnLogin.setBackground(turquesa);
 		btnLogin.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
 		btnLogin.setForeground(new Color(0, 0, 0));
 		btnLogin.setPreferredSize(new Dimension(250, 40)); // 150px de ancho, 40px de alto
@@ -112,12 +119,12 @@ public class VentanaLogin {
 					JPanel panel = new JPanel(new BorderLayout());
 					JLabel mensaje = new JLabel("Login incorrecto", SwingConstants.CENTER);
 					ImageIcon icono = new ImageIcon(VentanaLogin.class.getResource("/recursos/cancel.png"));
-					panel.setBackground(new Color(245, 210, 158));
+					panel.setBackground(naranjaClaro);
 					panel.add(mensaje, BorderLayout.CENTER);
 					panel.add(new JLabel(icono), BorderLayout.WEST);
 					UIManager.put("Button.background", new Color(244, 97, 34)); 
-					UIManager.put("Panel.background", new Color(245, 210, 158)); 
-					UIManager.put("OptionPane.background", new Color(245, 210, 158));
+					UIManager.put("Panel.background", naranjaClaro); 
+					UIManager.put("OptionPane.background", naranjaClaro);
 					JOptionPane.showMessageDialog(frmLogin, panel, "Login failed", JOptionPane.PLAIN_MESSAGE);
 				}
 			}
@@ -126,7 +133,7 @@ public class VentanaLogin {
 		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/login.png")));
 		
 		JPanel panel = new JPanel();
-		panel.setBackground(new Color(245, 210, 158));
+		panel.setBackground(naranjaClaro);
 		panelBot.add(panel, BorderLayout.SOUTH);
 		
 		
@@ -139,7 +146,7 @@ public class VentanaLogin {
 		panel.add(btnRegistrar);
 		btnRegistrar.setOpaque(true);
 		btnRegistrar.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
-		btnRegistrar.setBackground(new Color(244, 97, 34));
+		btnRegistrar.setBackground(boton);
 		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/register.png")));
 		btnRegistrar.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -151,7 +158,7 @@ public class VentanaLogin {
 		
 		
 		JPanel panelTop = new JPanel();
-		panelTop.setBackground(new Color(245, 210, 158));
+		panelTop.setBackground(naranjaClaro);
 		frmLogin.getContentPane().add(panelTop, BorderLayout.NORTH);
 		
 		panelTop.setLayout(new GridBagLayout());
@@ -186,7 +193,7 @@ public class VentanaLogin {
 		panelTop.add(lblNewLabel, gbc_lblNewLabel);
 		
 		JPanel panelMid = new JPanel();
-		panelMid.setBackground(new Color(245, 210, 158));
+		panelMid.setBackground(naranjaClaro);
 		frmLogin.getContentPane().add(panelMid, BorderLayout.CENTER);
 		GridBagLayout gbl_panelMid = new GridBagLayout();
 		gbl_panelMid.columnWidths = new int[]{30, 90, 275, 50, 0};

@@ -37,6 +37,14 @@ public class VentanaMain {
 
 	private JScrollPane scrollBarChat;
 
+	// variables para los colores 
+	private final Color turquesa = Colores.TURQUESA.getColor();
+	private final Color turquesaOscuro = Colores.TURQUESA_OSCURO.getColor();
+	private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+	private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+
+	
+	
     /**
      * Launch the application.
      */
@@ -191,7 +199,7 @@ public class VentanaMain {
             modelContactos.addElement(contacto);
         }
 
-        listaChatRecientes.setBackground(new Color(236, 163, 96));
+        listaChatRecientes.setBackground(naranjaOscuro);
         listaChatRecientes.setVisibleRowCount(16);
         
         
@@ -215,7 +223,7 @@ public class VentanaMain {
         
         // Panel superior para botones y opciones
         JPanel panelNorte = new JPanel();
-        panelNorte.setBackground(new Color(242, 190, 142));
+        panelNorte.setBackground(naranjaClaro);
         frame.getContentPane().add(panelNorte, BorderLayout.NORTH);
         panelNorte.setLayout(new BoxLayout(panelNorte, BoxLayout.X_AXIS));
 
@@ -281,7 +289,7 @@ public class VentanaMain {
 
         // Panel para mensajes enviados/recibidos
         JPanel chat = new JPanel();
-        chat.setBackground(new Color(241, 192, 133));
+        chat.setBackground(naranjaClaro);
         chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
         chat.setSize(400, 700);
         chat.setMinimumSize(new Dimension(400, 700));
@@ -289,11 +297,11 @@ public class VentanaMain {
         chat.setPreferredSize(new Dimension(400, 700));
 
         // Mensajes de ejemplo para el chat actual
-        BubbleText burbuja1 = new BubbleText(chat, "Hola grupo!!", Color.getColor("turquesa", new Color(159, 213, 192)), "J.Ramón", BubbleText.SENT);
+        BubbleText burbuja1 = new BubbleText(chat, "Hola grupo!!", Color.getColor("turquesa", turquesa), "J.Ramón", BubbleText.SENT);
         chat.add(burbuja1);
 
         BubbleText burbuja2 = new BubbleText(chat,
-                "Hola, ¿Está seguro de que la burbuja usa varias líneas si es necesario?", Color.getColor("turquesa oscuro", new Color(16, 154, 137)), "Alumno",
+                "Hola, ¿Está seguro de que la burbuja usa varias líneas si es necesario?", Color.getColor("turquesa oscuro", turquesaOscuro), "Alumno",
                 BubbleText.RECEIVED);
         chat.add(burbuja2);
 
