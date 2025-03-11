@@ -44,28 +44,26 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		return unicaInstancia;
 	}
 	
-	/*
+	
 	public void registrarContacto(ContactoIndividual contacto) {
-		Entidad eContacto = null;
-		
+		Entidad eContacto = new Entidad();
+		boolean existe = true;
+
+		// Si la entidad está registrada no la registra de nuevo
 		try {
 			eContacto = servPersistencia.recuperarEntidad(contacto.getCodigo());
 		} catch (NullPointerException e) {
-			
+			existe = false;
 		}
-		
-		if (eContacto != null) return;
-		
-		 // 🔹 Verificar si el contacto ya existe antes de registrarlo
-        if (existeContacto(contacto)) {
-            System.out.println("ℹ️ Contacto ya existe: " + contacto.getNombre());
-            return;
-        }
-        
-        System.out.println("➕ Registrando nuevo contacto en persistencia: " + contacto.getNombre());
-		
-		
-		registrarSiNoExisteMensaje(contacto);
+		if (existe)
+			return;
+
+		// Registramos primero los atributos que son objetos
+		// Registrar los mensajes del contacto
+		registrarSiNoExistenMensajes(contacto.getMensajesEnviados());
+
+		// Registramos al usuario correspondiente al contacto si no existe.
+		registrarSiNoExiste(contacto.getUsuario());
 		
 		eContacto = new Entidad();
 		eContacto.setNombre("contacto");
@@ -74,57 +72,23 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 				new Propiedad("usuario", String.valueOf(contacto.getUsuario().getCodigo())),
 				new Propiedad("mensajesRecibidos", obtenerCodigosMensajesRecibidos(contacto.getMensajesEnviados())),
 				new Propiedad("telefono", String.valueOf(contacto.getTelefono())))));
+		
 		eContacto = servPersistencia.registrarEntidad(eContacto);
 		contacto.setCodigo(eContacto.getId());
 		
+		/*
 		// 🔹 Verificar si la lista de mensajes es null antes de registrar mensajes
 	    if (contacto.getMensajesEnviados() == null) {
 	        contacto.setMensajes(new LinkedList<>());
 	    }
-
-	    contacto.getMensajesEnviados().forEach(mensaje -> {
-	        AdaptadorMensaje.getUnicaInstancia().registrarSiNoExiste(mensaje);
-	    });
 	    
 	    Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
 	    usuarioActual.añadirContacto(contacto);
-	    
 	    Controlador.getInstancia().getAdaptadorUsuario().registrarUsuario(usuarioActual);
-
+	    */
 	    
 		PoolDAO.getUnicaInstancia().añadirObjeto(contacto.getCodigo(), contacto);
-    }*/
-	
-	public void registrarContacto(ContactoIndividual contacto) {
-	    System.out.println("➕ Registrando nuevo contacto en persistencia:");
-	    System.out.println("   🔹 Nombre: " + contacto.getNombre());
-	    System.out.println("   🔹 Teléfono: " + contacto.getTelefono());
-	    System.out.println("   🔹 Usuario dueño: " + contacto.getUsuario().getCodigo());
-
-	    Entidad eContacto = new Entidad();
-	    eContacto.setNombre("contacto");
-	    eContacto.setPropiedades(new ArrayList<>(Arrays.asList(
-	        new Propiedad("nombre", contacto.getNombre()),
-	        new Propiedad("usuario", String.valueOf(contacto.getUsuario().getCodigo())),
-	        new Propiedad("mensajesRecibidos", obtenerCodigosMensajesRecibidos(contacto.getMensajesEnviados())),
-	        new Propiedad("telefono", contacto.getTelefono())
-	    )));
-
-	    eContacto = servPersistencia.registrarEntidad(eContacto);
-	    contacto.setCodigo(eContacto.getId());
-
-	    System.out.println("✅ Contacto registrado con ID: " + contacto.getCodigo());
-
-	    Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
-	    usuarioActual.añadirContacto(contacto);
-	    Controlador.getInstancia().getAdaptadorUsuario().modificarUsuario(usuarioActual);
-
-	    PoolDAO.getUnicaInstancia().añadirObjeto(contacto.getCodigo(), contacto);
-	}
-
-
-
-	
+    }	
 
 	@Override
 	public void borrarContacto(ContactoIndividual contacto) {
@@ -179,10 +143,6 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	    }
 
 	    Entidad eContacto = servPersistencia.recuperarEntidad(codigo);
-	    if (eContacto == null) {
-	        System.err.println("❌ No se encontró la entidad para el contacto con código: " + codigo);
-	        return null;
-	    }
 
 	    System.out.println("🟢 Propiedades de contacto en BD: ");
 	    for (Propiedad p : eContacto.getPropiedades()) {
@@ -192,11 +152,6 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	    String nombre = servPersistencia.recuperarPropiedadEntidad(eContacto, "nombre");
 	    String telefono = servPersistencia.recuperarPropiedadEntidad(eContacto, "telefono");
 	    String codigoUsuarioStr = servPersistencia.recuperarPropiedadEntidad(eContacto, "usuario");
-
-	    if (codigoUsuarioStr == null || codigoUsuarioStr.isEmpty()) {
-	        System.err.println("⚠️ Contacto sin usuario asignado.");
-	        return null;
-	    }
 
 	    int codigoUsuario = Integer.parseInt(codigoUsuarioStr);
 	    Usuario usuario = AdaptadorUsuario.getUnicaInstancia().recuperarUsuario(codigoUsuario);
@@ -231,27 +186,10 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		return contactos;
 	}
 
-	/**
-	 * Registrar mensajes en persistencia si no existen
-	 * 
-	 * @param mensajes registrar
-	 */
-	public void registrarSiNoExisteMensaje(ContactoIndividual contacto) {
-	    if (contacto == null) return;
-
-	    // 🔹 Verificar si la lista de mensajes es null y corregirlo antes de recorrerla
-	    if (contacto.getMensajesEnviados() == null) {
-	        System.err.println("⚠️ La lista de mensajes del contacto era null. Inicializando lista vacía.");
-	        contacto.setMensajes(new LinkedList<>());
-	    }
-
-	    // Registrar solo si el mensaje no existe
-	    contacto.getMensajesEnviados().forEach(mensaje -> {
-	        AdaptadorMensaje.getUnicaInstancia().registrarSiNoExiste(mensaje);
-	    });
+	private void registrarSiNoExistenMensajes(List<Mensaje> messages) {
+		AdaptadorMensaje adaptadorMensajes = AdaptadorMensaje.getUnicaInstancia();
+		messages.stream().forEach(m -> adaptadorMensajes.registrarMensaje(m));
 	}
-
-
 	
 	private void registrarSiNoExiste(Usuario usuario) {
 		AdaptadorUsuario adaptadorUsuario = AdaptadorUsuario.getUnicaInstancia();
