@@ -71,10 +71,6 @@ public class VentanaMain {
      */
      
     void cargarMensajesRecientes(Contacto contacto) {
-        if (contacto == null) {
-            System.err.println("⚠️ Error: No se encontró un contacto asociado al usuario actual.");
-            return;
-        }
 
         chat = chatsRecientes.get(contacto);
 
@@ -240,12 +236,14 @@ public class VentanaMain {
         });
         
         panelNorte.add(btnBuscarMensaje);
+        
+		final DefaultListModel<Contacto> modelContacts = new DefaultListModel<>();
 
         JButton btnContactos = new JButton("Contactos");
         btnContactos.setBackground(new Color(234, 158, 66));
         btnContactos.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
-        		VentanaContacto ventanaContactos = new VentanaContacto(frame);
+        		VentanaContacto ventanaContactos = new VentanaContacto(modelContacts);
                 ventanaContactos.setVisible(true);
         	}
         });

@@ -239,6 +239,38 @@ public class Controlador {
 	            .filter(c -> c.getUsuario() != null && c.getUsuario().getCodigo() == usuario.getCodigo())
 	            .findAny();
 	}
+	
+	/**
+	 * Crea el contacto especificado.
+	 * 
+	 * @param nombre      Nombre del contacto a guardar
+	 * @param numTelefono Número de telefono del contacto a guardar
+	 * @return El contacto creado. Devuelve null en caso de que ya existiese el
+	 *         contacto o el contacto no se corresponda con un usuario real.
+	 */
+	public ContactoIndividual crearContacto(String nombre, String numTelefono) {
+		if (numTelefono.equals(usuarioActual.getTelefono())) {
+			return null;
+		}
+		// Si no tiene el contacto creado lo crea
+		if (!usuarioActual.tieneContactoIndividual(nombre)) {
+			Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(numTelefono);
+
+			if (usuarioOpt.isPresent()) {
+				
+				ContactoIndividual nuevoContacto = new ContactoIndividual(nombre, usuarioOpt.get(), numTelefono);
+				usuarioActual.añadirContacto(nuevoContacto);
+				
+				adaptadorContactoIndividual.registrarContacto(nuevoContacto);
+
+				adaptadorUsuario.modificarUsuario(usuarioActual);
+
+				return nuevoContacto;
+			}
+		}
+		return null;
+	}
+	
 
 	
 	public RepositorioUsuarios getRepoUsuarios() {

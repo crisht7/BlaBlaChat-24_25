@@ -107,7 +107,16 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 		
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		LocalDate fecha = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha"));
+		//LocalDate fecha = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha"));
+		String fechaStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha");
+		if (fechaStr == null || fechaStr.equals("0") || fechaStr.isEmpty()) {
+		    System.err.println("⚠️ Fecha inválida para el usuario: " + eUsuario.getNombre());
+		    // Podrías asignar una fecha predeterminada si se recupera un valor incorrecto
+		    fechaStr = "2000-01-01";  // Fecha predeterminada
+		}
+
+		LocalDate fecha = LocalDate.parse(fechaStr);
+
 		String telefono = servPersistencia.recuperarPropiedadEntidad(eUsuario, "telefono");
 		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
 		String saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
@@ -123,11 +132,6 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		// Recuperar contactos y grupos asociados
 	    String contactosStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos");
 	    
-	    /*if (contactosStr == null) {
-	        System.err.println("⚠️ Usuario " + nombre + " no tiene contactos registrados.");
-	        contactosStr = ""; // Evita errores
-	    }*/
-
 	    List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(contactosStr);
 	    List<ContactoIndividual> contactosFiltrados = contactos.stream()
 	            .filter(c -> c != null) // 🔹 Evita contactos nulos

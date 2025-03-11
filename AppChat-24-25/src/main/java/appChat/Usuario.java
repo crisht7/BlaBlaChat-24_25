@@ -70,6 +70,8 @@ public class Usuario {
 			String telefono, String saludo, LocalDate fechaRegistro, Boolean isPremium) {
     	this(nombre, fecha, imagen, contraseña, telefono, saludo, fechaRegistro);
     	this.premium = isPremium;
+    	this.contactos = new LinkedList<>();
+
     
     }
     
@@ -89,7 +91,8 @@ public class Usuario {
 			String telefono, String saludo, LocalDate fechaRegistro, Boolean isPremium, int codigo) {
     	this(nombre, fecha, imagen, contraseña, telefono, saludo, fechaRegistro,isPremium);
     	this.codigo = codigo;	
-    
+    	this.contactos = new LinkedList<>();
+
     }
     
     /**
@@ -346,7 +349,8 @@ public class Usuario {
 	
 	public List<Contacto> getContactosOrdenadosPorMensaje() {
 	    if (contactos == null || contactos.isEmpty()) {
-	        return new LinkedList<>(); // 🔹 Si no hay contactos, devuelve una lista vacía
+	        System.err.println("❌ No hay contactos en usuario");
+	    	return new LinkedList<>(); // 🔹 Si no hay contactos, devuelve una lista vacía
 	    }
 
 	    // Ordenar contactos por el número total de mensajes enviados

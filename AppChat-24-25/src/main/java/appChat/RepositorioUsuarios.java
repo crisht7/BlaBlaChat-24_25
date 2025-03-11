@@ -111,6 +111,10 @@ public class RepositorioUsuarios {
 				.findAny().orElse(null);
 	}
 	
+	public Optional<Usuario> getUsuarioNumTelf(String numTelefono) {
+		return usuarios.values().stream().filter(u -> u.getTelefono() == numTelefono).findAny();
+	}
+	
 	/**
 	 * Comprueba si un usuario existe en el repositorio.
 	 *

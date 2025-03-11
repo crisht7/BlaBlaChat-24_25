@@ -75,17 +75,6 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		
 		eContacto = servPersistencia.registrarEntidad(eContacto);
 		contacto.setCodigo(eContacto.getId());
-		
-		/*
-		// 🔹 Verificar si la lista de mensajes es null antes de registrar mensajes
-	    if (contacto.getMensajesEnviados() == null) {
-	        contacto.setMensajes(new LinkedList<>());
-	    }
-	    
-	    Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
-	    usuarioActual.añadirContacto(contacto);
-	    Controlador.getInstancia().getAdaptadorUsuario().registrarUsuario(usuarioActual);
-	    */
 	    
 		PoolDAO.getUnicaInstancia().añadirObjeto(contacto.getCodigo(), contacto);
     }	
