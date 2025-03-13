@@ -60,12 +60,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		if (existeUsuario(usuario)) {
 	        return;
 	    }
-		
-		System.out.println("➕ Registrando nuevo usuario en persistencia:");
-	    System.out.println("   🔹 Nombre: " + usuario.getNombre());
-	    System.out.println("   🔹 Teléfono: " + usuario.getTelefono());
-	    System.out.println("   🔹 Contactos: " + usuario.getContactos().size());
-		
+
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
 		eUsuario.setPropiedades(new ArrayList<>(Arrays.asList(
@@ -76,9 +71,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				new Propiedad("saludo", usuario.getSaludo()),
 				new Propiedad("premium", String.valueOf(usuario.isPremium())),
 				new Propiedad("foto", usuario.getFotoPerfil().getDescription()),
-				new Propiedad("contactos", usuario.getContactos().stream()
-				        .map(c -> String.valueOf(c.getCodigo()))
-				        .collect(Collectors.joining(" "))),
+				new Propiedad("contactos", obtenerCodigosContactoIndividual(usuario.getContactos())),
 				new Propiedad("fechaRegistro", usuario.getFechaRegistro().toString()),
 				new Propiedad("Grupos", usuario.getGrupos().toString()))));
 		
@@ -88,6 +81,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		usuario.setCodigo(eUsuario.getId());
+		
 		PoolDAO.getUnicaInstancia().añadirObjeto(usuario.getCodigo(), usuario);
 	}
 
@@ -107,15 +101,17 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 		
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		//LocalDate fecha = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha"));
+		
 		String fechaStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha");
-		if (fechaStr == null || fechaStr.equals("0") || fechaStr.isEmpty()) {
-		    System.err.println("⚠️ Fecha inválida para el usuario: " + eUsuario.getNombre());
-		    // Podrías asignar una fecha predeterminada si se recupera un valor incorrecto
-		    fechaStr = "2000-01-01";  // Fecha predeterminada
+		if (fechaStr.equals("0")) {
+			System.out.println("⚠️ Fecha de nacimiento 0");
+		    fechaStr = "2000-01-01"; // Asigna una fecha predeterminada
 		}
-
 		LocalDate fecha = LocalDate.parse(fechaStr);
+		System.out.println("⚠️ Fecha de nacimiento" + fecha);
+
+		
+		
 
 		String telefono = servPersistencia.recuperarPropiedadEntidad(eUsuario, "telefono");
 		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
@@ -196,7 +192,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				p.setValor(usuario.getFotoPerfil().getDescription());
 				break;
 			case "contactos":
-				p.setValor(usuario.getContactos().toString());
+				p.setValor(obtenerCodigosContactoIndividual(usuario.getContactos()));
 				break;
 			case "fechaRegistro":
 				p.setValor(usuario.getFechaRegistro().toString());
@@ -276,6 +272,11 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	    return grupos;
 	}
 
+	private String obtenerCodigosContactoIndividual(List<Contacto> contactos) {
+		return contactos.stream().filter(c -> c instanceof ContactoIndividual)
+				.map(c -> String.valueOf(c.getCodigo())).reduce("", (l, c) -> l + c + " ")
+				.trim();
+	}
 	private boolean existeUsuario(Usuario usuario) {
 	    return servPersistencia.recuperarEntidad(usuario.getCodigo()) != null;
 	}

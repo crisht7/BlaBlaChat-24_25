@@ -103,7 +103,7 @@ public class VentanaContacto extends JFrame {
         panel.add(lblName, gbc_lblName);
 
         textFieldName = new JTextField();
-        textFieldName.addActionListener(e -> addContact());
+        textFieldName.addActionListener(e -> addContacto());
         textFieldName.setForeground(new Color(255, 255, 255));
         textFieldName.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
         textFieldName.setCaretColor(new Color(245, 210, 158));
@@ -132,7 +132,7 @@ public class VentanaContacto extends JFrame {
         panel.add(lblPhoneNumber, gbc_lblPhoneNumber);
 
         textFieldTelf = new JTextField();
-        textFieldTelf.addActionListener(e -> addContact());
+        textFieldTelf.addActionListener(e -> addContacto());
         textFieldTelf.setForeground(new Color(255, 255, 255));
         textFieldTelf.setBorder(new EtchedBorder(EtchedBorder.LOWERED, null, null));
         textFieldTelf.setCaretColor(new Color(245, 210, 158));
@@ -161,7 +161,7 @@ public class VentanaContacto extends JFrame {
         panel_2.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 5));
 
         JButton btnAdd = new JButton("ADD");
-        btnAdd.addActionListener(arg0 -> addContact());
+        btnAdd.addActionListener(arg0 -> addContacto());
         btnAdd.setBackground(boton); // Botón naranja más oscuro
         panel_2.add(btnAdd);
     }
@@ -199,7 +199,7 @@ public class VentanaContacto extends JFrame {
 	/**
 	 * Comprueba errores y añade el contacto si está todo correcto
 	 */
-	private void addContact() {
+	private void addContacto() {
 		// Comprobamos que los datos son correctos
 		if (!datosCorrectos())
 			return;
@@ -210,12 +210,12 @@ public class VentanaContacto extends JFrame {
 		if (nuevoContacto == null) {
 			// No se ha podido crear el usuario
 			Toolkit.getDefaultToolkit().beep();
-			JOptionPane.showMessageDialog(VentanaContacto.this, "The contact is already saved or its user does not exist",
+			JOptionPane.showMessageDialog(VentanaContacto.this, "El contacto ya existe o no es un usuario real",
 					"Error", JOptionPane.ERROR_MESSAGE);
 		} else {
 			// Usuario creado
 			modelContacts.add(modelContacts.size(), nuevoContacto);
-			JOptionPane.showMessageDialog(VentanaContacto.this, "Contact added successfully", "Info",
+			JOptionPane.showMessageDialog(VentanaContacto.this, "Contacto añadido correctamente", "Info",
 					JOptionPane.INFORMATION_MESSAGE);
 		}
 	}
