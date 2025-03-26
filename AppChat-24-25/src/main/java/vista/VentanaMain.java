@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.EventQueue;
+import java.awt.Font;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -21,7 +22,6 @@ import controlador.Controlador;
 import tds.BubbleText;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
-import javax.swing.ImageIcon;
 
 public class VentanaMain {
 
@@ -156,6 +156,55 @@ public class VentanaMain {
     }
 
 
+	private static ListCellRenderer<? super Mensaje> crearRendererMensajes() {
+		return new DefaultListCellRenderer() {
+			@Override
+			public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                JPanel cellPanel = new JPanel(new BorderLayout(5, 5));
+                cellPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+
+                Mensaje mensaje = (Mensaje) value;
+
+                JLabel imageLabel = new JLabel();
+                imageLabel.setIcon(new ImageIcon(getClass().getResource("/recursos/usuario.png")));    // foto predeterminada pero podríamos añadir la foto del usuario
+
+                JPanel textPanel = new JPanel(new BorderLayout());
+                textPanel.setOpaque(false);
+
+                JLabel nameLabel = new JLabel(mensaje.getEmisor().getNombre());
+                JLabel textoLabel = new JLabel(mensaje.getTexto());
+                JLabel fechaLabel = new JLabel(mensaje.getHora() + " " );
+
+                nameLabel.setFont(new Font("Arial", Font.BOLD, 12));
+                textoLabel.setFont(new Font("Arial", Font.PLAIN, 11));
+                fechaLabel.setFont(new Font("Arial", Font.ITALIC, 9));
+                fechaLabel.setForeground(Color.DARK_GRAY);
+
+                textPanel.add(nameLabel, BorderLayout.NORTH);
+                textPanel.add(textoLabel, BorderLayout.CENTER);
+                textPanel.add(fechaLabel, BorderLayout.SOUTH);
+
+                cellPanel.add(imageLabel, BorderLayout.WEST);
+                cellPanel.add(textPanel, BorderLayout.CENTER);
+
+                Color turquesaClaro = new Color(175, 238, 238);
+                Color turquesaOscuro = new Color(64, 224, 208);
+
+                if (isSelected) {
+                    cellPanel.setBackground(turquesaOscuro);
+                } else {
+                    cellPanel.setBackground(turquesaClaro);
+                }
+
+                return cellPanel;
+            }
+                
+                
+		};
+		
+	}
+    
+    
 
   
     //############################################################################
@@ -189,7 +238,10 @@ public class VentanaMain {
         actualizarListaContactos();
         
         // JList para mensajes recientes con MensajeCellRenderer
-        JList<Mensaje> listaChatRecientes = new JList<>();
+        JList<Mensaje> listaChatRecientes = new JList<Mensaje>();
+
+        listaChatRecientes.setCellRenderer(crearRendererMensajes());
+
         
         // Obtener contactos recientes desde el controlador
         List<Contacto> contactos = Controlador.getInstancia().getContactosUsuarioActual();
