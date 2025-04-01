@@ -95,14 +95,14 @@ public class VentanaLogin {
 		btnLogin.setForeground(new Color(0, 0, 0));
 		btnLogin.setPreferredSize(new Dimension(250, 40)); // 150px de ancho, 40px de alto
 
-
+		
 		btnLogin.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				// Recuperar datos ADAPTAR A BASE DE DATOS 
 				
 				String telefono = textFieldTelefono.getText();
 				@SuppressWarnings("deprecation")
-				String password = passwordFieldContraseña.getText();
+				String password = passwordFieldContraseña.getText(); 
 				
 				// Ejecutar negocio por controlador terminar 
 				Controlador controlador = Controlador.getInstancia();

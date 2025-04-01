@@ -1,7 +1,6 @@
 package appChat;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,17 +8,14 @@ import java.util.stream.Collectors;
 
 import javax.swing.ImageIcon;
 
-import com.toedter.calendar.JDateChooser;
-
 public class Usuario {
     private String nombre;
-    private LocalDate fecha;
     private ImageIcon fotoPerfil;
     private String contraseña;
     private String telefono;
     private String saludo;
     private boolean premium;
-    private LocalDate fechaRegistro;
+    private LocalDate fechaNacimiento;
     private int codigo;
     private List<Contacto> contactos;
     
@@ -39,16 +35,15 @@ public class Usuario {
      * @param saludo
      * @param fechaRegistro
      */
-    public Usuario(String nombre, LocalDate fecha, ImageIcon imagen, String contraseña, 
-    			String telefono, String saludo, LocalDate fechaRegistro) {
+    public Usuario(String nombre, ImageIcon imagen, String contraseña, 
+    			String telefono, String saludo, LocalDate fechaNacimiento) {
     	this.codigo = 0;
     	this.nombre = nombre;
-    	this.fecha = fecha;
     	this.fotoPerfil = imagen;
     	this.contraseña = contraseña;
     	this.telefono = telefono;
     	this.saludo = saludo;
-    	this.fechaRegistro = fechaRegistro;
+    	this.fechaNacimiento = fechaNacimiento;
     	this.premium = false;
     	this.contactos = new LinkedList<>();
     	
@@ -66,9 +61,9 @@ public class Usuario {
      * @param fechaRegistro
      * @param isPremium
      */
-    public Usuario(String nombre, LocalDate fecha, ImageIcon imagen, String contraseña, 
-			String telefono, String saludo, LocalDate fechaRegistro, Boolean isPremium) {
-    	this(nombre, fecha, imagen, contraseña, telefono, saludo, fechaRegistro);
+    public Usuario(String nombre, ImageIcon imagen, String contraseña, 
+			String telefono, String saludo, LocalDate fechaNacimiento, Boolean isPremium) {
+    	this(nombre, imagen, contraseña, telefono, saludo, fechaNacimiento);
     	this.premium = isPremium;
     	this.contactos = new LinkedList<>();
 
@@ -89,7 +84,7 @@ public class Usuario {
      */
     public Usuario(String nombre, LocalDate fecha, ImageIcon imagen, String contraseña, 
 			String telefono, String saludo, LocalDate fechaRegistro, Boolean isPremium, int codigo) {
-    	this(nombre, fecha, imagen, contraseña, telefono, saludo, fechaRegistro,isPremium);
+    	this(nombre, imagen, contraseña, telefono, saludo, fechaRegistro,isPremium);
     	this.codigo = codigo;	
     	this.contactos = new LinkedList<>();
 
@@ -154,14 +149,7 @@ public class Usuario {
     	return this.nombre;
     }
 	
-    /**
-     * Devuelve la fecha de nacimiento del usuario
-     * 
-     * @return fecha
-     */
-	public LocalDate getFecha() {
-		return this.fecha;
-	}
+
 	
 	/**
 	 * Devuelve el telefono del usuario
@@ -250,7 +238,7 @@ public class Usuario {
 	 * @return fechaRegistro
 	 */
 	public LocalDate getFechaRegistro() {
-		return this.fechaRegistro;
+		return this.fechaNacimiento;
 	}
 	
 	/**
@@ -280,14 +268,6 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 	
-	/**
-	 * Establece una fecha de nacimiento al usuario
-	 * 
-	 * @param fecha
-	 */
-	public void setFecha(LocalDate fecha) {
-		this.fecha = fecha;
-	}
 	
 	/**
 	 * Establece el codigo al usuario
@@ -373,8 +353,8 @@ public class Usuario {
 	
 	@Override
 	public String toString() {
-		return "Usuario [nombre=" + nombre + ", fecha=" + fecha + ", fotoPerfil=" + fotoPerfil + ", contraseña=" + contraseña
+		return "Usuario [nombre=" + nombre + "," + ", fotoPerfil=" + fotoPerfil + ", contraseña=" + contraseña
                 + ", telefono=" + telefono + ", saludo=" + saludo + ", premium=" + premium + ", fechaRegistro="
-                + fechaRegistro + ", codigo=" + codigo + ", contactos=" + contactos + "]";
+                + fechaNacimiento + ", codigo=" + codigo + ", contactos=" + contactos + "]";
 	}
 }

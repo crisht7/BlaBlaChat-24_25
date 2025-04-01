@@ -1,8 +1,6 @@
 package appChat;
 
-import java.sql.Time;
 import java.time.LocalDateTime;
-import java.util.Date;
 
 public class Mensaje {
 	private int codigo;

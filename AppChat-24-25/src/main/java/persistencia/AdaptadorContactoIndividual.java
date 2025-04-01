@@ -12,7 +12,6 @@ import appChat.Mensaje;
 import appChat.Usuario;
 import beans.Entidad;
 import beans.Propiedad;
-import controlador.Controlador;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
@@ -198,21 +197,6 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	private String obtenerCodigosMensajesRecibidos(List<Mensaje> mensajesRecibidos) {
 		return mensajesRecibidos.stream().map(m -> String.valueOf(m.getCodigo()))
 				.reduce("", (l, m) -> l + m + " ").trim();
-	}
-
-	
-	private List<Mensaje> obtenerMensajesConCodigo(String codigos) {
-		List<Mensaje> mensajes = new LinkedList<>();
-		StringTokenizer strTok = new StringTokenizer(codigos, " ");
-		AdaptadorMensaje adaptadorMensajes = AdaptadorMensaje.getUnicaInstancia();
-		while (strTok.hasMoreTokens()) {
-			mensajes.add(adaptadorMensajes.recuperarMensaje(Integer.valueOf(strTok.nextToken())));
-		}
-		return mensajes;
-	}
-	
-	private boolean existeContacto(ContactoIndividual contacto) {
-	    return servPersistencia.recuperarEntidad(contacto.getCodigo()) != null;
 	}
 	
 	private List<Mensaje> obtenerMensajesDesdeCodigos(String codigos) {

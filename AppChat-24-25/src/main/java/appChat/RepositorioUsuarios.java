@@ -29,7 +29,7 @@ public class RepositorioUsuarios {
 			    throw new RuntimeException("Error: FactoriaDAO no está inicializada correctamente."); //Comprobación depuración
 			}
 			this.daoUsuario = factoria.getUsuarioDAO();
-			this.usuarios = new HashMap<>();
+			this.usuarios = new HashMap<String, Usuario>();
 			this.cargarRepositorio();
 		} catch (DAOException eDAO) {
 			eDAO.printStackTrace();

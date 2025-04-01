@@ -3,7 +3,6 @@ package appChat;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Representa un contacto individual en la aplicación de chat, 

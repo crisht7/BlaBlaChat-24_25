@@ -65,7 +65,6 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		eUsuario.setNombre("usuario");
 		eUsuario.setPropiedades(new ArrayList<>(Arrays.asList(
 				new Propiedad("nombre", usuario.getNombre()), 
-				new Propiedad("fecha", usuario.getFecha().toString()), 
 				new Propiedad("telefono", usuario.getTelefono()),
 				new Propiedad("contraseña", usuario.getContraseña()),
 				new Propiedad("saludo", usuario.getSaludo()),
@@ -101,18 +100,13 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 		
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		
+		//DEPURACÍON
+		System.out.println("Nombre: " + nombre);
 		String fechaStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha");
-		if (fechaStr.equals("0")) {
-			System.out.println("⚠️ Fecha de nacimiento 0");
-		    fechaStr = "2000-01-01"; // Asigna una fecha predeterminada
-		}
-		LocalDate fecha = LocalDate.parse(fechaStr);
-		System.out.println("⚠️ Fecha de nacimiento" + fecha);
-
-		
-		
-
+		System.out.println("📅 Fecha: " + fechaStr);
+		String fechaRegistroStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaRegistro");
+		System.out.println("📅 Fecha Registro: " + fechaRegistroStr);
+		////
 		String telefono = servPersistencia.recuperarPropiedadEntidad(eUsuario, "telefono");
 		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
 		String saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
@@ -122,7 +116,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		
 		ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
 		
-		Usuario usuario = new Usuario(nombre, fecha, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
+		Usuario usuario = new Usuario(nombre, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
 		usuario.setCodigo(codigo);
 		
 		// Recuperar contactos y grupos asociados

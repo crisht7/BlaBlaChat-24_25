@@ -1,7 +1,6 @@
 package controlador;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -87,14 +86,12 @@ public class Controlador {
 	    boolean resultado = false;
 	    
 	    if (telefono.isEmpty() || Contraseña.isEmpty()) {
-	        System.err.println("❌ Error: Teléfono o contraseña vacíos.");
 	        return resultado;
 	    }
 	    
 	    Usuario usuario = repoUsuarios.getUsuario(telefono);
 	    
 	    if (usuario == null) {
-	        System.err.println("❌ Error: No se encontró un usuario con el teléfono " + telefono);
 	        return resultado;
 	    }
 	    
@@ -111,7 +108,7 @@ public class Controlador {
 	}
 
 	
-	public boolean registrarUsuario(String nombre, LocalDate fecha, ImageIcon foto, String telefono, 
+	public boolean registrarUsuario(String nombre, LocalDate fechaNacimiento, ImageIcon foto, String telefono, 
 									String saludo, String contraseña) {
 		Usuario usuarioExistente = repoUsuarios.getUsuario(telefono);
 		if (usuarioExistente != null) {
@@ -120,7 +117,7 @@ public class Controlador {
 		
 		LocalDate fechaRegistro = LocalDate.now();
 		
-		Usuario nuevoUsuario = new Usuario(nombre, fecha, foto, contraseña, telefono, saludo, fechaRegistro, false);
+		Usuario nuevoUsuario = new Usuario(nombre, foto, contraseña, telefono, saludo, fechaNacimiento, false);
 		
 		//Añadimos al repositorio si no existe
 		if (!repoUsuarios.existeUsuario(nuevoUsuario)) {
