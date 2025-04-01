@@ -51,7 +51,7 @@ public class VentanaContacto extends JFrame {
     public VentanaContacto(DefaultListModel<Contacto> modelo) {
         this.modelContacts = modelo;
         setTitle("Add contact");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setBounds(100, 100, 558, 334);
         contentPane = new JPanel();
         contentPane.setBackground(naranjaClaro); 

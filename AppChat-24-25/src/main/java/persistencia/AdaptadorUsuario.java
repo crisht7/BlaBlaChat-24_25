@@ -100,13 +100,6 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 		
 		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		//DEPURACÍON
-		System.out.println("Nombre: " + nombre);
-		String fechaStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fecha");
-		System.out.println("📅 Fecha: " + fechaStr);
-		String fechaRegistroStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaRegistro");
-		System.out.println("📅 Fecha Registro: " + fechaRegistroStr);
-		////
 		String telefono = servPersistencia.recuperarPropiedadEntidad(eUsuario, "telefono");
 		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
 		String saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
@@ -119,17 +112,11 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		Usuario usuario = new Usuario(nombre, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
 		usuario.setCodigo(codigo);
 		
-		// Recuperar contactos y grupos asociados
-	    String contactosStr = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos");
-	    
-	    List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(contactosStr);
-	    List<ContactoIndividual> contactosFiltrados = contactos.stream()
-	            .filter(c -> c != null) // 🔹 Evita contactos nulos
-	            .collect(Collectors.toList());
+		// Recuperar contactos y grupos asociados   
+	    List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(
+	    		servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"));
 
-	    System.out.println("✅ Contactos filtrados para usuario " + nombre + ": " + contactosFiltrados.size());
-
-	    contactosFiltrados.forEach(usuario::añadirContacto);
+	    contactos.forEach(usuario::añadirContacto);
 
 
 		List<Grupo> grupos = obtenerGruposDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "grupos"));
