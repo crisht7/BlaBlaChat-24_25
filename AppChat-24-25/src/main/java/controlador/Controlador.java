@@ -97,6 +97,14 @@ public class Controlador {
 	    
 	    if (usuario.getContraseña().equals(Contraseña)) {
 	        this.usuarioActual = usuario;
+	        
+	        List<ContactoIndividual> contactosBD = adaptadorContactoIndividual.recuperarTodosContactosIndividuales();
+
+	        for (ContactoIndividual contacto : contactosBD) {
+	            if (contacto.getUsuario().equals(usuarioActual)) {
+	                usuarioActual.añadirContacto(contacto);
+	            }
+	        }
 	        System.out.println("✅ Usuario autenticado: " + usuario.getNombre());
 	        System.out.println("🔹 Contactos del usuario autenticado: " + usuario.getContactos().size());
 	        resultado = true;
@@ -114,9 +122,7 @@ public class Controlador {
 		if (usuarioExistente != null) {
 			return false;
 		}
-		
-		LocalDate fechaRegistro = LocalDate.now();
-		
+				
 		Usuario nuevoUsuario = new Usuario(nombre, foto, contraseña, telefono, saludo, fechaNacimiento, false);
 		
 		//Añadimos al repositorio si no existe
@@ -246,27 +252,40 @@ public class Controlador {
 	 *         contacto o el contacto no se corresponda con un usuario real.
 	 */
 	public ContactoIndividual crearContacto(String nombre, String numTelefono) {
-		if (numTelefono.equals(usuarioActual.getTelefono())) {
-			return null;
-		}
-		// Si no tiene el contacto creado lo crea
-		if (!usuarioActual.tieneContactoIndividual(nombre)) {
-			Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(numTelefono);
+	    if (numTelefono.equals(usuarioActual.getTelefono())) {
+	        System.err.println("⚠️ No puedes agregarte a ti mismo como contacto.");
+	        return null;
+	    }
 
-			if (usuarioOpt.isPresent()) {
-				
-				ContactoIndividual nuevoContacto = new ContactoIndividual(nombre, usuarioOpt.get(), numTelefono);
-				usuarioActual.añadirContacto(nuevoContacto);
-				
-				adaptadorContactoIndividual.registrarContacto(nuevoContacto);
+	    // Verifica si el contacto ya existe por nombre o por teléfono
+	    boolean yaExistePorNombre = usuarioActual.tieneContactoIndividual(nombre);
+	    boolean yaExistePorTelefono = usuarioActual.tieneContactoIndividual(numTelefono);
 
-				adaptadorUsuario.modificarUsuario(usuarioActual);
+	    if (yaExistePorNombre || yaExistePorTelefono) {
+	        System.err.println("⚠️ El contacto ya existe.");
+	        return null;
+	    }
 
-				return nuevoContacto;
-			}
-		}
-		return null;
+	    Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(numTelefono);
+
+	    if (usuarioOpt.isPresent()) {
+	        Usuario usuarioContacto = usuarioOpt.get();
+
+	        ContactoIndividual nuevoContacto = new ContactoIndividual(nombre, usuarioContacto, numTelefono);
+	        usuarioActual.añadirContacto(nuevoContacto);
+
+	        adaptadorContactoIndividual.registrarContacto(nuevoContacto);
+	        adaptadorUsuario.modificarUsuario(usuarioActual);
+
+	        System.out.println("✅ Contacto añadido y guardado en la base de datos.");
+	        return nuevoContacto;
+	    } else {
+	        System.err.println("❌ No se encontró un usuario con ese teléfono.");
+	    }
+
+	    return null;
 	}
+
 	
 
 	

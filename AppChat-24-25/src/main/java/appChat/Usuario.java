@@ -102,6 +102,19 @@ public class Usuario {
 	}
 	
 	/**
+	 * Verifica si el usuario ya tiene un contacto individual con el teléfono especificado
+	 * 
+	 * @param telefono del posible contacto
+	 * @return true si ya existe un contacto con ese número
+	 */
+	public boolean tieneContactoIndividualPorTelefono(String telefono) {
+	    return contactos.stream()
+	        .filter(c -> c instanceof ContactoIndividual)
+	        .map(c -> (ContactoIndividual) c)
+	        .anyMatch(c -> c.getTelefono().equals(telefono));
+	}
+	
+	/**
 	 * Verifica si el usuario tiene un grupo por nombre
 	 * 
 	 * @param nombre
@@ -231,6 +244,7 @@ public class Usuario {
 				map(c -> (ContactoIndividual) c)
 				.collect(Collectors.toList());
 	}
+
 	
 	/**
 	 * Devuelve la fecha de registro del usuario
