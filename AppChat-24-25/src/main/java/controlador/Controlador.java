@@ -89,7 +89,8 @@ public class Controlador {
 	        return resultado;
 	    }
 	    
-	    Usuario usuario = repoUsuarios.getUsuario(telefono);
+	    Usuario usuario = adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
+
 	    
 	    if (usuario == null) {
 	        return resultado;
@@ -98,6 +99,7 @@ public class Controlador {
 	    if (usuario.getContraseña().equals(Contraseña)) {
 	        this.usuarioActual = usuario;
 	        
+	        /*
 	        List<ContactoIndividual> contactosBD = adaptadorContactoIndividual.recuperarTodosContactosIndividuales();
 
 	        for (ContactoIndividual contacto : contactosBD) {
@@ -105,6 +107,7 @@ public class Controlador {
 	                usuarioActual.añadirContacto(contacto);
 	            }
 	        }
+	        */
 	        System.out.println("✅ Usuario autenticado: " + usuario.getNombre());
 	        System.out.println("🔹 Contactos del usuario autenticado: " + usuario.getContactos().size());
 	        resultado = true;
@@ -216,7 +219,6 @@ public class Controlador {
 	    }
 
 	    List<Contacto> contactos = usuarioActual.getContactosOrdenadosPorMensaje();
-	    System.out.println("🔹 Contactos obtenidos para " + usuarioActual.getNombre() + ": " + contactos.size());
 	    return contactos;
 	}
 

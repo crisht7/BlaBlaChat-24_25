@@ -61,6 +61,10 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	        return;
 	    }
 
+		usuario.getContactos().forEach(c -> {
+            AdaptadorContactoIndividual.getUnicaInstancia().registrarContacto((ContactoIndividual) c);
+            });
+		
 		eUsuario = new Entidad();
 		eUsuario.setNombre("usuario");
 		eUsuario.setPropiedades(new ArrayList<>(Arrays.asList(
@@ -73,11 +77,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				new Propiedad("contactos", obtenerCodigosContactoIndividual(usuario.getContactos())),
 				new Propiedad("fechaRegistro", usuario.getFechaRegistro().toString()),
 				new Propiedad("Grupos", usuario.getGrupos().toString()))));
-		
-		usuario.getContactos().forEach(c -> {
-            AdaptadorContactoIndividual.getUnicaInstancia().registrarContacto((ContactoIndividual) c);
-            });
-		
+				
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		usuario.setCodigo(eUsuario.getId());
 		
@@ -107,8 +107,10 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		LocalDate fechaRegistro = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaRegistro"));
 		String direccionFoto = servPersistencia.recuperarPropiedadEntidad(eUsuario, "foto");
 		
-		ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
-		
+		//Modo correcto, comentado mientras no se implementa la logica completa
+		//ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
+	    ImageIcon fotoPerfil = new ImageIcon(); // Evita el fallo
+
 		Usuario usuario = new Usuario(nombre, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
 		usuario.setCodigo(codigo);
 		
@@ -124,7 +126,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				);
 		
 		PoolDAO.getUnicaInstancia().añadirObjeto(codigo, usuario);
-				
+		
 		return usuario;
 		
 	}
@@ -262,7 +264,13 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	    return servPersistencia.recuperarEntidad(usuario.getCodigo()) != null;
 	}
 	
-	
+	public Usuario recuperarUsuarioPorTelefono(String telefono) {
+	    return recuperarTodosUsuarios().stream()
+	        .filter(u -> u.getTelefono().equals(telefono))
+	        .findFirst()
+	        .orElse(null);
+	}
+
 
 
 

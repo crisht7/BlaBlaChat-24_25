@@ -48,5 +48,7 @@ public interface UsuarioDAO {
 	 */
 	public void modificarUsuario(Usuario usuario);
 
+	public Usuario recuperarUsuarioPorTelefono(String telefono);
+
 	
 }

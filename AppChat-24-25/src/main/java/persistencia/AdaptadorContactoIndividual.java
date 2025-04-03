@@ -45,18 +45,17 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	
 	
 	public void registrarContacto(ContactoIndividual contacto) {
+
 		Entidad eContacto = new Entidad();
-		boolean existe = true;
 
 		// Si la entidad está registrada no la registra de nuevo
 		try {
 			eContacto = servPersistencia.recuperarEntidad(contacto.getCodigo());
 		} catch (NullPointerException e) {
-			existe = false;
 		}
-		if (existe)
+		if (eContacto != null) {
 			return;
-
+		}
 		// Registramos primero los atributos que son objetos
 		// Registrar los mensajes del contacto
 		registrarSiNoExistenMensajes(contacto.getMensajesEnviados());
@@ -73,11 +72,7 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 				new Propiedad("telefono", String.valueOf(contacto.getTelefono())))));
 		
 		eContacto = servPersistencia.registrarEntidad(eContacto);
-		if(servPersistencia.registrarEntidad(eContacto) != null) {
-			System.out.println("✅ Contacto registrado con éxito.");
-		} else {
-			System.err.println("❌ Error al registrar el contacto.");
-		}
+		
 		contacto.setCodigo(eContacto.getId());
 	    
 		PoolDAO.getUnicaInstancia().añadirObjeto(contacto.getCodigo(), contacto);

@@ -241,10 +241,18 @@ public class VentanaMain {
         actualizarListaContactos();
         
         // JList para mensajes recientes con MensajeCellRenderer
-        JList<Mensaje> listaChatRecientes = new JList<Mensaje>();
+        JList<Contacto> listaChatRecientes = new JList<>();
+        listaChatRecientes.setCellRenderer(new RenderizadorListaContactos()); // Usa tu renderizador
+        listaChatRecientes.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Contacto contactoSeleccionado = listaChatRecientes.getSelectedValue();
+                if (contactoSeleccionado != null) {
+                    cargarMensajesRecientes(contactoSeleccionado);
+                }
+            }
+        });
 
-        listaChatRecientes.setCellRenderer(crearRendererMensajes());
-
+        	
         
         // Obtener contactos recientes desde el controlador
         List<Contacto> contactos = Controlador.getInstancia().getContactosUsuarioActual();
@@ -257,10 +265,6 @@ public class VentanaMain {
         listaChatRecientes.setBackground(naranjaOscuro);
         listaChatRecientes.setVisibleRowCount(16);
         
-        
-        
-     // Obtener mensajes recientes desde el controlador
-        //TODO: Cambiar null por el usuario actual
         List<Mensaje> mensajes = Controlador.getInstancia().getMensajesUsuarioActual();
         DefaultListModel<Mensaje> model = new DefaultListModel<>();
         for (Mensaje mensaje : mensajes) {
@@ -270,7 +274,18 @@ public class VentanaMain {
                 System.err.println("Mensaje inválido: " + mensaje);
             }
         }
-        listaChatRecientes.setModel(model);
+        listaChatRecientes.setModel(modelContactos);
+        listaChatRecientes.addListSelectionListener(e -> {
+            if (!e.getValueIsAdjusting()) {
+                Contacto contactoSeleccionado = listaChatRecientes.getSelectedValue();
+                if (contactoSeleccionado != null) {
+                    cargarMensajesRecientes(contactoSeleccionado);
+                }
+            }
+        });
+
+        
+        
         // Agregar la lista a un JScrollPane
         JScrollPane scrollPane = new JScrollPane(listaChatRecientes);
         panelRecientes.add(scrollPane, BorderLayout.CENTER);

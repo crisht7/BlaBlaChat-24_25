@@ -2,6 +2,8 @@ package vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
+
 import appChat.Contacto;
 import appChat.ContactoIndividual;
 
@@ -39,9 +41,26 @@ public class RenderizadorListaContactos extends JPanel implements ListCellRender
     			telefonoLabel.setText(""); // Si es un grupo u otro tipo de contacto
     		}
 
-    		ImageIcon icono = new ImageIcon(getClass().getResource("/iconos/contacto.png")); 
-    		Image imagenEscalada = icono.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-    		iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+    		//ImageIcon icono = new ImageIcon(getClass().getResource("/iconos/contacto.png")); 
+    		//Image imagenEscalada = icono.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+    		//iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+    		
+    		try {
+    		    URL iconURL = getClass().getResource("/iconos/contacto.png");
+    		    if (iconURL != null) {
+    		        ImageIcon icono = new ImageIcon(iconURL);
+    		        Image imagenEscalada = icono.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+    		        iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+    		    } else {
+    		        // Recurso no encontrado: usar ícono por defecto o dejar sin ícono
+    		        System.err.println("⚠️ Icono '/iconos/contacto.png' no encontrado, se omite.");
+    		        iconoLabel.setIcon(null); // o usar un ícono genérico si querés
+    		    }
+    		} catch (Exception ex) {
+    		    System.err.println("❌ Error cargando icono: " + ex.getMessage());
+    		    iconoLabel.setIcon(null); // para evitar crash
+    		}
+
     		
     		setBackground(isSelected ? new Color(173, 216, 230) : Color.WHITE);
     	}
