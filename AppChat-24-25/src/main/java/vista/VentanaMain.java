@@ -13,7 +13,7 @@ import appChat.*;
 import controlador.Controlador;
 import tds.BubbleText;
 
-public class VentanaMain{
+public class VentanaMain {
 
     public JFrame frame;
     public Chat chat;
@@ -23,8 +23,6 @@ public class VentanaMain{
     private JScrollPane scrollBarChat;
     private Contacto contactoActual;
 
-
-    // colores
     private final Color turquesa = Colores.TURQUESA.getColor();
     private final Color turquesaOscuro = Colores.TURQUESA_OSCURO.getColor();
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
@@ -54,15 +52,11 @@ public class VentanaMain{
         chat = chatsRecientes.get(contacto);
 
         if (chat == null) {
-            chat = new Chat();
-            chat.setBackground(new Color(241, 192, 133));
-            chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
-            chat.setSize(400, 700);
+            chat = crearChat();
             scrollBarChat.setViewportView(chat);
-            scrollBarChat.getViewport().setBackground(new Color(159, 213, 192));
 
             List<Mensaje> mensajes = Optional.ofNullable(Controlador.getInstancia().getMensajes(contacto))
-                                             .orElse(new LinkedList<>());
+                    .orElse(new LinkedList<>());
 
             for (Mensaje m : mensajes) {
                 chat.add(crearBubble(m));
@@ -81,37 +75,46 @@ public class VentanaMain{
         chat.repaint();
 
         SwingUtilities.invokeLater(() ->
-            scrollBarChat.getVerticalScrollBar().setValue(scrollBarChat.getVerticalScrollBar().getMaximum())
+                scrollBarChat.getVerticalScrollBar().setValue(scrollBarChat.getVerticalScrollBar().getMaximum())
         );
     }
 
-    private void enviarMensajeAlContactoActual(JTextArea textField) {
+    private void enviarMensaje(JTextArea textField) {
         if (contactoActual == null || textField == null) return;
 
         String texto = textField.getText().trim();
         if (texto.isEmpty()) return;
 
-        // Enviar a través del controlador
         Controlador.getInstancia().enviarMensaje(texto, contactoActual);
 
-        // Crear burbuja visual
         BubbleText burbuja = new BubbleText(chat, texto, new Color(159, 213, 192), "Tú", BubbleText.SENT, 12);
         chat.add(burbuja);
 
-        // Limpiar campo de texto
         textField.setText(null);
 
-        // Scroll automático
         SwingUtilities.invokeLater(() -> {
             JScrollBar vertical = scrollBarChat.getVerticalScrollBar();
             vertical.setValue(vertical.getMaximum());
         });
 
-        // Refrescar contactos recientes
         actualizarListaContactos();
     }
 
+    private void enviarIcono(int idEmoticono) {
+        if (contactoActual == null) return;
 
+        Controlador.getInstancia().enviarMensaje(idEmoticono, contactoActual);
+
+        BubbleText burbuja = new BubbleText(chat, idEmoticono, new Color(159, 213, 192), "Tú", BubbleText.SENT, 12);
+        chat.add(burbuja);
+
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar vertical = scrollBarChat.getVerticalScrollBar();
+            vertical.setValue(vertical.getMaximum());
+        });
+
+        actualizarListaContactos();
+    }
 
     private Chat crearChat() {
         Chat nuevoChat = new Chat();
@@ -144,12 +147,7 @@ public class VentanaMain{
 
     public void actualizarListaContactos() {
         List<Contacto> contactos = Optional.ofNullable(Controlador.getInstancia().getContactosUsuarioActual())
-                                           .orElse(new LinkedList<>());
-        if (contactos.isEmpty()) {
-            System.err.println("⚠️ No se encontraron contactos para mostrar en la ventana principal.");
-        } else {
-            System.out.println("✅ Contactos cargados en la ventana principal: " + contactos.size());
-        }
+                .orElse(new LinkedList<>());
         panelListaContactos.actualizarLista(contactos);
     }
 
@@ -215,9 +213,7 @@ public class VentanaMain{
 
         JButton btnBuscarMensaje = crearBoton("Buscar", e -> new VentanaBuscar(frame).setVisible(true));
         JButton btnContactos = crearBoton("Contactos", e -> new VentanaContacto(new DefaultListModel<>()).setVisible(true));
-        JButton btnTema = crearBoton("Tema", e -> {
-            // Implementar cambio de tema
-        });
+        JButton btnTema = crearBoton("Tema", e -> {});
 
         JButton btnPremium = new JButton("Premium");
         btnPremium.setBackground(new Color(159, 213, 192));
@@ -268,57 +264,57 @@ public class VentanaMain{
         btnEmoji.setBackground(new Color(234, 158, 66));
         btnEmoji.setIcon(new ImageIcon(VentanaMain.class.getResource("/recursos/emoticono.png")));
         JPopupMenu menuEmojis = new JPopupMenu();
-        Arrays.asList("😀", "😂", "😍", "😎", "😢", "😡", "👍", "🔥", "💯").forEach(emoji -> {
-            JMenuItem item = new JMenuItem(emoji);
-            item.addActionListener(e -> txtMensaje.append(emoji));
+        List<String> emojis = Arrays.asList("😀", "😂", "😍", "😎", "😢", "😡", "👍", "🔥", "💯");
+        for (int i = 0; i < emojis.size(); i++) {
+            final int index = i;
+            JMenuItem item = new JMenuItem(emojis.get(i));
+            item.addActionListener(e -> enviarIcono(index));
             menuEmojis.add(item);
-        });
+        }
         btnEmoji.addActionListener(e -> menuEmojis.show(btnEmoji, 0, btnEmoji.getHeight()));
         panelMensajesSur.add(btnEmoji, BorderLayout.WEST);
 
         JButton btnEnviar = new JButton("");
         btnEnviar.setBackground(new Color(234, 158, 66));
         btnEnviar.setIcon(new ImageIcon(VentanaMain.class.getResource("/recursos/enviar.png")));
-        btnEnviar.addActionListener(e -> enviarMensajeAlContactoActual(txtMensaje));
-
+        btnEnviar.addActionListener(e -> enviarMensaje(txtMensaje));
 
         panelMensajesSur.add(btnEnviar, BorderLayout.EAST);
 
         return panelMensajesSur;
     }
-    
-}
 
- class Chat extends JPanel implements Scrollable {
-	private static final long serialVersionUID = 1L;
+    class Chat extends JPanel implements Scrollable {
+        private static final long serialVersionUID = 1L;
 
-	@Override
-	public boolean getScrollableTracksViewportWidth() {
-		return true;
-	}
+        @Override
+        public boolean getScrollableTracksViewportWidth() {
+            return true;
+        }
 
-	@Override
-	public boolean getScrollableTracksViewportHeight() {
-		return false;
-	}
+        @Override
+        public boolean getScrollableTracksViewportHeight() {
+            return false;
+        }
 
-	@Override
-	public Dimension getPreferredScrollableViewportSize() {
-		return null;
-	}
+        @Override
+        public Dimension getPreferredScrollableViewportSize() {
+            return null;
+        }
 
-	@Override
-	public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
-		return 0;
-	}
+        @Override
+        public int getScrollableUnitIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 0;
+        }
 
-	@Override
-	public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
-		return 0;
-	}
+        @Override
+        public int getScrollableBlockIncrement(Rectangle visibleRect, int orientation, int direction) {
+            return 0;
+        }
 
-	@Override
-	public String toString() {
-		return this.getClass().getSimpleName();
-	}
+        @Override
+        public String toString() {
+            return this.getClass().getSimpleName();
+        }
+    }
 }

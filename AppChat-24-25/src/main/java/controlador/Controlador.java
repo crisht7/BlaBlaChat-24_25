@@ -262,7 +262,7 @@ public class Controlador {
 	 * Envia un mensaje al contacto especificado
 	 *
 	 * @param texto    Texto del mensaje a enviar
-	 * @param receptor Contacto al que se enviará el mensaje
+	 * @param contaco Contacto al que se enviará el mensaje
 	 */
 	public void enviarMensaje(String texto, Contacto contacto) {
 	    if (usuarioActual == null || contacto == null || texto == null || texto.isEmpty()) return;
@@ -285,6 +285,28 @@ public class Controlador {
 			
 		}
 	}
+	
+	/**
+	 * Envia un mensaje al contacto especificado
+	 *
+	 * @param emoticono Emoticono del mensaje a enviar
+	 * @param contacto Contacto al que se enviará el mensaje
+	 */
+	public void enviarMensaje(int emoticono, Contacto contacto) {
+	    if (usuarioActual == null || contacto == null) return;
+
+	    Mensaje mensaje = new Mensaje(emoticono, java.time.LocalDateTime.now(), usuarioActual, contacto);
+	    contacto.enviarMensaje(mensaje);
+
+	    adaptadorMensaje.registrarMensaje(mensaje);
+
+	    if (contacto instanceof ContactoIndividual) {
+	        adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
+	    } else if (contacto instanceof Grupo) {
+	        // lógica para grupo si es necesario
+	    }
+	}
+
 
 	
 
