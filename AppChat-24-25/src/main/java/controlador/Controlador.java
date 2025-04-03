@@ -1,6 +1,7 @@
 package controlador;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -12,6 +13,7 @@ import javax.swing.ImageIcon;
 
 import appChat.Contacto;
 import appChat.ContactoIndividual;
+import appChat.Grupo;
 import appChat.Mensaje;
 import appChat.RepositorioUsuarios;
 import appChat.Usuario;
@@ -53,6 +55,9 @@ public class Controlador {
 		inicializarRepositorios();
 	}
 	
+	/**
+	 * Inicializa los adaptadores de la base de datos
+	 */
 	private void inicializarAdaptadores() {
 		FactoriaDAO factoria = null;
 		try {
@@ -66,16 +71,25 @@ public class Controlador {
 		adaptadorContactoIndividual = factoria.getContactoIndividualDAO();
 	}
 
+	/**
+	 * Inicializa el repositorio de usuarios
+	 */
 	private void inicializarRepositorios() {
 		this.repoUsuarios = RepositorioUsuarios.getUnicaInstancia();
 	}
 
+	/**
+	 * Devuelve la instancia unica del controlador.
+	 * 
+	 * @return Controlador
+	 */
 	public static Controlador getInstancia() {
 		if (unicaInstancia == null) {
 			unicaInstancia = new Controlador();
 		}
 		return unicaInstancia;
 	}
+	
 	/**
 	 * Realiza el inicio de sesion con telefono y contraseña
 	 * 
@@ -90,35 +104,30 @@ public class Controlador {
 	    }
 	    
 	    Usuario usuario = adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
-
-	    
 	    if (usuario == null) {
 	        return resultado;
 	    }
 	    
 	    if (usuario.getContraseña().equals(Contraseña)) {
 	        this.usuarioActual = usuario;
-	        
-	        /*
-	        List<ContactoIndividual> contactosBD = adaptadorContactoIndividual.recuperarTodosContactosIndividuales();
-
-	        for (ContactoIndividual contacto : contactosBD) {
-	            if (contacto.getUsuario().equals(usuarioActual)) {
-	                usuarioActual.añadirContacto(contacto);
-	            }
-	        }
-	        */
-	        System.out.println("✅ Usuario autenticado: " + usuario.getNombre());
-	        System.out.println("🔹 Contactos del usuario autenticado: " + usuario.getContactos().size());
 	        resultado = true;
-	    } else {
-	        System.err.println("❌ Error: Contraseña incorrecta.");
 	    }
 	    
 	    return resultado;
 	}
 
-	
+	/**
+	 * 
+	 * Registra un nuevo usuario en la aplicacion.
+	 * 
+	 * @param nombre
+	 * @param fechaNacimiento
+	 * @param foto
+	 * @param telefono
+	 * @param saludo
+	 * @param contraseña
+	 * @return
+	 */
 	public boolean registrarUsuario(String nombre, LocalDate fechaNacimiento, ImageIcon foto, String telefono, 
 									String saludo, String contraseña) {
 		Usuario usuarioExistente = repoUsuarios.getUsuario(telefono);
@@ -139,17 +148,13 @@ public class Controlador {
 		return false;
 	}
 	
-	public Usuario getUsuarioActual() {
-		return this.usuarioActual;
-
-	}
-
-	public List<Mensaje> getMensajesUsuario(Contacto contacto) {
-		 if (contacto == null) {
-		        System.err.println("⚠️ Error en getMensajesUsuario(): Contacto es null.");
-		        return new LinkedList<>();
-		    }
-		
+	/**
+	 * Devuelve los mensajes relevantes de un contacto para el usuario actual.
+	 * 
+	 * @param contacto del que se obtendrán los mensajes.
+	 * @return Lista de mensajes relacionados con el contacto.
+	 */
+	public List<Mensaje> getMensajes(Contacto contacto) {
 		if (contacto instanceof ContactoIndividual && !((ContactoIndividual) contacto).isUsuario(usuarioActual)) {
 			List<Mensaje> mensajes = Stream
 					.concat(((ContactoIndividual) contacto).getMensajesEnviados().stream(),
@@ -161,45 +166,17 @@ public class Controlador {
 				.collect(Collectors.toList());
 		}
 		else {
-	        System.err.println("⚠️ Error: Contacto no es de tipo ContactoIndividual.");
-	        return new LinkedList<>();
+	        return contacto.getMensajesEnviados();
 	    }
 	}
 	
-	public List<Mensaje> getMensajesUsuarioActual() {
-		List<Contacto> contactos = Controlador.getInstancia().getContactosUsuarioActual();
-		if (contactos.isEmpty()) {
-		    System.err.println("⚠️ El usuario no tiene contactos en la base de datos.");
-		} else {
-		    System.out.println("✅ Contactos cargados: " + contactos.size());
-		}
 
-	    Contacto contacto = buscarContactoDelUsuario(); // Buscar el contacto del usuario autenticado
-
-	    if (contacto == null) {
-	        return new ArrayList<>(); // Si no hay contacto, devolver una lista vacía
-	    }
-
-	    List<Mensaje> mensajesEnviados = contacto.getMensajesEnviados();
-	    
-	    // Si se gestionan mensajes recibidos, hay que agregarlos (ver cómo se implementa en Contacto)
-	    List<Mensaje> mensajesRecibidos = new ArrayList<>();
-	    if (contacto instanceof ContactoIndividual) {
-	        mensajesRecibidos = ((ContactoIndividual) contacto).getMensajesRecibidos(Optional.of(usuarioActual));
-	    }
-
-	    return Stream.concat(mensajesEnviados.stream(), mensajesRecibidos.stream())
-	            .sorted()
-	            .collect(Collectors.toList());
-	}
-
-	
+	/**
+	 * Devuelve el contacto del usuario autenticado. Si no existe, devuelve null.
+	 * 
+	 * @return Contacto del usuario autenticado
+	 */
 	private Contacto buscarContactoDelUsuario() {
-	    if (usuarioActual == null) {
-	        System.err.println("Error: No hay un usuario autenticado.");
-	        return null;
-	    }
-
 	    // Buscar el contacto que representa al usuario autenticado
 		for (ContactoIndividual c : usuarioActual.getContactos().stream().filter(c -> c instanceof ContactoIndividual)
 				.map(c -> (ContactoIndividual) c).collect(Collectors.toList())) {
@@ -207,14 +184,16 @@ public class Controlador {
 	            return c;
 	        }
 	    }
-
-	    System.err.println("Error: No se encontró un contacto asociado al usuario actual.");
 	    return null;
 	}
 	
+	/**
+	 * Devuelve los contactos del usuario ordenados por fecha del ultimo mensaje.
+	 * 
+	 * @return Lista de contactos 
+	 */
 	public List<Contacto> getContactosUsuarioActual() {
 	    if (usuarioActual == null) {
-	        System.err.println("❌ Error: usuarioActual es NULL en getContactosUsuarioActual.");
 	        return new LinkedList<>();
 	    }
 
@@ -224,21 +203,17 @@ public class Controlador {
 
 	
 	
+	/**
+	 * Devuelve el contacto individual del usuario actual.
+	 * 
+	 * @param usuario del que se quiere obtener el contacto
+	 * @return El contacto individual del usuario actual, o null si no existe.
+	 */
 	public Optional<ContactoIndividual> getContactoDelUsuarioActual(Usuario usuario) {
-	    if (usuario == null) {
-	        System.err.println("⚠️ Usuario es null en getContactoDelUsuarioActual().");
-	        return Optional.empty();
-	    }
-
 	    List<ContactoIndividual> contactosIndividuales = Controlador.getInstancia().getContactosUsuarioActual().stream()
 	            .filter(c -> c instanceof ContactoIndividual)
 	            .map(c -> (ContactoIndividual) c)
 	            .collect(Collectors.toList());
-
-	    if (contactosIndividuales.isEmpty()) {
-	        System.err.println("⚠️ No se encontraron contactos individuales para el usuario.");
-	        return Optional.empty();
-	    }
 
 	    return contactosIndividuales.stream()
 	            .filter(c -> c.getUsuario() != null && c.getUsuario().getCodigo() == usuario.getCodigo())
@@ -255,7 +230,6 @@ public class Controlador {
 	 */
 	public ContactoIndividual crearContacto(String nombre, String numTelefono) {
 	    if (numTelefono.equals(usuarioActual.getTelefono())) {
-	        System.err.println("⚠️ No puedes agregarte a ti mismo como contacto.");
 	        return null;
 	    }
 
@@ -264,7 +238,6 @@ public class Controlador {
 	    boolean yaExistePorTelefono = usuarioActual.tieneContactoIndividual(numTelefono);
 
 	    if (yaExistePorNombre || yaExistePorTelefono) {
-	        System.err.println("⚠️ El contacto ya existe.");
 	        return null;
 	    }
 
@@ -279,13 +252,38 @@ public class Controlador {
 	        adaptadorContactoIndividual.registrarContacto(nuevoContacto);
 	        adaptadorUsuario.modificarUsuario(usuarioActual);
 
-	        System.out.println("✅ Contacto añadido y guardado en la base de datos.");
 	        return nuevoContacto;
-	    } else {
-	        System.err.println("❌ No se encontró un usuario con ese teléfono.");
 	    }
 
 	    return null;
+	}
+
+	/**
+	 * Envia un mensaje al contacto especificado
+	 *
+	 * @param texto    Texto del mensaje a enviar
+	 * @param receptor Contacto al que se enviará el mensaje
+	 */
+	public void enviarMensaje(String texto, Contacto contacto) {
+	    if (usuarioActual == null || contacto == null || texto == null || texto.isEmpty()) return;
+
+		Mensaje mensaje = null;
+
+		if (contacto instanceof ContactoIndividual) {
+			//Por si queremos enviar un mensaje a alguien que no tenemos agregado
+			/*
+			if (!isEnListaContactos(contacto)) {
+				crearContactoAnonimo((ContactoIndividual) contacto);
+			}*/
+			
+			mensaje = new Mensaje(texto, LocalDateTime.now(), usuarioActual, contacto);
+			contacto.enviarMensaje(mensaje);
+
+			adaptadorMensaje.registrarMensaje(mensaje);
+			adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
+		} else if (contacto instanceof Grupo) {
+			
+		}
 	}
 
 	
@@ -300,8 +298,12 @@ public class Controlador {
 	}
 
 	public UsuarioDAO getAdaptadorUsuario() {
-		// TODO Auto-generated method stub
 		return this.adaptadorUsuario;
+	}
+	
+	public Usuario getUsuarioActual() {
+		return this.usuarioActual;
+
 	}
 	
 	

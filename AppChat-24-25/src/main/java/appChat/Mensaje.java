@@ -2,7 +2,7 @@ package appChat;
 
 import java.time.LocalDateTime;
 
-public class Mensaje {
+public class Mensaje implements Comparable<Mensaje>{
 	private int codigo;
     private String texto;
     private Usuario emisor;
