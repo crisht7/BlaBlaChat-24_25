@@ -88,16 +88,34 @@ public class VentanaMain {
 
         Controlador.getInstancia().enviarMensaje(texto, contactoActual);
 
-        BubbleText burbuja = new BubbleText(chat, texto, new Color(159, 213, 192), "Tú", BubbleText.SENT, 12);
-        chat.add(burbuja);
+        // Obtener el chat real asociado al contacto
+        Chat chatActual = chatsRecientes.get(contactoActual);
+        if (chatActual == null) {
+            chatActual = crearChat();
+            chatsRecientes.put(contactoActual, chatActual);
+        }
 
+        // Crear y agregar la burbuja al panel de chat correspondiente
+        BubbleText burbuja = new BubbleText(chatActual, texto, new Color(159, 213, 192), "Tú", BubbleText.SENT, 12);
+        chatActual.add(burbuja);
+
+        // Mostrar ese chat en pantalla
+        scrollBarChat.setViewportView(chatActual);
+
+        // Limpiar campo de texto
         textField.setText(null);
 
+        // Refrescar la vista
+        chatActual.revalidate();
+        chatActual.repaint();
+
+        // Scroll automático al final
         SwingUtilities.invokeLater(() -> {
             JScrollBar vertical = scrollBarChat.getVerticalScrollBar();
             vertical.setValue(vertical.getMaximum());
         });
 
+        // Actualizar lista de contactos
         actualizarListaContactos();
     }
 
@@ -243,7 +261,11 @@ public class VentanaMain {
         chat.setLayout(new BoxLayout(chat, BoxLayout.Y_AXIS));
         chat.setPreferredSize(new Dimension(400, 700));
 
-        panelChatActual.add(chat, BorderLayout.CENTER);
+        scrollBarChat = new JScrollPane(chat);
+        scrollBarChat.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollBarChat.getViewport().setBackground(naranjaClaro);
+
+        panelChatActual.add(scrollBarChat, BorderLayout.CENTER);
         panelChatActual.add(crearPanelMensajesSur(), BorderLayout.SOUTH);
     }
 
@@ -316,5 +338,83 @@ public class VentanaMain {
             return this.getClass().getSimpleName();
         }
     }
+    
+    @SuppressWarnings("serial")
+	class CellRenderer extends JPanel implements ListCellRenderer<Contacto> {
+        private JLabel nombreLabel;
+        private JLabel telefonoLabel;
+        private JLabel mensajePreviewLabel;
+        private JLabel iconoLabel;
+
+        public CellRenderer() {
+            setLayout(new BorderLayout(5, 5));
+
+            iconoLabel = new JLabel();
+
+            nombreLabel = new JLabel();
+            nombreLabel.setFont(new Font("Arial", Font.BOLD, 14));
+
+            telefonoLabel = new JLabel();
+            telefonoLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+
+            mensajePreviewLabel = new JLabel();
+            mensajePreviewLabel.setFont(new Font("Arial", Font.ITALIC, 11));
+            mensajePreviewLabel.setForeground(Color.DARK_GRAY);
+
+            JPanel panelTexto = new JPanel(new GridLayout(3, 1));
+            panelTexto.add(nombreLabel);
+            panelTexto.add(telefonoLabel);
+            panelTexto.add(mensajePreviewLabel);
+
+            add(iconoLabel, BorderLayout.WEST);
+            add(panelTexto, BorderLayout.CENTER);
+            setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        }
+
+        @Override
+        public Component getListCellRendererComponent(JList<? extends Contacto> list,
+                                                      Contacto contacto, int index,
+                                                      boolean isSelected, boolean cellHasFocus) {
+            if (contacto != null) {
+                nombreLabel.setText(contacto.getNombre());
+
+                if (contacto instanceof ContactoIndividual) {
+                    telefonoLabel.setText(((ContactoIndividual) contacto).getTelefono());
+                } else {
+                    telefonoLabel.setText("");
+                }
+
+                // 🟡 Mostrar último mensaje (texto)
+                List<Mensaje> mensajes = Controlador.getInstancia().getMensajes(contacto);
+                if (!mensajes.isEmpty()) {
+                    Mensaje ultimo = mensajes.get(mensajes.size() - 1);
+                    String texto = ultimo.getTexto().isEmpty() ? "[Emoticono]" : ultimo.getTexto();
+                    mensajePreviewLabel.setText("Último: " + texto);
+                } else {
+                    mensajePreviewLabel.setText("Sin mensajes");
+                }
+
+                try {
+                    URL iconURL = getClass().getResource("/iconos/contacto.png");
+                    if (iconURL != null) {
+                        ImageIcon icono = new ImageIcon(iconURL);
+                        Image imagenEscalada = icono.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                        iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+                    } else {
+                        iconoLabel.setIcon(null);
+                        System.err.println("⚠️ Icono '/iconos/contacto.png' no encontrado.");
+                    }
+                } catch (Exception ex) {
+                    System.err.println("❌ Error cargando icono: " + ex.getMessage());
+                    iconoLabel.setIcon(null);
+                }
+
+                setBackground(isSelected ? new Color(173, 216, 230) : Color.WHITE);
+            }
+
+            return this;
+        }
+    }
+
 
 }
