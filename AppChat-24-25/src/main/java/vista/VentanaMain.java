@@ -2,6 +2,7 @@ package vista;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -18,10 +19,10 @@ public class VentanaMain {
     public JFrame frame;
     public Chat chat;
     private static VentanaMain instancia;
-    private PanelListaContactos panelListaContactos;
     private Map<Contacto, Chat> chatsRecientes;
     private JScrollPane scrollBarChat;
     private Contacto contactoActual;
+    private JList<Contacto> listaChatRecientes;
 
     private final Color turquesa = Colores.TURQUESA.getColor();
     private final Color turquesaOscuro = Colores.TURQUESA_OSCURO.getColor();
@@ -148,7 +149,10 @@ public class VentanaMain {
     public void actualizarListaContactos() {
         List<Contacto> contactos = Optional.ofNullable(Controlador.getInstancia().getContactosUsuarioActual())
                 .orElse(new LinkedList<>());
-        panelListaContactos.actualizarLista(contactos);
+
+        DefaultListModel<Contacto> nuevoModelo = new DefaultListModel<>();
+        contactos.forEach(nuevoModelo::addElement);
+        listaChatRecientes.setModel(nuevoModelo);
     }
 
     private void initialize() {
@@ -173,13 +177,8 @@ public class VentanaMain {
         JLabel lblTitulo = new JLabel("Chats Recientes", JLabel.CENTER);
         panelRecientes.add(lblTitulo, BorderLayout.NORTH);
 
-        panelListaContactos = new PanelListaContactos();
-        panelRecientes.add(panelListaContactos, BorderLayout.CENTER);
-
-        actualizarListaContactos();
-
-        JList<Contacto> listaChatRecientes = new JList<>();
-        listaChatRecientes.setCellRenderer(new RenderizadorListaContactos());
+        listaChatRecientes = new JList<>();
+        listaChatRecientes.setCellRenderer(new CellRenderer());
         listaChatRecientes.setBackground(naranjaOscuro);
         listaChatRecientes.setVisibleRowCount(16);
 
@@ -317,4 +316,5 @@ public class VentanaMain {
             return this.getClass().getSimpleName();
         }
     }
+
 }

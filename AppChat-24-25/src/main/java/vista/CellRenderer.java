@@ -9,13 +9,13 @@ import appChat.ContactoIndividual;
 import appChat.Mensaje;
 import controlador.Controlador;
 
-public class RenderizadorListaContactos extends JPanel implements ListCellRenderer<Contacto> {
+public class CellRenderer extends JPanel implements ListCellRenderer<Contacto> {
     private JLabel nombreLabel;
     private JLabel telefonoLabel;
     private JLabel mensajePreviewLabel;
     private JLabel iconoLabel;
 
-    public RenderizadorListaContactos() {
+    public CellRenderer() {
         setLayout(new BorderLayout(5, 5));
 
         iconoLabel = new JLabel();
