@@ -92,44 +92,42 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 	@Override
 	public Usuario recuperarUsuario(int codigo) {
-		if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
-			return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(codigo);
-		}
-		
-		Entidad eUsuario = servPersistencia.recuperarEntidad(codigo);
+	    if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
+	        return (Usuario) PoolDAO.getUnicaInstancia().getObjeto(codigo);
+	    }
 
-		
-		String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
-		String telefono = servPersistencia.recuperarPropiedadEntidad(eUsuario, "telefono");
-		String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
-		String saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
-		Boolean premium = Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
-		LocalDate fechaRegistro = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaRegistro"));
-		String direccionFoto = servPersistencia.recuperarPropiedadEntidad(eUsuario, "foto");
-		
-		//Modo correcto, comentado mientras no se implementa la logica completa
-		//ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
+	    Entidad eUsuario = servPersistencia.recuperarEntidad(codigo);
+
+	    String nombre = servPersistencia.recuperarPropiedadEntidad(eUsuario, "nombre");
+	    String telefono = servPersistencia.recuperarPropiedadEntidad(eUsuario, "telefono");
+	    String contraseña = servPersistencia.recuperarPropiedadEntidad(eUsuario, "contraseña");
+	    String saludo = servPersistencia.recuperarPropiedadEntidad(eUsuario, "saludo");
+	    Boolean premium = Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eUsuario, "premium"));
+	    LocalDate fechaRegistro = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaRegistro"));
+	    String direccionFoto = servPersistencia.recuperarPropiedadEntidad(eUsuario, "foto");
+
+	    //Modo correcto, comentado mientras no se implementa la logica completa
+	    //ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
 	    ImageIcon fotoPerfil = new ImageIcon(); // Evita el fallo
 
-		Usuario usuario = new Usuario(nombre, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
-		usuario.setCodigo(codigo);
-		
-		// Recuperar contactos y grupos asociados   
-	    List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(
-	    		servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"));
+	    Usuario usuario = new Usuario(nombre, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
+	    usuario.setCodigo(codigo);
 
+	    // Añadir al Pool antes de reconstruir contactos y grupos
+	    PoolDAO.getUnicaInstancia().añadirObjeto(codigo, usuario);
+
+	    // Recuperar contactos y grupos asociados   
+	    List<ContactoIndividual> contactos = obtenerContactosDesdeCodigos(
+	        servPersistencia.recuperarPropiedadEntidad(eUsuario, "contactos"));
 	    contactos.forEach(usuario::añadirContacto);
 
+	    List<Grupo> grupos = obtenerGruposDesdeCodigos(
+	        servPersistencia.recuperarPropiedadEntidad(eUsuario, "grupos"));
+	    grupos.forEach(usuario::añadirContacto);
 
-		List<Grupo> grupos = obtenerGruposDesdeCodigos(servPersistencia.recuperarPropiedadEntidad(eUsuario, "grupos"));
-		grupos.forEach(usuario::añadirContacto
-				);
-		
-		PoolDAO.getUnicaInstancia().añadirObjeto(codigo, usuario);
-		
-		return usuario;
-		
+	    return usuario;
 	}
+
 
 	@Override
 	public List<Usuario> recuperarTodosUsuarios() {

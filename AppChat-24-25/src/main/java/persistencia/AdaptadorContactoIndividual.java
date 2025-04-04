@@ -125,43 +125,41 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	public ContactoIndividual recuperarContacto(int codigo) {
 	    if (codigo == 0) return null;
 
-	    System.out.println("🔍 Intentando recuperar contacto con código: " + codigo);
-
 	    if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
-	        System.out.println("✅ Contacto obtenido desde PoolDAO.");
 	        return (ContactoIndividual) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 	    }
-	    Entidad eContacto = servPersistencia.recuperarEntidad(codigo);
 
-	    System.out.println("🟢 Propiedades de contacto en BD: ");
-	    for (Propiedad p : eContacto.getPropiedades()) {
-	        System.out.println(p.getNombre() + " = " + p.getValor());
-	    }
+	    Entidad eContacto = servPersistencia.recuperarEntidad(codigo);
 
 	    String nombre = servPersistencia.recuperarPropiedadEntidad(eContacto, "nombre");
 	    String telefono = servPersistencia.recuperarPropiedadEntidad(eContacto, "telefono");
-	 
 
+	    // Crear el objeto base con campos simples
 	    ContactoIndividual contacto = new ContactoIndividual(nombre, new LinkedList<Mensaje>(), telefono, null);
-		contacto.setCodigo(codigo);
+	    contacto.setCodigo(codigo);
 
-	 // Recuperar mensajes asociados al contacto
-	 	List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
-	 			servPersistencia.recuperarPropiedadEntidad(eContacto, "mensajesRecibidos"));
+	    // Añadir al Pool antes de seguir para evitar recursión infinita
+	    PoolDAO.getUnicaInstancia().añadirObjeto(codigo, contacto);
 
-	 	// Recuperar el usuario asociado al contacto
-	 	String codigoUsuario = servPersistencia.recuperarPropiedadEntidad(eContacto, "usuario");
-		Usuario user = AdaptadorUsuario.getUnicaInstancia().recuperarUsuario(Integer.valueOf(codigoUsuario));
-	 	
-		contacto.setUsuario(user);
+	    // Recuperar mensajes asociados al contacto
+	    List<Mensaje> mensajes = obtenerMensajesDesdeCodigos(
+	        servPersistencia.recuperarPropiedadEntidad(eContacto, "mensajesRecibidos"));
 
-	 	// Añadir mensajes al contacto
-	 	for (Mensaje m : mensajes) {
-	 		contacto.enviarMensaje(m);
-	 	}
+	    // Recuperar el usuario asociado al contacto
+	    String codigoUsuario = servPersistencia.recuperarPropiedadEntidad(eContacto, "usuario");
+	    Usuario user = AdaptadorUsuario.getUnicaInstancia().recuperarUsuario(Integer.valueOf(codigoUsuario));
+
+	    contacto.setUsuario(user);
+
+	    // Añadir mensajes al contacto
+	    for (Mensaje m : mensajes) {
+	        contacto.enviarMensaje(m);
+	    }
 
 	    return contacto;
 	}
+
+
 
 
 
