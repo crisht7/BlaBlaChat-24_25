@@ -212,6 +212,9 @@ public class VentanaContacto extends JFrame {
 		} else {
 			// Usuario creado
 			modelContacts.add(modelContacts.size(), nuevoContacto);
+			
+			// Actualizamos la lista de contactos
+			VentanaMain.getInstancia().actualizarListaContactos();
 			JOptionPane.showMessageDialog(VentanaContacto.this, "Contacto añadido correctamente", "Info",
 					JOptionPane.INFORMATION_MESSAGE);
 		}

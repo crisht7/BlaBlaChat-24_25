@@ -42,5 +42,12 @@ public interface MensajeDAO {
 	 */
 	public List<Mensaje> recuperarTodosMensajes();
 	
+	/**
+	 * Devuelve todos los mensajes enviados por un número de teléfono específico.
+	 *
+	 * @param telefono Teléfono del emisor.
+	 * @return Lista de mensajes enviados por ese teléfono.
+	 */
+	public List<Mensaje> getMensajesEnviadosPor(String telefono);
 
 }

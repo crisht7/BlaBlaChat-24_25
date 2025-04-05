@@ -52,10 +52,9 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		try {
 			eContacto = servPersistencia.recuperarEntidad(contacto.getCodigo());
 		} catch (NullPointerException e) {
+			System.err.println("No se ha encontrado la entidad de contacto");
 		}
-		if (eContacto != null) {
-			return;
-		}
+	
 		// Registramos primero los atributos que son objetos
 		// Registrar los mensajes del contacto
 		registrarSiNoExistenMensajes(contacto.getMensajesEnviados());
@@ -158,11 +157,6 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 
 	    return contacto;
 	}
-
-
-
-
-
 
 	@Override
 	public List<ContactoIndividual> recuperarTodosContactosIndividuales() {

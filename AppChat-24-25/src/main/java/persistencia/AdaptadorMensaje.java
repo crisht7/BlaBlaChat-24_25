@@ -161,6 +161,12 @@ public class AdaptadorMensaje implements MensajeDAO {
 		return mensaje;
 	}
 	
+	
+	/**
+	 * Recupera todos los mensajes de la base de datos
+	 * 
+	 * @return lista de mensajes
+	 */
 	@Override
 	public List<Mensaje> recuperarTodosMensajes() {
 		List<Mensaje> mensajes = new ArrayList<>();
@@ -172,10 +178,15 @@ public class AdaptadorMensaje implements MensajeDAO {
 		return mensajes;
 	}
 
+	/**
+	 * Registra un mensaje en la base de datos si no existe
+	 * 
+	 * @param mensaje a registrar
+	 */
 	public void registrarSiNoExiste(Mensaje mensaje) {
 	    if (mensaje == null) return;
 
-	    // 🔹 Verificar si el mensaje ya existe en la base de datos antes de registrarlo
+	    // Verificar si el mensaje ya existe en la base de datos antes de registrarlo
 	    if (existeMensaje(mensaje)) {
 	        System.out.println("ℹ️ Mensaje ya registrado: " + mensaje.getTexto());
 	        return;
@@ -183,8 +194,34 @@ public class AdaptadorMensaje implements MensajeDAO {
 
 	}
 
+	/**
+	 * Verifica si un mensaje ya existe en la base de datos
+	 * 
+	 * @param mensaje a verificar
+	 * @return true si existe, false en caso contrario
+	 */
 	private boolean existeMensaje(Mensaje mensaje) {
 	    return servPersistencia.recuperarEntidad(mensaje.getCodigo()) != null;
+	}
+
+	
+	/**
+	 * Devuelve todos los mensajes enviados por un número de teléfono específico.
+	 *
+	 * @param telefono Teléfono del emisor.
+	 * @return Lista de mensajes enviados por ese teléfono.
+	 */
+	public List<Mensaje> getMensajesEnviadosPor(String telefono) {
+	    List<Mensaje> todos = recuperarTodosMensajes();
+	    List<Mensaje> enviados = new ArrayList<>();
+
+	    for (Mensaje m : todos) {
+	        if (m.getEmisor() != null && m.getEmisor().getTelefono().equals(telefono)) {
+	            enviados.add(m);
+	        }
+	    }
+
+	    return enviados;
 	}
 
 

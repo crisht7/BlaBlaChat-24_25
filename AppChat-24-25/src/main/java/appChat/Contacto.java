@@ -19,6 +19,7 @@ public class Contacto {
     public Contacto(String nombre) {
         this.nombre = nombre;
         this.foto = null;
+        this.mensajes = new LinkedList<>();
     }
     
 	/**
@@ -30,6 +31,7 @@ public class Contacto {
     public Contacto(String nombre, ImageIcon foto) {
     	this(nombre);
     	this.foto = foto;
+    	this.mensajes = new LinkedList<>();
     }
     
     /**

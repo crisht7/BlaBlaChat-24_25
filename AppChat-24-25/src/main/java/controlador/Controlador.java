@@ -197,9 +197,45 @@ public class Controlador {
 	        return new LinkedList<>();
 	    }
 
-	    List<Contacto> contactos = usuarioActual.getContactosOrdenadosPorMensaje();
+	    List<Contacto> contactos = new LinkedList<>(usuarioActual.getContactosOrdenadosPorMensaje());
+
+	    // Buscar mensajes de emisores que no estén en la lista de contactos
+	    List<Usuario> emisoresDesconocidos = new ArrayList<>();
+
+	    for (Usuario posibleEmisor : repoUsuarios.getUsuarios()) {
+	        if (posibleEmisor.equals(usuarioActual)) continue;
+
+	        boolean yaAgregado = usuarioActual.tieneContactoIndividualPorTelefono(posibleEmisor.getTelefono());
+	        if (!yaAgregado) {
+	            // Obtener mensajes enviados por este posible emisor
+	            List<Mensaje> mensajesEnviados = adaptadorMensaje.getMensajesEnviadosPor(posibleEmisor.getTelefono());
+
+	            boolean haEnviadoAlUsuarioActual = mensajesEnviados.stream()
+	                .anyMatch(m -> {
+	                    if (m.getReceptor() instanceof ContactoIndividual) {
+	                        ContactoIndividual receptor = (ContactoIndividual) m.getReceptor();
+	                        return receptor.isUsuario(usuarioActual);
+	                    }
+	                    return false;
+	                });
+
+	            if (haEnviadoAlUsuarioActual) {
+	                emisoresDesconocidos.add(posibleEmisor);
+	            }
+	        }
+	    }
+
+	    // Crear contactos temporales para esos emisores
+	    for (Usuario emisor : emisoresDesconocidos) {
+	        String telefono = emisor.getTelefono();
+	        String nombre = telefono; // Se muestra el número como nombre
+	        ContactoIndividual contactoAnonimo = new ContactoIndividual(nombre, emisor, telefono);
+	        contactos.add(contactoAnonimo);
+	    }
+
 	    return contactos;
 	}
+
 
 	
 	
@@ -270,22 +306,24 @@ public class Controlador {
 		Mensaje mensaje = null;
 
 		if (contacto instanceof ContactoIndividual) {
-			//Por si queremos enviar un mensaje a alguien que no tenemos agregado
-			/*
 			if (!isEnListaContactos(contacto)) {
 				crearContactoAnonimo((ContactoIndividual) contacto);
-			}*/
+			}
 			
 			mensaje = new Mensaje(texto, LocalDateTime.now(), usuarioActual, contacto);
 			contacto.enviarMensaje(mensaje);
 
 			adaptadorMensaje.registrarMensaje(mensaje);
-			adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
+			ContactoIndividual ci = (ContactoIndividual) contacto;
+			if (ci.getCodigo() != 0 && PoolDAO.getUnicaInstancia().contieneID(ci.getCodigo())) {
+			    adaptadorContactoIndividual.modificarContacto(ci);
+			}		
 		} else if (contacto instanceof Grupo) {
 			
 		}
 	}
-	
+
+
 	/**
 	 * Envia un mensaje al contacto especificado
 	 *
@@ -307,8 +345,34 @@ public class Controlador {
 	    }
 	}
 
-
+	private boolean isEnListaContactos(Contacto contacto) {
+		ContactoIndividual contactoIndividual = (ContactoIndividual) contacto;
+		return usuarioActual.getContactos().stream().filter(c -> c instanceof ContactoIndividual)
+				.map(c -> (ContactoIndividual) c)
+				.anyMatch(c -> c.getTelefono().equals(contactoIndividual.getTelefono()));
+	}
 	
+	private void crearContactoAnonimo(ContactoIndividual contacto) {
+	    Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(contacto.getTelefono());
+	    
+	    if (usuarioOpt.isEmpty()) return;
+
+	    Usuario receptor = usuarioOpt.get();
+
+	    // Si el usuario actual NO está en su lista de contactos, creamos uno nuevo
+	    if (!receptor.tieneContactoIndividualPorTelefono(usuarioActual.getTelefono())) {
+	        ContactoIndividual nuevo = new ContactoIndividual(
+	            usuarioActual.getTelefono(), 
+	            usuarioActual,
+	            usuarioActual.getTelefono()  
+	        );
+
+	        receptor.añadirContacto(nuevo);
+	        adaptadorContactoIndividual.registrarContacto(nuevo);
+	        adaptadorUsuario.modificarUsuario(receptor);
+	    }
+	}
+
 
 	
 	public RepositorioUsuarios getRepoUsuarios() {
