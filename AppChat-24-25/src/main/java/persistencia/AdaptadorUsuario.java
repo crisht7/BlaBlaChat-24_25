@@ -22,9 +22,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	private static AdaptadorUsuario unicaInstancia = null;
 	private static ServicioPersistencia servPersistencia;
 	
-	/**
-	 * Constructor privado Singleton
-	 */
+	// Constructor privado Singleton
 	private AdaptadorUsuario() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
@@ -32,6 +30,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	/**
 	 * Devuelve la única instancia unica de la clase
 	 * Garantiza Singleton
+	 * 
 	 * @return unicaInstancia
 	 */
 	public static AdaptadorUsuario getUnicaInstancia() {
@@ -84,6 +83,11 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		PoolDAO.getUnicaInstancia().añadirObjeto(usuario.getCodigo(), usuario);
 	}
 
+	/**
+	 * Borra un usuario de la base de datos
+	 * 
+	 * @param usuario a borrar
+	 */
 	@Override
 	public void borrarUsuario(Usuario usuario) {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
@@ -99,6 +103,12 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		}
 	}
 
+	/**
+	 * Recupera un usuario de la base de datos a traves del codigo
+	 * 
+	 * @param codigo del usuario
+	 * @return usuario
+     */
 	@Override
 	public Usuario recuperarUsuario(int codigo) {
 	    if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
@@ -115,7 +125,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	    LocalDate fechaRegistro = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaRegistro"));
 	    String direccionFoto = servPersistencia.recuperarPropiedadEntidad(eUsuario, "foto");
 
-	    //Modo correcto, comentado mientras no se implementa la logica completa
+	    //TODO: Modo correcto comentado mientras no se implementa la logica completa
 	    //ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
 	    ImageIcon fotoPerfil = new ImageIcon(); // Evita el fallo
 
@@ -137,19 +147,11 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	    return usuario;
 	}
 
-
-	@Override
-	public List<Usuario> recuperarTodosUsuarios() {
-		List<Usuario> usuarios = new LinkedList<>();
-		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
-
-		for (Entidad eUsuario : eUsuarios) {
-			usuarios.add(recuperarUsuario(eUsuario.getId()));
-		}
-	
-		return usuarios;
-	}
-
+	/**
+	 * Modifica un usuario de la base de datos
+	 * 
+	 * @param usuario a modificar
+	 */
 	@Override
 	public void modificarUsuario(Usuario usuario) {
 		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
@@ -196,21 +198,50 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		
 	}
 	
+	/**
+	 * Recupera todos los usuarios de la base de datos
+	 * 
+	 * @return lista de usuarios
+	 */
+	@Override
+	public List<Usuario> recuperarTodosUsuarios() {
+		List<Usuario> usuarios = new LinkedList<>();
+		List<Entidad> eUsuarios = servPersistencia.recuperarEntidades("usuario");
+
+		for (Entidad eUsuario : eUsuarios) {
+			usuarios.add(recuperarUsuario(eUsuario.getId()));
+		}
+	
+		return usuarios;
+	}
+	
+	/**
+	 * Recupera un usuario de la base de datos a traves del telefono
+	 * 
+	 * @param telefono del usuario
+	 * @return usuario
+	 */
+	@Override
+	public Usuario recuperarUsuarioPorTelefono(String telefono) {
+	    return recuperarTodosUsuarios().stream()
+	        .filter(u -> u.getTelefono().equals(telefono))
+	        .findFirst()
+	        .orElse(null);
+	}
+	
+	/**
+	 * Obtiene los contactos asociados a un usuario
+	 * 
+	 * @param codigos
+	 * @return lista de contactos
+	 */
 	private List<ContactoIndividual> obtenerContactosDesdeCodigos(String codigos) {
 	    List<ContactoIndividual> contactos = new LinkedList<>();
 
-	    if (codigos == null || codigos.trim().isEmpty() ){
-	        System.err.println("⚠️ Lista de contactos vacía en la BD.");
-	        return contactos;
-	    }
-	    if (codigos.equals("[]")) {
-	        System.err.println("⚠️ Lista de contactos inválida en la BD.");
+	    if (codigos == null || codigos.trim().isEmpty() || codigos.equals("[]") ){
 	        return contactos;
 	    }
 	    
-
-	    System.out.println("🔍 Procesando contactos desde BD: " + codigos);
-
 	    StringTokenizer strTok = new StringTokenizer(codigos, " ");
 	    AdaptadorContactoIndividual adaptadorC = AdaptadorContactoIndividual.getUnicaInstancia();
 
@@ -220,25 +251,20 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	        try {
 	            int codigo = Integer.parseInt(token);
 	            ContactoIndividual contacto = adaptadorC.recuperarContacto(codigo);
-
-	            if (contacto == null) {
-	                System.err.println("❌ Contacto con código " + codigo + " no encontrado en BD.");
-	            } else {
-	                System.out.println("✅ Contacto recuperado: " + contacto.getNombre());
-	                contactos.add(contacto);
-	            }
+	            contactos.add(contacto);
 	        } catch (NumberFormatException e) {
 	            System.err.println("⚠️ Error al convertir código de contacto: " + token);
 	        }
 	    }
-
-	    System.out.println("✅ Contactos recuperados: " + contactos.size());
 	    return contactos;
 	}
 
-
-
-
+	/**
+	 * Convierte un String de codigos en una lista de grupos
+	 * 
+	 * @param codigos
+	 * @return lista de grupos
+	 */
 	private List<Grupo> obtenerGruposDesdeCodigos(String codigos) {
 	    List<Grupo> grupos = new LinkedList<>();
 
@@ -262,22 +288,28 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	    return grupos;
 	}
 
+	/**
+	 * Convierte una lista de contactos a un String de codigos
+	 * 
+	 * @param contactos
+	 * @return codigo
+	 */
 	private String obtenerCodigosContactoIndividual(List<Contacto> contactos) {
 		return contactos.stream().filter(c -> c instanceof ContactoIndividual)
 				.map(c -> String.valueOf(c.getCodigo())).reduce("", (l, c) -> l + c + " ")
 				.trim();
 	}
+	
+	/**
+	 * Verifica si el usuario existe en la base de datos
+	 * 
+	 * @param usuario
+	 * @return true si existe, false si no
+	 */
 	private boolean existeUsuario(Usuario usuario) {
 	    return servPersistencia.recuperarEntidad(usuario.getCodigo()) != null;
 	}
 	
-	public Usuario recuperarUsuarioPorTelefono(String telefono) {
-	    return recuperarTodosUsuarios().stream()
-	        .filter(u -> u.getTelefono().equals(telefono))
-	        .findFirst()
-	        .orElse(null);
-	}
-
 	/**
 	 * Convierte una lista de grupos a un String de codigos
 	 * 
@@ -288,7 +320,5 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	            .map(g -> String.valueOf(g.getCodigo()))
 	            .collect(Collectors.joining(" ")); // separados por espacio, como los contactos
 	}
-
-
 
 }

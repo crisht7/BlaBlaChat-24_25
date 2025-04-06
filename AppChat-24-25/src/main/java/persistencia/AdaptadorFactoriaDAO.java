@@ -5,12 +5,12 @@ package persistencia;
  * Mediante el patron Singleton proporciona instancias de los adaptadores de la base de datos
  * especificos para gestionarlos
  */
-public class ImpleFactoriaDAO extends FactoriaDAO{
+public class AdaptadorFactoriaDAO extends FactoriaDAO{
 
 	/**
 	 * Constructor, asegura que se mantenga una única instancia de la clase
 	 */
-	public ImpleFactoriaDAO() {
+	public AdaptadorFactoriaDAO() {
 		
 	}
 

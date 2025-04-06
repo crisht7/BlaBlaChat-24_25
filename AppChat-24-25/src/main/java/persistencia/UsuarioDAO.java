@@ -35,20 +35,25 @@ public interface UsuarioDAO {
 	public Usuario recuperarUsuario(int codigo);
 	
 	/**
-	 * Recupera los usuarios almacenados en la base de datos
-	 * 
-	 * @return lista de usuarios registrados
-	 */
-	public List<Usuario> recuperarTodosUsuarios();
-	
-	/**
 	 * Modifica un usuario de la base de datos
 	 * 
 	 * @param usuario
 	 */
 	public void modificarUsuario(Usuario usuario);
 
+	/**
+	 * Devuelve un usuario del repositorio por el numero de telefono.
+	 * 
+	 * @param numTelefono
+	 * @return Usuario
+	 */
 	public Usuario recuperarUsuarioPorTelefono(String telefono);
 
+	/**
+	 * Recupera los usuarios almacenados en la base de datos
+	 * 
+	 * @return lista de usuarios registrados
+	 */
+	public List<Usuario> recuperarTodosUsuarios();
 	
 }

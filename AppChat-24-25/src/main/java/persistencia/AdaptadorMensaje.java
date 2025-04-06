@@ -15,14 +15,12 @@ public class AdaptadorMensaje implements MensajeDAO {
 
 	public static AdaptadorMensaje unicainstancia = null;
 	public static ServicioPersistencia servPersistencia;
-	
-	/**
-	 * Constructor privado Singleton
-	 */
+
+	// Constructor privado Singleton	
 	private AdaptadorMensaje() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
-	
+
 	/**
 	 * Devuelve la única instancia unica de la clase 
 	 * Garantiza Singleton
@@ -40,6 +38,7 @@ public class AdaptadorMensaje implements MensajeDAO {
 	 * 
 	 * @param mensaje a registrar
 	 */
+	@Override
 	public void registrarMensaje(Mensaje mensaje) {
 		Entidad eMensaje = null;
 
@@ -50,7 +49,7 @@ public class AdaptadorMensaje implements MensajeDAO {
 
 		if (eMensaje != null)
 			return;
-		
+
 		eMensaje = new Entidad();
 		eMensaje.setNombre("mensaje");
 		eMensaje.setPropiedades(new ArrayList<>(Arrays.asList(
@@ -62,12 +61,12 @@ public class AdaptadorMensaje implements MensajeDAO {
 				new	Propiedad("grupo", String.valueOf(mensaje.isGroup())))));			
 
 		eMensaje = servPersistencia.registrarEntidad(eMensaje);
-		
+
 		mensaje.setCodigo(eMensaje.getId());
-		
+
 		PoolDAO.getUnicaInstancia().añadirObjeto(mensaje.getCodigo(), mensaje);
 	}
-	
+
 	/**
 	 * Elimina un mensaje de la base de datos
 	 * 
@@ -75,14 +74,14 @@ public class AdaptadorMensaje implements MensajeDAO {
 	 */
 	@Override
 	public void borrarMensaje(Mensaje mensaje) {
-		 Entidad eMensaje = servPersistencia.recuperarEntidad(mensaje.getCodigo());
-		 servPersistencia.borrarEntidad(eMensaje);
-		 
-			if (PoolDAO.getUnicaInstancia().contieneID(mensaje.getCodigo())) {
-				PoolDAO.getUnicaInstancia().eliminarObjeto(mensaje.getCodigo());
-			}
+		Entidad eMensaje = servPersistencia.recuperarEntidad(mensaje.getCodigo());
+		servPersistencia.borrarEntidad(eMensaje);
+
+		if (PoolDAO.getUnicaInstancia().contieneID(mensaje.getCodigo())) {
+			PoolDAO.getUnicaInstancia().eliminarObjeto(mensaje.getCodigo());
+		}
 	}
-	
+
 	/**
 	 * Modifica un mensaje en la base de datos
 	 * 
@@ -91,7 +90,7 @@ public class AdaptadorMensaje implements MensajeDAO {
 	@Override
 	public void modificarMensaje(Mensaje mensaje) {
 		Entidad eMensaje = servPersistencia.recuperarEntidad(mensaje.getCodigo());
-		
+
 		for (Propiedad p : eMensaje.getPropiedades()) {
 			switch (p.getNombre()) {
 			case "hora":
@@ -115,12 +114,13 @@ public class AdaptadorMensaje implements MensajeDAO {
 			}
 			servPersistencia.modificarPropiedad(p);
 		}
-		
 	}
 
 	/**
 	 * Recupera un mensaje de la base de datos a traves del codigo
 	 * 
+	 * @param codigo del mensaje
+	 * @return mensaje
 	 */
 	@Override
 	public Mensaje recuperarMensaje(int codigo) {
@@ -128,40 +128,39 @@ public class AdaptadorMensaje implements MensajeDAO {
 		if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
 			return (Mensaje) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 		}
-		
+
 		Entidad eMensaje = servPersistencia.recuperarEntidad(codigo);
-		
+
 		String texto = servPersistencia.recuperarPropiedadEntidad(eMensaje, "texto");
 		int emoticono = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "emoticono"));
 		LocalDateTime hora = LocalDateTime.parse(servPersistencia.recuperarPropiedadEntidad(eMensaje, "hora"));
-		
+
 		Mensaje mensaje = new Mensaje(texto, emoticono, hora);
 		mensaje.setCodigo(codigo);
-		
+
 		PoolDAO.getUnicaInstancia().añadirObjeto(codigo, mensaje);
-		
+
 		AdaptadorUsuario adaptadorUsuario = AdaptadorUsuario.getUnicaInstancia();
 		int codEmisor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "emisor"));
 		Usuario emisor = adaptadorUsuario.recuperarUsuario(codEmisor);
 		mensaje.setEmisor(emisor);
-		
+
 		AdaptadorContactoIndividual adaptadorContacto = AdaptadorContactoIndividual.getUnicaInstancia();
 		int codReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
 		try {
-            Contacto receptor = adaptadorContacto.recuperarContacto(codReceptor);
-            mensaje.setReceptor(receptor);
-        } catch (Exception e) {
-        	Contacto receptor = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(codReceptor);
-            mensaje.setReceptor(receptor);
-        }
-		
+			Contacto receptor = adaptadorContacto.recuperarContacto(codReceptor);
+			mensaje.setReceptor(receptor);
+		} catch (Exception e) {
+			Contacto receptor = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(codReceptor);
+			mensaje.setReceptor(receptor);
+		}
+
 		boolean grupo = Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eMensaje, "grupo"));
 		mensaje.setGroup(grupo);
-		
+
 		return mensaje;
 	}
-	
-	
+
 	/**
 	 * Recupera todos los mensajes de la base de datos
 	 * 
@@ -171,7 +170,7 @@ public class AdaptadorMensaje implements MensajeDAO {
 	public List<Mensaje> recuperarTodosMensajes() {
 		List<Mensaje> mensajes = new ArrayList<>();
 		List<Entidad> eMensajes = servPersistencia.recuperarEntidades("mensaje");
-		
+
 		for (Entidad eMensaje : eMensajes) {
 			mensajes.add(recuperarMensaje(eMensaje.getId()));
 		}
@@ -184,14 +183,12 @@ public class AdaptadorMensaje implements MensajeDAO {
 	 * @param mensaje a registrar
 	 */
 	public void registrarSiNoExiste(Mensaje mensaje) {
-	    if (mensaje == null) return;
+		if (mensaje == null) return;
 
-	    // Verificar si el mensaje ya existe en la base de datos antes de registrarlo
-	    if (existeMensaje(mensaje)) {
-	        System.out.println("ℹ️ Mensaje ya registrado: " + mensaje.getTexto());
-	        return;
-	    }
-
+		// Verificar si el mensaje ya existe en la base de datos antes de registrarlo
+		if (existeMensaje(mensaje)) {
+			return;
+		}
 	}
 
 	/**
@@ -201,29 +198,26 @@ public class AdaptadorMensaje implements MensajeDAO {
 	 * @return true si existe, false en caso contrario
 	 */
 	private boolean existeMensaje(Mensaje mensaje) {
-	    return servPersistencia.recuperarEntidad(mensaje.getCodigo()) != null;
+		return servPersistencia.recuperarEntidad(mensaje.getCodigo()) != null;
 	}
 
-	
 	/**
 	 * Devuelve todos los mensajes enviados por un número de teléfono específico.
 	 *
 	 * @param telefono Teléfono del emisor.
 	 * @return Lista de mensajes enviados por ese teléfono.
 	 */
+	@Override
 	public List<Mensaje> getMensajesEnviadosPor(String telefono) {
-	    List<Mensaje> todos = recuperarTodosMensajes();
-	    List<Mensaje> enviados = new ArrayList<>();
+		List<Mensaje> todos = recuperarTodosMensajes();
+		List<Mensaje> enviados = new ArrayList<>();
 
-	    for (Mensaje m : todos) {
-	        if (m.getEmisor() != null && m.getEmisor().getTelefono().equals(telefono)) {
-	            enviados.add(m);
-	        }
-	    }
-
-	    return enviados;
+		for (Mensaje m : todos) {
+			if (m.getEmisor() != null && m.getEmisor().getTelefono().equals(telefono)) {
+				enviados.add(m);
+			}
+		}
+		return enviados;
 	}
-
-
 
 }

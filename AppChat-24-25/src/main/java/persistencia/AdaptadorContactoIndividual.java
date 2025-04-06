@@ -24,9 +24,8 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	private static AdaptadorContactoIndividual unicaInstancia = null;
 	private static ServicioPersistencia servPersistencia;
 	
-	/**
-	 * Constructor privado Singleton
-	 */
+	
+	//Constructor privado Singleton
 	private AdaptadorContactoIndividual() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
@@ -43,7 +42,12 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		return unicaInstancia;
 	}
 	
-	
+	/**
+	 * Registra un contacto individual en la base de datos
+	 * 
+	 * @param contacto a registrar
+	 */
+	@Override
 	public void registrarContacto(ContactoIndividual contacto) {
 
 		Entidad eContacto = new Entidad();
@@ -55,7 +59,6 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 			System.err.println("No se ha encontrado la entidad de contacto");
 		}
 	
-		// Registramos primero los atributos que son objetos
 		// Registrar los mensajes del contacto
 		registrarSiNoExistenMensajes(contacto.getMensajesEnviados());
 
@@ -76,7 +79,12 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	    
 		PoolDAO.getUnicaInstancia().añadirObjeto(contacto.getCodigo(), contacto);
     }	
-
+	
+	/**
+	 * Borra un contacto individual de la base de datos
+	 * 
+	 * @param contacto a borrar
+     */
 	@Override
 	public void borrarContacto(ContactoIndividual contacto) {
 
@@ -97,6 +105,11 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	}
 	
 
+	/**
+	 * Modifica un contacto individual en la base de datos
+	 * 
+	 * @param contacto a modificar
+	 */
 	@Override
 	public void modificarContacto(ContactoIndividual contacto) {
 		Entidad eContact = servPersistencia.recuperarEntidad(contacto.getCodigo());
@@ -120,6 +133,12 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		}
 	}
 
+	/**
+	 * Recupera un contacto individual de la base de datos
+	 * 
+	 * @param codigo del contacto a recuperar
+	 * @return contacto recuperado
+	 */
 	@Override
 	public ContactoIndividual recuperarContacto(int codigo) {
 	    if (codigo == 0) return null;
@@ -158,6 +177,11 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	    return contacto;
 	}
 
+	/**
+	 * Recupera todos los contactos individuales de la base de datos
+	 * 
+	 * @return lista de contactos individuales
+	 */
 	@Override
 	public List<ContactoIndividual> recuperarTodosContactosIndividuales() {
 		List<ContactoIndividual> contactos = new LinkedList<>();
@@ -170,22 +194,43 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		return contactos;
 	}
 
+	/**
+	 * Registra los mensajes del contacto individual si no existen
+	 * 
+	 * @param messages
+	 */
 	private void registrarSiNoExistenMensajes(List<Mensaje> messages) {
 		AdaptadorMensaje adaptadorMensajes = AdaptadorMensaje.getUnicaInstancia();
 		messages.stream().forEach(m -> adaptadorMensajes.registrarMensaje(m));
 	}
 	
+	/**
+	 * Registra el usuario si no existe
+	 * 
+	 * @param usuario
+	 */
 	private void registrarSiNoExiste(Usuario usuario) {
 		AdaptadorUsuario adaptadorUsuario = AdaptadorUsuario.getUnicaInstancia();
         adaptadorUsuario.registrarUsuario(usuario);
-		
 	}
 	
+	/**
+	 * Convierte una lista de mensajes a una cadena de códigos
+	 * 
+	 * @param mensajesRecibidos
+	 * @return cadena de códigos
+	 */
 	private String obtenerCodigosMensajesRecibidos(List<Mensaje> mensajesRecibidos) {
 		return mensajesRecibidos.stream().map(m -> String.valueOf(m.getCodigo()))
 				.reduce("", (l, m) -> l + m + " ").trim();
 	}
 	
+	/**
+	 * Convierte una cadena de códigos a una lista de mensajes
+	 * 
+	 * @param codigos
+	 * @return lista de mensajes
+	 */
 	private List<Mensaje> obtenerMensajesDesdeCodigos(String codigos) {
 		List<Mensaje> mensajes = new LinkedList<>();
 		StringTokenizer strTok = new StringTokenizer(codigos, " ");
@@ -196,7 +241,6 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 		return mensajes;
 	}
 
-	
 }
 
 

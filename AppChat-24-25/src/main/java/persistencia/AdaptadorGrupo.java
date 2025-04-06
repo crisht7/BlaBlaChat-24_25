@@ -20,18 +20,15 @@ public class AdaptadorGrupo implements GrupoDAO{
 	private static AdaptadorGrupo unicaInstancia = null;
 	private static ServicioPersistencia servPersistencia;
 	
-	/**
-	 * Instacia unica para mantener el patron singleton
-	 */
+	//Instacia unica para mantener el patron singleton 
 	public static AdaptadorGrupo getUnicaInstancia() {
 		if (unicaInstancia == null)
             unicaInstancia = new AdaptadorGrupo();
         return unicaInstancia;
 	}
 
-	/**
-	 * Constructor privado para mantener el patron singleton
-	 */
+	// Constructor privado para mantener el patron singleton
+	
 	private AdaptadorGrupo() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
@@ -74,7 +71,6 @@ public class AdaptadorGrupo implements GrupoDAO{
 		grupo.setCodigo(eContactoGrupo.getId());
 	}
 
-	
 	/**
 	 * Elimina un grupo de la base de datos
 	 * 
@@ -86,7 +82,6 @@ public class AdaptadorGrupo implements GrupoDAO{
 		servPersistencia.borrarEntidad(eGrupo);
 	}
 
-	
 	/**
 	 * Recupera un grupo de la base de datos a traves del codigo
 	 * 
@@ -139,6 +134,11 @@ public class AdaptadorGrupo implements GrupoDAO{
 		return grupos;
 	}
 
+	/**
+	 * Modifica un grupo de la base de datos
+	 * 
+	 * @param grupo
+	 */
 	@Override
 	public void modificarGrupo(Grupo grupo) {
 		Entidad eContactoGrupo = servPersistencia.recuperarEntidad(grupo.getCodigo());
@@ -166,8 +166,14 @@ public class AdaptadorGrupo implements GrupoDAO{
 		
 	}
 	
+	/**
+	 * Convierte una cadena de texto a un ImageIcon
+	 * 
+	 * @param path
+	 * @return ImageIcon
+	 */
 	private ImageIcon getImageIcon(String path) {
-		//METODO SIN IMPLEMENTAR
+		// TODO Auto-generated method stub
 		return new ImageIcon(path);
 	}
 
