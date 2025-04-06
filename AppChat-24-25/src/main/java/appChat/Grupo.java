@@ -47,6 +47,11 @@ public class Grupo extends Contacto {
 		this.integrantes.remove(contacto);
 	}
 	
+	/**
+	 * Obtiene una representación en texto de los participantes del grupo
+	 * 
+	 * @return texto de los participantes
+	 */
 	public String getTextoParticipantes() {
 		if (this.integrantes == null || this.integrantes.isEmpty()) {
 			return "No hay intengrantes";

@@ -45,46 +45,7 @@ public class Contacto {
     	this.mensajes = mensajes;
     	this.foto = null;
     }
-
-    
-  //Getters y setters
-    public String getNombre() {
-		return nombre;
-	}
-    
-    public void setNombre(String nombre) {
-		this.nombre = nombre;
-	}
-    
-	public int getCodigo() {
-		return codigo;
-	}
-
-	public void setCodigo(int codigo) {
-		this.codigo = codigo;
-	}
-
-	public List<Mensaje> getMensajesEnviados() {
-		if (this.mensajes == null) {
-			return new LinkedList<Mensaje>();
-		}
-		return this.mensajes;
-	}
-
-	public void setMensajes(List<Mensaje> mensajes) {
-		this.mensajes = mensajes;
-	}
-
-	public ImageIcon getFoto() {
-		return foto;
-	}
-
-	public void setFoto(ImageIcon foto) {
-		this.foto = foto;
-	}
-
 	
-
 	  /**
      * Añade un mensaje a la lista de mensajes del contacto.
      * 
@@ -95,8 +56,7 @@ public class Contacto {
             mensajes.add(mensaje);
         }
     }
-    
-    
+        
     /**
      * Elimina un mensaje específico de la lista.
      * 
@@ -106,7 +66,6 @@ public class Contacto {
     public boolean eliminarMensaje(Mensaje mensaje) {
         return mensajes.remove(mensaje);
     }
-
 
     /**
      * Borra todos los mensajes del contacto.
@@ -124,7 +83,6 @@ public class Contacto {
             mensajes.removeIf(mensaje -> mensaje.getEmisor().equals(usuario));
         }
     }
-    
 
     /**
      * Añade una lista de mensajes al contacto.
@@ -137,10 +95,69 @@ public class Contacto {
         }
     }
 	
+	/**
+	 * Devuelve el nombre del contacto.
+	 * 
+	 * @return Nombre del contacto.
+	 */
+    public String getNombre() {
+		return nombre;
+	}
+    
+    /**
+     * Establece el nombre del contacto.
+     * 
+     * @param nombre
+     */
+    public void setNombre(String nombre) {
+		this.nombre = nombre;
+	}
+    
+	/**
+	 * Devuelve el código del contacto.
+	 * 
+	 * @return Código del contacto.
+	 */
+	public int getCodigo() {
+		return codigo;
+	}
+
+	/**
+	 * Establece el código del contacto.
+	 * 
+	 * @param codigo Código del contacto.
+	 */
+	public void setCodigo(int codigo) {
+		this.codigo = codigo;
+	}
+
+	/**
+	 * Devuelve la lista de mensajes enviados por el contacto.
+	 * 
+	 * @return Lista de mensajes enviados.
+	 */
+	public List<Mensaje> getMensajesEnviados() {
+		if (this.mensajes == null) {
+			return new LinkedList<Mensaje>();
+		}
+		return this.mensajes;
+	}
 	
-	
-    
-    
-    
-}
-    
+	/**
+	 * Devuelve la foto de perfil del contacto.
+	 * @return Foto de perfil.
+	 */
+	public ImageIcon getFoto() {
+		return foto;
+	}
+
+	/**
+	 * Establece la foto de perfil del contacto.
+	 * 
+	 * @param foto Foto de perfil.
+	 */
+	public void setFoto(ImageIcon foto) {
+		this.foto = foto;
+	}
+
+}  

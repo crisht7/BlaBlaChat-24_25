@@ -111,6 +111,12 @@ public class RepositorioUsuarios {
 				.findAny().orElse(null);
 	}
 	
+	/**
+	 * Devuelve un usuario del repositorio por el numero de telefono.
+	 * 
+	 * @param numTelefono
+	 * @return Usuario
+	 */
 	public Optional<Usuario> getUsuarioNumTelf(String numTelefono) {
 		return usuarios.values().stream().filter(u -> u.getTelefono() == numTelefono).findAny();
 	}
@@ -133,7 +139,6 @@ public class RepositorioUsuarios {
 	 * @throws DAOException Si ocurre un error al interactuar con la capa de
 	 *                      persistencia.
 	 */	
-	
     private void cargarRepositorio() throws DAOException {
 		List<Usuario> usuariosBD = daoUsuario.recuperarTodosUsuarios();
 		for (Usuario usuario : usuariosBD) {

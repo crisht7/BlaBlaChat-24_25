@@ -161,9 +161,7 @@ public class Usuario {
     public String getNombre() {
     	return this.nombre;
     }
-	
-
-	
+		
 	/**
 	 * Devuelve el telefono del usuario
 	 * 
@@ -207,20 +205,11 @@ public class Usuario {
      */
 	public List<Contacto> getContactos() {
 	    if (this.contactos == null) {
-	        System.err.println("⚠️ Advertencia: La lista de contactos es null para el usuario " + this.nombre);
 	        return new LinkedList<>();
-	    }
-
-	    // Detectar contactos nulos antes de devolver la lista
-	    for (Contacto c : this.contactos) {
-	        if (c == null) {
-	            System.err.println("❌ Error: Se encontró un contacto NULL en la lista de " + this.nombre);
-	        }
 	    }
 	    return this.contactos;
 	}
 
-	
 	/**
 	 * Devuelve la lista de grupos del usuario
 	 * 
@@ -245,7 +234,6 @@ public class Usuario {
 				.collect(Collectors.toList());
 	}
 
-	
 	/**
 	 * Devuelve la fecha de registro del usuario
 	 * 
@@ -282,7 +270,6 @@ public class Usuario {
 		this.nombre = nombre;
 	}
 	
-	
 	/**
 	 * Establece el codigo al usuario
 	 * 
@@ -310,7 +297,6 @@ public class Usuario {
 		this.telefono = telefono;
 	}
 	
-	
 	/**
 	 * Establece si el usuario es premium
 	 * 
@@ -329,6 +315,9 @@ public class Usuario {
 		this.fotoPerfil = imagen;
 	}
 	
+	/**
+	 * Metodo de comparacion de usuarios
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj) {
@@ -340,10 +329,13 @@ public class Usuario {
 		Usuario other = (Usuario) obj;
 		return this.telefono.equals(other.telefono);
 	}
-	
+	/**
+	 * Devuelve una lista de contactos ordenados por el número total de mensajes enviados
+	 * 
+	 * @return lista de contactos ordenados por mensajes
+	 */
 	public List<Contacto> getContactosOrdenadosPorMensaje() {
 	    if (contactos == null || contactos.isEmpty()) {
-	        System.err.println("❌ No hay contactos en usuario");
 	    	return new LinkedList<>(); // 🔹 Si no hay contactos, devuelve una lista vacía
 	    }
 
@@ -352,7 +344,6 @@ public class Usuario {
 	            .filter(c -> c != null) // 🔹 Evita contactos nulos
 	            .sorted(Comparator.comparing(c -> c.getMensajesEnviados().size(), Comparator.reverseOrder()))
 	            .collect(Collectors.toList());
-
 	}
 
 	
