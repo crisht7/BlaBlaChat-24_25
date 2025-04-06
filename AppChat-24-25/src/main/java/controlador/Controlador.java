@@ -20,42 +20,28 @@ import appChat.Usuario;
 import persistencia.*;
 
 public class Controlador {
-	//Uso del patron Singleton de instancia unica
+	// Uso del patron Singleton de instancia unica
 	private static Controlador unicaInstancia = null;
-	
-	//Repositorio de usuarios que almacena los usuarios de la aplicacion
+
+	// Repositorio de usuarios que almacena los usuarios de la aplicacion
 	private RepositorioUsuarios repoUsuarios;
-	
-	//Adaptadores de la base de datos para los grupos
+
+	// Adaptadores de la base de datos
 	private GrupoDAO adaptadorGrupo;
-	
-	//Adaptadores de la base de datos para los mensajes
 	private MensajeDAO adaptadorMensaje;
-	
-	//Adaptadores de la base de datos para los usuarios
 	private UsuarioDAO adaptadorUsuario;
-	
-	//Adaptadores de la base de datos para los contactos
 	private ContactoIndividualDAO adaptadorContactoIndividual;
-	
-	//Usuario actual autenticado usando la aplicación
+
+	// Usuario actual autenticado usando la aplicación
 	private Usuario usuarioActual;
-	
-	
-	/**
-	 * Constructor privado del controlador. 
-	 * Inicializa los adaptadores y repositorios
-	 * 
-	 * SOlo es llamado una vez debido al uso del patrón Singleton
-	 */
+
+	// Constructor privado del controlador
 	private Controlador() {
 		inicializarAdaptadores();
 		inicializarRepositorios();
 	}
-	
-	/**
-	 * Inicializa los adaptadores de la base de datos
-	 */
+
+	// Inicialización de adaptadores
 	private void inicializarAdaptadores() {
 		FactoriaDAO factoria = null;
 		try {
@@ -69,54 +55,48 @@ public class Controlador {
 		adaptadorContactoIndividual = factoria.getContactoIndividualDAO();
 	}
 
-	/**
-	 * Inicializa el repositorio de usuarios
-	 */
+	// Inicialización de repositorios
 	private void inicializarRepositorios() {
 		this.repoUsuarios = RepositorioUsuarios.getUnicaInstancia();
 	}
 
-	/**
-	 * Devuelve la instancia unica del controlador.
-	 * 
-	 * @return Controlador
-	 */
+	// Devuelve la instancia única del controlador
 	public static Controlador getInstancia() {
 		if (unicaInstancia == null) {
 			unicaInstancia = new Controlador();
 		}
 		return unicaInstancia;
 	}
-	
+
 	/**
-	 * Realiza el inicio de sesion con telefono y contraseña
+	 * Realiza el login del usuario en la aplicación
 	 * 
 	 * @param telefono
 	 * @param Contraseña
+	 * @return true si el login es exitoso, false en caso contrario
 	 */
 	public boolean hacerLogin(String telefono, String Contraseña) {
-	    boolean resultado = false;
-	    
-	    if (telefono.isEmpty() || Contraseña.isEmpty()) {
-	        return resultado;
-	    }
-	    
-	    Usuario usuario = adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
-	    if (usuario == null) {
-	        return resultado;
-	    }
-	    
-	    if (usuario.getContraseña().equals(Contraseña)) {
-	        this.usuarioActual = usuario;
-	        resultado = true;
-	    }
-	    
-	    return resultado;
+		boolean resultado = false;
+
+		if (telefono.isEmpty() || Contraseña.isEmpty()) {
+			return resultado;
+		}
+
+		Usuario usuario = adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
+		if (usuario == null) {
+			return resultado;
+		}
+
+		if (usuario.getContraseña().equals(Contraseña)) {
+			this.usuarioActual = usuario;
+			resultado = true;
+		}
+
+		return resultado;
 	}
 
 	/**
-	 * 
-	 * Registra un nuevo usuario en la aplicacion.
+	 * Registra un nuevo usuario en la aplicación
 	 * 
 	 * @param nombre
 	 * @param fechaNacimiento
@@ -124,166 +104,141 @@ public class Controlador {
 	 * @param telefono
 	 * @param saludo
 	 * @param contraseña
-	 * @return
+	 * @return true si el registro es exitoso, false en caso contrario
 	 */
-	public boolean registrarUsuario(String nombre, LocalDate fechaNacimiento, ImageIcon foto, String telefono, 
-									String saludo, String contraseña) {
+	public boolean registrarUsuario(String nombre, LocalDate fechaNacimiento, ImageIcon foto, String telefono,
+			String saludo, String contraseña) {
 		Usuario usuarioExistente = repoUsuarios.getUsuario(telefono);
 		if (usuarioExistente != null) {
 			return false;
 		}
-				
+
 		Usuario nuevoUsuario = new Usuario(nombre, foto, contraseña, telefono, saludo, fechaNacimiento, false);
-		
-		//Añadimos al repositorio si no existe
+
 		if (!repoUsuarios.existeUsuario(nuevoUsuario)) {
 			repoUsuarios.agregarUsuario(nuevoUsuario);
 			adaptadorUsuario.registrarUsuario(nuevoUsuario);
-			
-			//Devuelve true si se ha registrado correctamente
 			return hacerLogin(nuevoUsuario.getTelefono(), nuevoUsuario.getContraseña());
 		}
 		return false;
 	}
-	
+
 	/**
-	 * Devuelve los mensajes relevantes de un contacto para el usuario actual.
+	 * Obtiene la lista de mensajes de un contacto específico
 	 * 
-	 * @param contacto del que se obtendrán los mensajes.
-	 * @return Lista de mensajes relacionados con el contacto.
+	 * @param contacto
+	 * @return Lista de mensajes del contacto
 	 */
 	public List<Mensaje> getMensajes(Contacto contacto) {
 		if (contacto instanceof ContactoIndividual && !((ContactoIndividual) contacto).isUsuario(usuarioActual)) {
 			List<Mensaje> mensajes = Stream
 					.concat(((ContactoIndividual) contacto).getMensajesEnviados().stream(),
-                    ((ContactoIndividual) contacto).getMensajesRecibidos(Optional.of(usuarioActual)).stream()).
-					sorted().collect(Collectors.toList());
-		return mensajes.stream()
-				.filter(m-> !(m.getEmisor().getTelefono()
-				.equals(usuarioActual.getTelefono()) && m.isGroup()))
-				.collect(Collectors.toList());
+							((ContactoIndividual) contacto).getMensajesRecibidos(Optional.of(usuarioActual)).stream())
+					.sorted().collect(Collectors.toList());
+			return mensajes.stream()
+					.filter(m -> !(m.getEmisor().getTelefono()
+							.equals(usuarioActual.getTelefono()) && m.isGroup()))
+					.collect(Collectors.toList());
+		} else {
+			return contacto.getMensajesEnviados();
 		}
-		else {
-	        return contacto.getMensajesEnviados();
-	    }
 	}
-	
-	
+
 	/**
-	 * Devuelve los contactos del usuario ordenados por fecha del ultimo mensaje.
+	 * Obtiene la lista de contactos del usuario actual
 	 * 
-	 * @return Lista de contactos 
+	 * @return Lista de contactos del usuario actual
 	 */
 	public List<Contacto> getContactosUsuarioActual() {
-	    if (usuarioActual == null) {
-	        return new LinkedList<>();
-	    }
+		if (usuarioActual == null) {
+			return new LinkedList<>();
+		}
 
-	    List<Contacto> contactos = new LinkedList<>(usuarioActual.getContactosOrdenadosPorMensaje());
+		List<Contacto> contactos = new LinkedList<>(usuarioActual.getContactosOrdenadosPorMensaje());
+		List<Usuario> emisoresDesconocidos = new ArrayList<>();
 
-	    // Buscar mensajes de emisores que no estén en la lista de contactos
-	    List<Usuario> emisoresDesconocidos = new ArrayList<>();
+		for (Usuario posibleEmisor : repoUsuarios.getUsuarios()) {
+			if (posibleEmisor.equals(usuarioActual)) continue;
 
-	    for (Usuario posibleEmisor : repoUsuarios.getUsuarios()) {
-	        if (posibleEmisor.equals(usuarioActual)) continue;
+			boolean yaAgregado = usuarioActual.tieneContactoIndividualPorTelefono(posibleEmisor.getTelefono());
+			if (!yaAgregado) {
+				List<Mensaje> mensajesEnviados = adaptadorMensaje.getMensajesEnviadosPor(posibleEmisor.getTelefono());
+				boolean haEnviadoAlUsuarioActual = mensajesEnviados.stream()
+						.anyMatch(m -> m.getReceptor() instanceof ContactoIndividual &&
+								((ContactoIndividual) m.getReceptor()).isUsuario(usuarioActual));
 
-	        boolean yaAgregado = usuarioActual.tieneContactoIndividualPorTelefono(posibleEmisor.getTelefono());
-	        if (!yaAgregado) {
-	            // Obtener mensajes enviados por este posible emisor
-	            List<Mensaje> mensajesEnviados = adaptadorMensaje.getMensajesEnviadosPor(posibleEmisor.getTelefono());
+				if (haEnviadoAlUsuarioActual) {
+					emisoresDesconocidos.add(posibleEmisor);
+				}
+			}
+		}
 
-	            boolean haEnviadoAlUsuarioActual = mensajesEnviados.stream()
-	                .anyMatch(m -> {
-	                    if (m.getReceptor() instanceof ContactoIndividual) {
-	                        ContactoIndividual receptor = (ContactoIndividual) m.getReceptor();
-	                        return receptor.isUsuario(usuarioActual);
-	                    }
-	                    return false;
-	                });
+		for (Usuario emisor : emisoresDesconocidos) {
+			String telefono = emisor.getTelefono();
+			ContactoIndividual contactoAnonimo = new ContactoIndividual(telefono, emisor, telefono);
+			contactos.add(contactoAnonimo);
+		}
 
-	            if (haEnviadoAlUsuarioActual) {
-	                emisoresDesconocidos.add(posibleEmisor);
-	            }
-	        }
-	    }
-
-	    // Crear contactos temporales para esos emisores
-	    for (Usuario emisor : emisoresDesconocidos) {
-	        String telefono = emisor.getTelefono();
-	        String nombre = telefono; // Se muestra el número como nombre
-	        ContactoIndividual contactoAnonimo = new ContactoIndividual(nombre, emisor, telefono);
-	        contactos.add(contactoAnonimo);
-	    }
-
-	    return contactos;
+		return contactos;
 	}
 
-
-	
-	
 	/**
-	 * Devuelve el contacto individual del usuario actual.
+	 * Obtiene un contacto específico del usuario actual
 	 * 
-	 * @param usuario del que se quiere obtener el contacto
-	 * @return El contacto individual del usuario actual, o null si no existe.
+	 * @param usuario
+	 * @return ContactoIndividual correspondiente al usuario
 	 */
 	public Optional<ContactoIndividual> getContactoDelUsuarioActual(Usuario usuario) {
-	    List<ContactoIndividual> contactosIndividuales = Controlador.getInstancia().getContactosUsuarioActual().stream()
-	            .filter(c -> c instanceof ContactoIndividual)
-	            .map(c -> (ContactoIndividual) c)
-	            .collect(Collectors.toList());
+		List<ContactoIndividual> contactosIndividuales = getContactosUsuarioActual().stream()
+				.filter(c -> c instanceof ContactoIndividual)
+				.map(c -> (ContactoIndividual) c)
+				.collect(Collectors.toList());
 
-	    return contactosIndividuales.stream()
-	            .filter(c -> c.getUsuario() != null && c.getUsuario().getCodigo() == usuario.getCodigo())
-	            .findAny();
+		return contactosIndividuales.stream()
+				.filter(c -> c.getUsuario() != null && c.getUsuario().getCodigo() == usuario.getCodigo())
+				.findAny();
 	}
-	
+
 	/**
-	 * Crea el contacto especificado.
+	 * Crea un nuevo contacto individual
 	 * 
-	 * @param nombre      Nombre del contacto a guardar
-	 * @param numTelefono Número de telefono del contacto a guardar
-	 * @return El contacto creado. Devuelve null en caso de que ya existiese el
-	 *         contacto o el contacto no se corresponda con un usuario real.
+	 * @param nombre
+	 * @param numTelefono
+	 * @return ContactoIndividual creado, o null si no se pudo crear
 	 */
 	public ContactoIndividual crearContacto(String nombre, String numTelefono) {
-	    if (numTelefono.equals(usuarioActual.getTelefono())) {
-	        return null;
-	    }
+		if (numTelefono.equals(usuarioActual.getTelefono())) {
+			return null;
+		}
 
-	    // Verifica si el contacto ya existe por nombre o por teléfono
-	    boolean yaExistePorNombre = usuarioActual.tieneContactoIndividual(nombre);
-	    boolean yaExistePorTelefono = usuarioActual.tieneContactoIndividual(numTelefono);
+		boolean yaExistePorNombre = usuarioActual.tieneContactoIndividual(nombre);
+		boolean yaExistePorTelefono = usuarioActual.tieneContactoIndividual(numTelefono);
 
-	    if (yaExistePorNombre || yaExistePorTelefono) {
-	        return null;
-	    }
+		if (yaExistePorNombre || yaExistePorTelefono) {
+			return null;
+		}
 
-	    Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(numTelefono);
+		Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(numTelefono);
 
-	    if (usuarioOpt.isPresent()) {
-	        Usuario usuarioContacto = usuarioOpt.get();
-
-	        ContactoIndividual nuevoContacto = new ContactoIndividual(nombre, usuarioContacto, numTelefono);
-	        usuarioActual.añadirContacto(nuevoContacto);
-
-	        adaptadorContactoIndividual.registrarContacto(nuevoContacto);
-	        adaptadorUsuario.modificarUsuario(usuarioActual);
-
-	        return nuevoContacto;
-	    }
-
-	    return null;
+		if (usuarioOpt.isPresent()) {
+			Usuario usuarioContacto = usuarioOpt.get();
+			ContactoIndividual nuevoContacto = new ContactoIndividual(nombre, usuarioContacto, numTelefono);
+			usuarioActual.añadirContacto(nuevoContacto);
+			adaptadorContactoIndividual.registrarContacto(nuevoContacto);
+			adaptadorUsuario.modificarUsuario(usuarioActual);
+			return nuevoContacto;
+		}
+		return null;
 	}
 
 	/**
-	 * Envia un mensaje al contacto especificado
-	 *
-	 * @param texto    Texto del mensaje a enviar
-	 * @param contaco Contacto al que se enviará el mensaje
+	 * Envía un mensaje a un contacto específico
+	 * 
+	 * @param texto
+	 * @param contacto
 	 */
 	public void enviarMensaje(String texto, Contacto contacto) {
-	    if (usuarioActual == null || contacto == null || texto == null || texto.isEmpty()) return;
+		if (usuarioActual == null || contacto == null || texto == null || texto.isEmpty()) return;
 
 		Mensaje mensaje = null;
 
@@ -291,104 +246,101 @@ public class Controlador {
 			if (!isEnListaContactos(contacto)) {
 				crearContactoAnonimo((ContactoIndividual) contacto);
 			}
-			
+
 			mensaje = new Mensaje(texto, LocalDateTime.now(), usuarioActual, contacto);
 			contacto.enviarMensaje(mensaje);
-
 			adaptadorMensaje.registrarMensaje(mensaje);
+
 			ContactoIndividual ci = (ContactoIndividual) contacto;
 			if (ci.getCodigo() != 0 && PoolDAO.getUnicaInstancia().contieneID(ci.getCodigo())) {
-			    adaptadorContactoIndividual.modificarContacto(ci);
-			}		
+				adaptadorContactoIndividual.modificarContacto(ci);
+			}
 		} else if (contacto instanceof Grupo) {
-			
+			// TODO: lógica para grupos 
 		}
+	}
+
+	/**
+	 * Envía un mensaje con un emoticono a un contacto específico
+	 * 
+	 * @param emoticono
+	 * @param contacto
+	 */
+	public void enviarMensaje(int emoticono, Contacto contacto) {
+		if (usuarioActual == null || contacto == null) return;
+
+		Mensaje mensaje = new Mensaje(emoticono, LocalDateTime.now(), usuarioActual, contacto);
+		contacto.enviarMensaje(mensaje);
+		adaptadorMensaje.registrarMensaje(mensaje);
+
+		if (contacto instanceof ContactoIndividual) {
+			adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
+		} else if (contacto instanceof Grupo) {
+			// TODO lógica para grupo 
+		}
+	}
+
+	/**
+	 * Crea un nuevo grupo y lo añade a la lista de contactos del usuario actual
+	 * 
+	 * @param grupo
+	 */
+	public void añadirGrupo(Grupo grupo) {
+		if (grupo == null || usuarioActual == null) return;
+		usuarioActual.añadirContacto(grupo);
+		adaptadorGrupo.registrarGrupo(grupo);
+		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 
 
 	/**
-	 * Envia un mensaje al contacto especificado
-	 *
-	 * @param emoticono Emoticono del mensaje a enviar
-	 * @param contacto Contacto al que se enviará el mensaje
+	 * Verifica si el contacto ya está en la lista de contactos del usuario actual
+	 * 
+	 * @param contacto
+	 * @return
 	 */
-	public void enviarMensaje(int emoticono, Contacto contacto) {
-	    if (usuarioActual == null || contacto == null) return;
-
-	    Mensaje mensaje = new Mensaje(emoticono, java.time.LocalDateTime.now(), usuarioActual, contacto);
-	    contacto.enviarMensaje(mensaje);
-
-	    adaptadorMensaje.registrarMensaje(mensaje);
-
-	    if (contacto instanceof ContactoIndividual) {
-	        adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
-	    } else if (contacto instanceof Grupo) {
-	        // lógica para grupo si es necesario
-	    }
-	}
-
 	private boolean isEnListaContactos(Contacto contacto) {
 		ContactoIndividual contactoIndividual = (ContactoIndividual) contacto;
-		return usuarioActual.getContactos().stream().filter(c -> c instanceof ContactoIndividual)
+		return usuarioActual.getContactos().stream()
+				.filter(c -> c instanceof ContactoIndividual)
 				.map(c -> (ContactoIndividual) c)
 				.anyMatch(c -> c.getTelefono().equals(contactoIndividual.getTelefono()));
 	}
 	
-	private void crearContactoAnonimo(ContactoIndividual contacto) {
-	    Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(contacto.getTelefono());
-	    
-	    if (usuarioOpt.isEmpty()) return;
-
-	    Usuario receptor = usuarioOpt.get();
-
-	    // Si el usuario actual NO está en su lista de contactos, creamos uno nuevo
-	    if (!receptor.tieneContactoIndividualPorTelefono(usuarioActual.getTelefono())) {
-	        ContactoIndividual nuevo = new ContactoIndividual(
-	            usuarioActual.getTelefono(), 
-	            usuarioActual,
-	            usuarioActual.getTelefono()  
-	        );
-
-	        receptor.añadirContacto(nuevo);
-	        adaptadorContactoIndividual.registrarContacto(nuevo);
-	        adaptadorUsuario.modificarUsuario(receptor);
-	    }
-	}
-	
 	/**
-	 * Añade un grupo al usuario actual y lo guarda en la base de datos.
-	 *
-	 * @param grupo Grupo a añadir
+	 * Crea un contacto anónimo para el usuario actual si no existe
+	 * 
+	 * @param contacto
 	 */
-	public void añadirGrupo(Grupo grupo) {
-	    if (grupo == null || usuarioActual == null) return;
+	private void crearContactoAnonimo(ContactoIndividual contacto) {
+		Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(contacto.getTelefono());
+		if (usuarioOpt.isEmpty()) return;
 
-	    usuarioActual.añadirContacto(grupo);         // Agrega el grupo como contacto
-	    adaptadorGrupo.registrarGrupo(grupo);        // Lo guarda en la base de datos
-	    adaptadorUsuario.modificarUsuario(usuarioActual); // Persiste el usuario con su nuevo grupo
+		Usuario receptor = usuarioOpt.get();
+		if (!receptor.tieneContactoIndividualPorTelefono(usuarioActual.getTelefono())) {
+			ContactoIndividual nuevo = new ContactoIndividual(
+					usuarioActual.getTelefono(), usuarioActual, usuarioActual.getTelefono()
+					);
+			receptor.añadirContacto(nuevo);
+			adaptadorContactoIndividual.registrarContacto(nuevo);
+			adaptadorUsuario.modificarUsuario(receptor);
+		}
 	}
 
-
-
-	
+	//Getters y Setters 
 	public RepositorioUsuarios getRepoUsuarios() {
-	    return this.repoUsuarios;
+		return this.repoUsuarios;
 	}
 
 	public ContactoIndividualDAO getAdaptadorContactoIndividual() {
-	    return this.adaptadorContactoIndividual;
+		return this.adaptadorContactoIndividual;
 	}
 
 	public UsuarioDAO getAdaptadorUsuario() {
 		return this.adaptadorUsuario;
 	}
-	
+
 	public Usuario getUsuarioActual() {
 		return this.usuarioActual;
-
 	}
-	
-	
 }
-	
-
