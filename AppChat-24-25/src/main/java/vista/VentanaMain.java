@@ -10,13 +10,14 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Optional;
 import javax.swing.*;
+import java.util.Vector;
+
 import appChat.*;
 import controlador.Controlador;
 import tds.BubbleText;
 
-public class VentanaMain {
+public class VentanaMain extends JFrame {
 
-    public JFrame frame;
     public Chat chat;
     private static VentanaMain instancia;
     private Map<Contacto, Chat> chatsRecientes;
@@ -24,7 +25,6 @@ public class VentanaMain {
     private Contacto contactoActual;
     private JList<Contacto> listaChatRecientes;
     private JComboBox<String> comboPanelRecientes;
-
 
     private final Color turquesa = Colores.TURQUESA.getColor();
     private final Color turquesaOscuro = Colores.TURQUESA_OSCURO.getColor();
@@ -35,7 +35,7 @@ public class VentanaMain {
         EventQueue.invokeLater(() -> {
             try {
                 VentanaMain window = new VentanaMain();
-                window.frame.setVisible(true);
+                window.setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -48,11 +48,11 @@ public class VentanaMain {
         initialize();
     }
 
-	/**
-	 * Método para obtener la instancia de la ventana principal.
-	 * 
-	 * @return instancia de VentanaMain
-	 */
+    /**
+     * Método para obtener la instancia de la ventana principal.
+     * 
+     * @return instancia de VentanaMain
+     */
     public static VentanaMain getInstancia() {
         return instancia;
     }
@@ -179,13 +179,12 @@ public class VentanaMain {
 	 * Método para inicializar la ventana principal.
 	 */
     private void initialize() {
-        frame = new JFrame();
-        frame.setBounds(100, 100, 746, 654);
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.getContentPane().setLayout(new BorderLayout(0, 0));
+        this.setBounds(100, 100, 746, 654);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.getContentPane().setLayout(new BorderLayout(0, 0));
 
         scrollBarChat = new JScrollPane();
-        frame.getContentPane().add(scrollBarChat, BorderLayout.CENTER);
+        this.getContentPane().add(scrollBarChat, BorderLayout.CENTER);
 
         configurarPanelRecientes();
         configurarPanelNorte();
@@ -198,7 +197,7 @@ public class VentanaMain {
     private void configurarPanelRecientes() {
         JPanel panelRecientes = new JPanel(new BorderLayout());
         panelRecientes.setPreferredSize(new Dimension(250, 0));
-        frame.getContentPane().add(panelRecientes, BorderLayout.WEST);
+        this.getContentPane().add(panelRecientes, BorderLayout.WEST);
 
         JLabel lblTitulo = new JLabel("Chats Recientes", JLabel.CENTER);
         panelRecientes.add(lblTitulo, BorderLayout.NORTH);
@@ -232,7 +231,7 @@ public class VentanaMain {
         JPanel panelNorte = new JPanel();
         panelNorte.setBackground(naranjaClaro);
         panelNorte.setLayout(new BoxLayout(panelNorte, BoxLayout.X_AXIS));
-        frame.getContentPane().add(panelNorte, BorderLayout.NORTH);
+        this.getContentPane().add(panelNorte, BorderLayout.NORTH);
 
         comboPanelRecientes = new JComboBox<>();
         comboPanelRecientes.setMaximumSize(new Dimension(150, 30));
@@ -240,26 +239,24 @@ public class VentanaMain {
         comboPanelRecientes.setEditable(true);
         panelNorte.add(comboPanelRecientes);
 
-        JButton btnIrAlChat = crearBoton("Ir al chat", e -> abrirChatConNumeroDesdeCombo());
-        panelNorte.add(btnIrAlChat);
+        panelNorte.add(crearBoton("Ir al chat", e -> abrirChatConNumeroDesdeCombo()));
 
-        
-        JButton btnBuscarMensaje = crearBoton("Buscar", e -> new VentanaBuscar(frame).setVisible(true));
-        JButton btnContactos = crearBoton("Contactos", e -> new VentanaContacto(new DefaultListModel<>()).setVisible(true));
-        JButton btnTema = crearBoton("Tema", e -> {});
+        // Asegurate de agregar todos los botones:
+        panelNorte.add(crearBoton("Buscar", e -> new VentanaBuscar(this).setVisible(true)));
+        panelNorte.add(crearBoton("Contactos", e -> new VentanaContacto(new DefaultListModel<>()).setVisible(true)));
+        panelNorte.add(crearBoton("Tema", e -> {}));
+        panelNorte.add(crearBoton("Añadir Grupo", e -> abrirDialogoCrearGrupo()));
+
+        panelNorte.add(Box.createHorizontalGlue());
 
         JButton btnPremium = new JButton("Premium");
         btnPremium.setBackground(new Color(159, 213, 192));
+        panelNorte.add(btnPremium);
 
         JLabel lblFoto = new JLabel("Usuario");
-
-        panelNorte.add(btnBuscarMensaje);
-        panelNorte.add(btnContactos);
-        panelNorte.add(btnTema);
-        panelNorte.add(Box.createHorizontalGlue());
-        panelNorte.add(btnPremium);
         panelNorte.add(lblFoto);
     }
+
 
 	/**
 	 * Método para crear un botón con texto y ActionListener.
@@ -280,7 +277,7 @@ public class VentanaMain {
      */
     private void configurarPanelChat() {
         JPanel panelChatActual = new JPanel(new BorderLayout());
-        frame.getContentPane().add(panelChatActual, BorderLayout.CENTER);
+        this.getContentPane().add(panelChatActual, BorderLayout.CENTER);
 
         chat = new Chat();
         chat.setBackground(naranjaClaro);
@@ -505,7 +502,7 @@ public class VentanaMain {
         String telefono = ((String) comboPanelRecientes.getEditor().getItem()).trim();
 
         if (telefono.isEmpty()) {
-            JOptionPane.showMessageDialog(frame, "Por favor, introduce un número de teléfono.");
+            JOptionPane.showMessageDialog(this, "Por favor, introduce un número de teléfono.");
             return;
         }
 
@@ -523,7 +520,7 @@ public class VentanaMain {
             // Buscar el usuario al que corresponde el teléfono
             Optional<Usuario> usuarioDestino = Controlador.getInstancia().getRepoUsuarios().buscarUsuario(telefono);
             if (usuarioDestino.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "No existe ningún usuario con ese número.");
+                JOptionPane.showMessageDialog(this, "No existe ningún usuario con ese número.");
                 return;
             }
 
@@ -531,7 +528,7 @@ public class VentanaMain {
             contacto = Controlador.getInstancia().crearContacto(telefono, telefono); // nombre = telefono
 
             if (contacto == null) {
-                JOptionPane.showMessageDialog(frame, "No se pudo crear el contacto.");
+                JOptionPane.showMessageDialog(this, "No se pudo crear el contacto.");
                 return;
             }
 
@@ -542,6 +539,56 @@ public class VentanaMain {
         // Cargar chat en pantalla
         cargarChat(contacto);
     }
+    
+    private void abrirDialogoCrearGrupo() {
+        JDialog dialogo = new JDialog(this, "Crear Nuevo Grupo", true);
+        dialogo.setSize(400, 300);
+        dialogo.setLayout(new BorderLayout());
+
+        JPanel panelCentro = new JPanel(new GridLayout(3, 1));
+        
+        JTextField txtNombreGrupo = new JTextField();
+        panelCentro.add(new JLabel("Nombre del grupo:"));
+        panelCentro.add(txtNombreGrupo);
+
+        // Lista de contactos para elegir
+        List<ContactoIndividual> contactosDisponibles = Controlador.getInstancia().getUsuarioActual().getContactosIndividuales();
+        JList<ContactoIndividual> listaContactos = new JList<>(new Vector<>(contactosDisponibles));
+        listaContactos.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        panelCentro.add(new JScrollPane(listaContactos));
+
+        dialogo.add(panelCentro, BorderLayout.CENTER);
+
+        // Botón crear
+        JButton btnCrear = new JButton("Crear Grupo");
+        btnCrear.addActionListener(e -> {
+            String nombre = txtNombreGrupo.getText().trim();
+            List<ContactoIndividual> seleccionados = listaContactos.getSelectedValuesList();
+
+            if (nombre.isEmpty()) {
+                JOptionPane.showMessageDialog(dialogo, "Debe ingresar un nombre.");
+                return;
+            }
+
+            if (seleccionados.isEmpty()) {
+                JOptionPane.showMessageDialog(dialogo, "Debe seleccionar al menos un contacto.");
+                return;
+            }
+
+            Grupo nuevoGrupo = new Grupo(nombre); // Imagen por defecto
+            seleccionados.forEach(nuevoGrupo::agregarIntegrante);
+
+            Controlador.getInstancia().añadirGrupo(nuevoGrupo); // Esto debería persistir y añadir al usuario
+
+            actualizarListaContactos();
+            dialogo.dispose();
+        });
+
+        dialogo.add(btnCrear, BorderLayout.SOUTH);
+        dialogo.setLocationRelativeTo(this);
+        dialogo.setVisible(true);
+    }
+
 
 
 

@@ -72,6 +72,8 @@ public class Grupo extends Contacto {
 	public List<ContactoIndividual> getIntegrantes() {
 		return new LinkedList<>(integrantes);
 	}
+
+
 	
 	
 }

@@ -76,7 +76,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				new Propiedad("foto", usuario.getFotoPerfil().getDescription()),
 				new Propiedad("contactos", obtenerCodigosContactoIndividual(usuario.getContactos())),
 				new Propiedad("fechaRegistro", usuario.getFechaRegistro().toString()),
-				new Propiedad("Grupos", usuario.getGrupos().toString()))));
+				new Propiedad("grupos", obtenerCodigosGrupos(usuario.getGrupos())))));
 				
 		eUsuario = servPersistencia.registrarEntidad(eUsuario);
 		usuario.setCodigo(eUsuario.getId());
@@ -269,6 +269,16 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	        .orElse(null);
 	}
 
+	/**
+	 * Convierte una lista de grupos a un String de codigos
+	 * 
+	 * @return codigo
+	 */
+	private String obtenerCodigosGrupos(List<Grupo> grupos) {
+	    return grupos.stream()
+	            .map(g -> String.valueOf(g.getCodigo()))
+	            .collect(Collectors.joining(" ")); // separados por espacio, como los contactos
+	}
 
 
 

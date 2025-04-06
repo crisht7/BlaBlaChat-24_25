@@ -372,6 +372,20 @@ public class Controlador {
 	        adaptadorUsuario.modificarUsuario(receptor);
 	    }
 	}
+	
+	/**
+	 * Añade un grupo al usuario actual y lo guarda en la base de datos.
+	 *
+	 * @param grupo Grupo a añadir
+	 */
+	public void añadirGrupo(Grupo grupo) {
+	    if (grupo == null || usuarioActual == null) return;
+
+	    usuarioActual.añadirContacto(grupo);         // Agrega el grupo como contacto
+	    adaptadorGrupo.registrarGrupo(grupo);        // Lo guarda en la base de datos
+	    adaptadorUsuario.modificarUsuario(usuarioActual); // Persiste el usuario con su nuevo grupo
+	}
+
 
 
 	

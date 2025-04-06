@@ -112,7 +112,7 @@ public class VentanaLogin {
 				if (login) {
 					VentanaMain ventanaMain = new VentanaMain();
 				    ventanaMain.actualizarListaContactos();
-					ventanaMain.frame.setVisible(true);
+					ventanaMain.setVisible(true);
 					VentanaLogin.this.frmLogin.setVisible(false);
 				} else {
 					
