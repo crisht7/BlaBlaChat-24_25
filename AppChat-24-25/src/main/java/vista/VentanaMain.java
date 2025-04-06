@@ -16,6 +16,7 @@ import appChat.*;
 import controlador.Controlador;
 import tds.BubbleText;
 
+@SuppressWarnings("serial")
 public class VentanaMain extends JFrame {
 
     public Chat chat;
@@ -98,7 +99,6 @@ public class VentanaMain extends JFrame {
 	/**
 	 * Clase interna para el renderizado de la lista de contactos.
 	 */
-    @SuppressWarnings("serial")
 	class CellRenderer extends JPanel implements ListCellRenderer<Contacto> {
         private JLabel nombreLabel;
         private JLabel telefonoLabel;

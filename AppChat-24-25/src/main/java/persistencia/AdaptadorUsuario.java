@@ -86,8 +86,17 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 	@Override
 	public void borrarUsuario(Usuario usuario) {
-		// TODO Auto-generated method stub
+		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
+		servPersistencia.borrarEntidad(eUsuario);
 		
+		// Eliminar contactos asociados
+		usuario.getContactos().forEach(c -> {
+			AdaptadorContactoIndividual.getUnicaInstancia().borrarContacto((ContactoIndividual) c);
+		});
+		
+		if (PoolDAO.getUnicaInstancia().contieneID(usuario.getCodigo())) {
+			PoolDAO.getUnicaInstancia().eliminarObjeto(usuario.getCodigo());
+		}
 	}
 
 	@Override

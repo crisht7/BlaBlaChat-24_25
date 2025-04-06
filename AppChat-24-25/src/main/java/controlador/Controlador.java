@@ -41,8 +41,6 @@ public class Controlador {
 	//Usuario actual autenticado usando la aplicación
 	private Usuario usuarioActual;
 	
-	//Contacto en actualmente seleccionado en el chat
-	private Contacto contactoActual;
 	
 	/**
 	 * Constructor privado del controlador. 
@@ -170,22 +168,6 @@ public class Controlador {
 	    }
 	}
 	
-
-	/**
-	 * Devuelve el contacto del usuario autenticado. Si no existe, devuelve null.
-	 * 
-	 * @return Contacto del usuario autenticado
-	 */
-	private Contacto buscarContactoDelUsuario() {
-	    // Buscar el contacto que representa al usuario autenticado
-		for (ContactoIndividual c : usuarioActual.getContactos().stream().filter(c -> c instanceof ContactoIndividual)
-				.map(c -> (ContactoIndividual) c).collect(Collectors.toList())) {
-	        if (c.isUsuario(usuarioActual)) { // Método para verificar si es el usuario
-	            return c;
-	        }
-	    }
-	    return null;
-	}
 	
 	/**
 	 * Devuelve los contactos del usuario ordenados por fecha del ultimo mensaje.

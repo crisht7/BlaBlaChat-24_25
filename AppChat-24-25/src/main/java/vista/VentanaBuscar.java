@@ -3,6 +3,7 @@ package vista;
 import javax.swing.*;
 import java.awt.*;
 
+@SuppressWarnings("serial")
 public class VentanaBuscar extends JDialog {
 
     private JTextField textFieldTexto;
