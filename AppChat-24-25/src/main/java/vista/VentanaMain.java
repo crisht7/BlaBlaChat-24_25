@@ -168,7 +168,21 @@ public class VentanaMain extends JFrame {
                     iconoLabel.setIcon(null);
                 }
 
-                setBackground(isSelected ? new Color(173, 216, 230) : Color.WHITE);
+                
+                Color fondo = isSelected ?  naranjaClaro : naranjaOscuro;
+
+                setBackground(fondo);
+                nombreLabel.setBackground(fondo);
+                telefonoLabel.setBackground(fondo);
+                mensajePreviewLabel.setBackground(fondo);
+                iconoLabel.setBackground(fondo); // También si quieres el fondo detrás del icono
+                
+                // los ponemos opacos
+                setOpaque(true);
+                nombreLabel.setOpaque(true);
+                telefonoLabel.setOpaque(true);
+                mensajePreviewLabel.setOpaque(true);
+                iconoLabel.setOpaque(true);
             }
 
             return this;
@@ -450,10 +464,10 @@ public class VentanaMain extends JFrame {
 	 */
     private Chat crearChat() {
         Chat nuevoChat = new Chat();
-        nuevoChat.setBackground(new Color(241, 192, 133));
+        nuevoChat.setBackground(naranjaClaro);
         nuevoChat.setLayout(new BoxLayout(nuevoChat, BoxLayout.Y_AXIS));
         nuevoChat.setSize(400, 700);
-        scrollBarChat.getViewport().setBackground(new Color(159, 213, 192));
+        scrollBarChat.getViewport().setBackground(naranjaClaro);
         return nuevoChat;
     }
 
@@ -466,15 +480,18 @@ public class VentanaMain extends JFrame {
     private BubbleText crearBubble(Mensaje m) {
         String emisor;
         int direccionMensaje;
-        Color colorBurbuja = new Color(159, 213, 192);
+        Color colorBurbuja;
 
         if (m.getEmisor().equals(Controlador.getInstancia().getUsuarioActual())) {
             emisor = "You";
             direccionMensaje = BubbleText.SENT;
+            colorBurbuja = turquesa;
+            
         } else {
             Optional<ContactoIndividual> contactoOpcional = Controlador.getInstancia().getContactoDelUsuarioActual(m.getEmisor());
             emisor = contactoOpcional.map(ContactoIndividual::getNombre).orElse("Desconocido");
             direccionMensaje = BubbleText.RECEIVED;
+            colorBurbuja = turquesaOscuro;
         }
 
         if (m.getTexto().isEmpty()) {
