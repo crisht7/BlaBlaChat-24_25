@@ -2,7 +2,7 @@ package persistencia;
 
 public abstract class FactoriaDAO {
 
-	public static final String DAO_TDS = "persistencia.ImpleFactoriaDAO";
+	public static final String DAO_TDS = "persistencia.AdaptadorFactoriaDAO";
 	
 	private static FactoriaDAO unicaInstancia = null;
 
