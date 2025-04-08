@@ -2,7 +2,14 @@ package vista;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.image.BufferedImage;
+import java.io.IOException;
+import java.net.URL;
 import java.time.ZoneId;
+
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
@@ -19,7 +26,11 @@ public class VentanaRegistro extends JFrame {
 	private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
 	private final Color turquesa = Colores.TURQUESA.getColor();
 	private final Color boton = Colores.NARANJA_BOTON.getColor();
+	private JLabel lblIcon;
+	private BufferedImage imagenPerfil;  // Guardamos la imagen real aquí
 
+
+	
 	public VentanaRegistro() {
 		setTitle("Register");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -187,8 +198,17 @@ public class VentanaRegistro extends JFrame {
 		gbc_textFieldURL.gridx = 4;
 		gbc_textFieldURL.gridy = 10;
 		contentPane.add(textFieldURL, gbc_textFieldURL);
+		
+		// Después de agregar textFieldURL al contentPane
+		textFieldURL.addFocusListener(new FocusAdapter() {
+		    @Override
+		    public void focusLost(FocusEvent e) {
+		        cargarImagenDesdeURL();
+		    }
+		});
 
-		JLabel lblIcon = new JLabel("");
+
+		lblIcon = new JLabel("");
 		lblIcon.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/recursos/account.png")));
 		GridBagConstraints gbc_lblIcon = new GridBagConstraints();
 		gbc_lblIcon.gridheight = 3;
@@ -250,24 +270,83 @@ public class VentanaRegistro extends JFrame {
 		panel.add(btnCancelar);
 	}
 
-	private void registrarUsuario(ActionEvent e) {
-		if (!datosCorrectos()) return;
-		boolean creado = Controlador.getInstancia().registrarUsuario(
-				textFieldNombre.getText(),
-				dateChooserFechaNac.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
-				new ImageIcon(textFieldURL.getText()),
-				textFieldTelefono.getText(),
-				textFieldSaludo.getText(),
-				new String(passwordFieldContraseña.getPassword()));
-		if (!creado) {
-			JOptionPane.showMessageDialog(this, "El usuario ya existe", "Crea una cuenta", JOptionPane.ERROR_MESSAGE);
-		} else {
-			JOptionPane.showMessageDialog(this, "Usuario registrado correctamente", "Registro", JOptionPane.INFORMATION_MESSAGE);
-			Toolkit.getDefaultToolkit().beep();
-			dispose();
-			new VentanaLogin().frmLogin.setVisible(true);
-		}
+	private void cargarImagenDesdeURL() {
+	    String urlTexto = textFieldURL.getText().trim();
+	    if (urlTexto.isEmpty()) {
+	        try {
+	            imagenPerfil = ImageIO.read(VentanaRegistro.class.getResource("/recursos/account.png"));
+	            lblIcon.setIcon(new ImageIcon(imagenPerfil.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	        }
+	        return;
+	    }
+	    try {
+	        URL url = new URL(urlTexto);
+	        imagenPerfil = ImageIO.read(url);
+	        if (imagenPerfil != null) {
+	            lblIcon.setIcon(new ImageIcon(imagenPerfil.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+	        } else {
+	            System.err.println("⚠️ No se pudo cargar la imagen del URL, usando predeterminada.");
+	            imagenPerfil = ImageIO.read(VentanaRegistro.class.getResource("/recursos/account.png"));
+	            lblIcon.setIcon(new ImageIcon(imagenPerfil.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+	        }
+	    } catch (IOException ex) {
+	        System.err.println("❌ Error descargando la imagen: " + ex.getMessage());
+	        try {
+	            imagenPerfil = ImageIO.read(VentanaRegistro.class.getResource("/recursos/account.png"));
+	            lblIcon.setIcon(new ImageIcon(imagenPerfil.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
+	        } catch (IOException e2) {
+	            e2.printStackTrace();
+	        }
+	    }
 	}
+
+
+
+	
+	private void registrarUsuario(ActionEvent e) {
+	    if (!datosCorrectos()) return;
+
+	    ImageIcon fotoPerfil = null;
+	    String urlTexto = textFieldURL.getText().trim();
+
+	    if (!urlTexto.isEmpty()) {
+	        try {
+	            URL url = new URL(urlTexto);
+	            BufferedImage imagen = ImageIO.read(url);
+	            if (imagen != null) {
+	                fotoPerfil = new ImageIcon(imagen); // ⚡ Aquí sin escalar
+	            }
+	        } catch (IOException ex) {
+	            System.err.println("❌ No se pudo descargar la imagen, se usará predeterminada.");
+	        }
+	    }
+
+	    if (fotoPerfil == null) {
+	        fotoPerfil = new ImageIcon(VentanaRegistro.class.getResource("/recursos/account.png"));
+	    }
+
+	    boolean creado = Controlador.getInstancia().registrarUsuario(
+	        textFieldNombre.getText(),
+	        dateChooserFechaNac.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+	        fotoPerfil,
+	        textFieldTelefono.getText(),
+	        textFieldSaludo.getText(),
+	        new String(passwordFieldContraseña.getPassword())
+	    );
+
+	    if (!creado) {
+	        JOptionPane.showMessageDialog(this, "El usuario ya existe", "Crea una cuenta", JOptionPane.ERROR_MESSAGE);
+	    } else {
+	        JOptionPane.showMessageDialog(this, "Usuario registrado correctamente", "Registro", JOptionPane.INFORMATION_MESSAGE);
+	        Toolkit.getDefaultToolkit().beep();
+	        dispose();
+	        new VentanaLogin().frmLogin.setVisible(true);
+	    }
+	}
+
+
 
 	private void cancelarRegistro() {
 		dispose();

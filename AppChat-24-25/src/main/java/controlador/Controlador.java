@@ -120,6 +120,7 @@ public class Controlador {
 			adaptadorUsuario.registrarUsuario(nuevoUsuario);
 			return hacerLogin(nuevoUsuario.getTelefono(), nuevoUsuario.getContraseña());
 		}
+
 		return false;
 	}
 

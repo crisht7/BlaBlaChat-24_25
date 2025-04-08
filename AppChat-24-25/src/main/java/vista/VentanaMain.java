@@ -267,8 +267,25 @@ public class VentanaMain extends JFrame {
         btnPremium.setBackground(new Color(159, 213, 192));
         panelNorte.add(btnPremium);
 
-        JLabel lblFoto = new JLabel("Usuario");
-        panelNorte.add(lblFoto);
+        Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
+
+        if (usuarioActual != null) {
+            ImageIcon fotoPerfil = usuarioActual.getFotoPerfil();  // Ya sabemos que no es null
+            JLabel lblFotoUsuario = new JLabel();
+
+            if (fotoPerfil != null && fotoPerfil.getImage() != null) {
+                Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                lblFotoUsuario.setIcon(new ImageIcon(imagenEscalada));
+            }
+
+            lblFotoUsuario.setText(" " + usuarioActual.getNombre());
+            lblFotoUsuario.setHorizontalTextPosition(SwingConstants.RIGHT); // Icono a la izquierda, texto a la derecha
+            lblFotoUsuario.setIconTextGap(10); // Espacio entre icono y texto
+            lblFotoUsuario.setForeground(Color.BLACK); // Opcional: color del texto
+
+            panelNorte.add(lblFotoUsuario);
+        }
+       
     }
 
 
