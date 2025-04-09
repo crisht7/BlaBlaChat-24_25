@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.ZoneId;
@@ -13,6 +14,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.SoftBevelBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import com.toedter.calendar.JDateChooser;
 import controlador.Controlador;
 
@@ -188,27 +191,20 @@ public class VentanaRegistro extends JFrame {
 		gbc_lblUrl.gridy = 10;
 		contentPane.add(lblUrl, gbc_lblUrl);
 
-		textFieldURL = new JTextField();
-		textFieldURL.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
-		textFieldURL.setBackground(naranjaOscuro);
-		textFieldURL.setColumns(10);
-		GridBagConstraints gbc_textFieldURL = new GridBagConstraints();
-		gbc_textFieldURL.fill = GridBagConstraints.HORIZONTAL;
-		gbc_textFieldURL.insets = new Insets(0, 0, 5, 5);
-		gbc_textFieldURL.gridx = 4;
-		gbc_textFieldURL.gridy = 10;
-		contentPane.add(textFieldURL, gbc_textFieldURL);
 		
-		// Después de agregar textFieldURL al contentPane
-		textFieldURL.addFocusListener(new FocusAdapter() {
-		    @Override
-		    public void focusLost(FocusEvent e) {
-		        cargarImagenDesdeURL();
-		    }
-		});
 
 
 		lblIcon = new JLabel("");
+		JButton btnSeleccionarImagen = new JButton("Seleccionar Imagen");
+		btnSeleccionarImagen.setBackground(boton);
+		btnSeleccionarImagen.addActionListener(e -> seleccionarImagenDesdePC());
+		GridBagConstraints gbc_btnSeleccionarImagen = new GridBagConstraints();
+		gbc_btnSeleccionarImagen.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSeleccionarImagen.gridx = 4;
+		gbc_btnSeleccionarImagen.gridy = 14;
+		contentPane.add(btnSeleccionarImagen, gbc_btnSeleccionarImagen);
+
+		
 		lblIcon.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/recursos/account.png")));
 		GridBagConstraints gbc_lblIcon = new GridBagConstraints();
 		gbc_lblIcon.gridheight = 3;
@@ -308,25 +304,12 @@ public class VentanaRegistro extends JFrame {
 	private void registrarUsuario(ActionEvent e) {
 	    if (!datosCorrectos()) return;
 
-	    ImageIcon fotoPerfil = null;
-	    String urlTexto = textFieldURL.getText().trim();
-
-	    if (!urlTexto.isEmpty()) {
-	        try {
-	            URL url = new URL(urlTexto);
-	            BufferedImage imagen = ImageIO.read(url);
-	            if (imagen != null) {
-	                fotoPerfil = new ImageIcon(imagen); // ⚡ Aquí sin escalar
-	            }
-	        } catch (IOException ex) {
-	            System.err.println("❌ No se pudo descargar la imagen, se usará predeterminada.");
-	        }
-	    }
-
-	    if (fotoPerfil == null) {
+	    ImageIcon fotoPerfil = (ImageIcon) lblIcon.getIcon();
+	    if (fotoPerfil == null || fotoPerfil.getDescription() == null) {
 	        fotoPerfil = new ImageIcon(VentanaRegistro.class.getResource("/recursos/account.png"));
+	        fotoPerfil.setDescription("/recursos/account.png");
 	    }
-
+	    
 	    boolean creado = Controlador.getInstancia().registrarUsuario(
 	        textFieldNombre.getText(),
 	        dateChooserFechaNac.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
@@ -375,6 +358,32 @@ public class VentanaRegistro extends JFrame {
 		}
 		return true;
 	}
+	
+	private void seleccionarImagenDesdePC() {
+	    JFileChooser seleccion = new JFileChooser();
+	    FileNameExtensionFilter filter = new FileNameExtensionFilter("Imágenes", "jpg", "png", "jpeg");
+	    seleccion.setFileFilter(filter);
+	    seleccion.setCurrentDirectory(new File(System.getProperty("user.home")));
+
+	    int resultado = seleccion.showOpenDialog(this);
+	    if (resultado == JFileChooser.APPROVE_OPTION) {
+	        File archivo = seleccion.getSelectedFile();
+	        try {
+	            BufferedImage imagen = ImageIO.read(archivo);
+	            if (imagen != null) {
+	                imagenPerfil = imagen;
+	                ImageIcon icono = new ImageIcon(imagen.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
+	                icono.setDescription(archivo.getAbsolutePath()); // 🔥 Aquí guardas la ruta
+	                lblIcon.setIcon(icono);
+	                lblIcon.setDisabledIcon(icono); // por si acaso
+	            }
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            JOptionPane.showMessageDialog(this, "Error al cargar la imagen.", "Error", JOptionPane.ERROR_MESSAGE);
+	        }
+	    }
+	}
+
 
 	private void mostrarError(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);

@@ -125,9 +125,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	    LocalDate fechaRegistro = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaRegistro"));
 	    String direccionFoto = servPersistencia.recuperarPropiedadEntidad(eUsuario, "foto");
 
-	    //TODO: Modo correcto comentado mientras no se implementa la logica completa
-	    //ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
-	    ImageIcon fotoPerfil = new ImageIcon(); // Evita el fallo
+	    ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
 
 	    Usuario usuario = new Usuario(nombre, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
 	    usuario.setCodigo(codigo);
