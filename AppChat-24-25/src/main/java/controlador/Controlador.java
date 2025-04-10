@@ -224,6 +224,7 @@ public class Controlador {
 		if (usuarioOpt.isPresent()) {
 			Usuario usuarioContacto = usuarioOpt.get();
 			ContactoIndividual nuevoContacto = new ContactoIndividual(nombre, usuarioContacto, numTelefono);
+			nuevoContacto.setFoto(usuarioContacto.getFotoPerfil()); // Añade la foto del usuario
 			usuarioActual.añadirContacto(nuevoContacto);
 			adaptadorContactoIndividual.registrarContacto(nuevoContacto);
 			adaptadorUsuario.modificarUsuario(usuarioActual);
@@ -322,6 +323,8 @@ public class Controlador {
 			ContactoIndividual nuevo = new ContactoIndividual(
 					usuarioActual.getTelefono(), usuarioActual, usuarioActual.getTelefono()
 					);
+			ImageIcon fotoAnonima = new ImageIcon(getClass().getResource("/recursos/account.png"));
+			nuevo.setFoto(fotoAnonima);
 			receptor.añadirContacto(nuevo);
 			adaptadorContactoIndividual.registrarContacto(nuevo);
 			adaptadorUsuario.modificarUsuario(receptor);

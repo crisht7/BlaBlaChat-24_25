@@ -138,7 +138,13 @@ public class VentanaMain extends JFrame {
                 nombreLabel.setText(contacto.getNombre());
 
                 if (contacto instanceof ContactoIndividual) {
-                    telefonoLabel.setText(((ContactoIndividual) contacto).getTelefono());
+                    ContactoIndividual cIndividual = (ContactoIndividual) contacto;
+                    telefonoLabel.setText(cIndividual.getTelefono());
+
+                    // Cargar directamente la foto de perfil
+                    ImageIcon fotoPerfil = cIndividual.getFoto();
+                    Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                    iconoLabel.setIcon(new ImageIcon(imagenEscalada));
                 } else {
                     telefonoLabel.setText("");
                 }
@@ -152,22 +158,6 @@ public class VentanaMain extends JFrame {
                 } else {
                     mensajePreviewLabel.setText("Sin mensajes");
                 }
-
-                try {
-                    URL iconURL = getClass().getResource("/iconos/contacto.png");
-                    if (iconURL != null) {
-                        ImageIcon icono = new ImageIcon(iconURL);
-                        Image imagenEscalada = icono.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-                        iconoLabel.setIcon(new ImageIcon(imagenEscalada));
-                    } else {
-                        iconoLabel.setIcon(null);
-                        System.err.println("⚠️ Icono '/iconos/contacto.png' no encontrado.");
-                    }
-                } catch (Exception ex) {
-                    System.err.println("❌ Error cargando icono: " + ex.getMessage());
-                    iconoLabel.setIcon(null);
-                }
-
                 
                 Color fondo = isSelected ?  naranjaClaro : naranjaOscuro;
 
@@ -282,6 +272,8 @@ public class VentanaMain extends JFrame {
             lblFotoUsuario.setHorizontalTextPosition(SwingConstants.RIGHT); // Icono a la izquierda, texto a la derecha
             lblFotoUsuario.setIconTextGap(10); // Espacio entre icono y texto
             lblFotoUsuario.setForeground(Color.BLACK); // Opcional: color del texto
+            lblFotoUsuario.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 10));
+
 
             panelNorte.add(lblFotoUsuario);
         }

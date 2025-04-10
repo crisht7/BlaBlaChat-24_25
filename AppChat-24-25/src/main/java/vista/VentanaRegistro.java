@@ -181,37 +181,20 @@ public class VentanaRegistro extends JFrame {
 		gbc_dateChooserFechaNac.gridx = 2;
 		gbc_dateChooserFechaNac.gridy = 10;
 		contentPane.add(dateChooserFechaNac, gbc_dateChooserFechaNac);
-
-		// URL Imagen
-		JLabel lblUrl = new JLabel("URL imagen:");
-		GridBagConstraints gbc_lblUrl = new GridBagConstraints();
-		gbc_lblUrl.anchor = GridBagConstraints.WEST;
-		gbc_lblUrl.insets = new Insets(0, 0, 5, 5);
-		gbc_lblUrl.gridx = 3;
-		gbc_lblUrl.gridy = 10;
-		contentPane.add(lblUrl, gbc_lblUrl);
-
 		
-
-
-		lblIcon = new JLabel("");
-		JButton btnSeleccionarImagen = new JButton("Seleccionar Imagen");
-		btnSeleccionarImagen.setBackground(boton);
-		btnSeleccionarImagen.addActionListener(e -> seleccionarImagenDesdePC());
-		GridBagConstraints gbc_btnSeleccionarImagen = new GridBagConstraints();
-		gbc_btnSeleccionarImagen.insets = new Insets(0, 0, 5, 5);
-		gbc_btnSeleccionarImagen.gridx = 4;
-		gbc_btnSeleccionarImagen.gridy = 14;
-		contentPane.add(btnSeleccionarImagen, gbc_btnSeleccionarImagen);
-
+				
 		
-		lblIcon.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/recursos/account.png")));
-		GridBagConstraints gbc_lblIcon = new GridBagConstraints();
-		gbc_lblIcon.gridheight = 3;
-		gbc_lblIcon.insets = new Insets(0, 0, 5, 5);
-		gbc_lblIcon.gridx = 4;
-		gbc_lblIcon.gridy = 11;
-		contentPane.add(lblIcon, gbc_lblIcon);
+		
+				lblIcon = new JLabel("");
+				
+						
+						lblIcon.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/recursos/account.png")));
+						GridBagConstraints gbc_lblIcon = new GridBagConstraints();
+						gbc_lblIcon.gridheight = 3;
+						gbc_lblIcon.insets = new Insets(0, 0, 5, 5);
+						gbc_lblIcon.gridx = 4;
+						gbc_lblIcon.gridy = 10;
+						contentPane.add(lblIcon, gbc_lblIcon);
 
 		// Saludo
 		JLabel lblSaludo = new JLabel("Saludo:");
@@ -264,6 +247,14 @@ public class VentanaRegistro extends JFrame {
 		
 		panel.add(Box.createHorizontalGlue());
 		panel.add(btnCancelar);
+		JButton btnSeleccionarImagen = new JButton("Seleccionar Imagen");
+		btnSeleccionarImagen.setBackground(boton);
+		btnSeleccionarImagen.addActionListener(e -> seleccionarImagenDesdePC());
+		GridBagConstraints gbc_btnSeleccionarImagen = new GridBagConstraints();
+		gbc_btnSeleccionarImagen.insets = new Insets(0, 0, 5, 5);
+		gbc_btnSeleccionarImagen.gridx = 4;
+		gbc_btnSeleccionarImagen.gridy = 13;
+		contentPane.add(btnSeleccionarImagen, gbc_btnSeleccionarImagen);
 	}
 
 	private void cargarImagenDesdeURL() {
