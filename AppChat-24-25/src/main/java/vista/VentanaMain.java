@@ -332,19 +332,41 @@ public class VentanaMain extends JFrame {
         scrollMensaje.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         panelMensajesSur.add(scrollMensaje, BorderLayout.CENTER);
 
+     // Botón de emojis
         JButton btnEmoji = new JButton("");
         btnEmoji.setBackground(new Color(234, 158, 66));
-        btnEmoji.setIcon(new ImageIcon(VentanaMain.class.getResource("/recursos/emoticono.png")));
+        btnEmoji.setIcon(new ImageIcon(VentanaMain.class.getResource("/recursos/emoji.png"))); // tu icono de emoji
+
+        // Crear menú emergente
         JPopupMenu menuEmojis = new JPopupMenu();
-        List<String> emojis = Arrays.asList("😀", "😂", "😍", "😎", "😢", "😡", "👍", "🔥", "💯");
-        for (int i = 0; i < emojis.size(); i++) {
-            final int index = i;
-            JMenuItem item = new JMenuItem(emojis.get(i));
-            item.addActionListener(e -> enviarIcono(index));
-            menuEmojis.add(item);
+        JPanel panelEmojis = new JPanel(new GridLayout(4, 9, 5, 5)); // 4 filas x 9 columnas, con separación de 5px
+
+        // Añadir los botones de los emoticonos
+        for (int i = 0; i <= BubbleText.MAXICONO; i++) {
+            JButton botonEmoji = new JButton();
+            botonEmoji.setIcon(BubbleText.getEmoji(i));
+            botonEmoji.setBorderPainted(false); // Sin borde de botón
+            botonEmoji.setContentAreaFilled(false); // Sin fondo de botón
+            botonEmoji.setFocusPainted(false); // Que no se pinte al hacer click
+            final int idEmoticono = i; // Necesario para el listener
+
+            botonEmoji.addActionListener(e -> {
+                enviarIcono(idEmoticono); // Envía el emoticono
+                menuEmojis.setVisible(false); // Cierra el menú después de seleccionar
+            });
+
+            panelEmojis.add(botonEmoji);
         }
+
+        // Añadir el panel cuadrado al menú emergente
+        menuEmojis.add(panelEmojis);
+
+        // Acción al pulsar el botón de emoji
         btnEmoji.addActionListener(e -> menuEmojis.show(btnEmoji, 0, btnEmoji.getHeight()));
+
+        // Añadir el botón al panel sur
         panelMensajesSur.add(btnEmoji, BorderLayout.WEST);
+
 
         JButton btnEnviar = new JButton("");
         btnEnviar.setBackground(new Color(234, 158, 66));
@@ -455,7 +477,7 @@ public class VentanaMain extends JFrame {
 
         Controlador.getInstancia().enviarMensaje(idEmoticono, contactoActual);
 
-        BubbleText burbuja = new BubbleText(chat, idEmoticono, new Color(159, 213, 192), "Tú", BubbleText.SENT, 12);
+        BubbleText burbuja = new BubbleText(chat, idEmoticono, new Color(159, 213, 192), "Tú", BubbleText.SENT, 18);
         chat.add(burbuja);
 
         SwingUtilities.invokeLater(() -> {
@@ -465,6 +487,7 @@ public class VentanaMain extends JFrame {
 
         actualizarListaContactos();
     }
+
 
 	/**
 	 * Método para crear un nuevo chat.
