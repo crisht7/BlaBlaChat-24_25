@@ -77,7 +77,7 @@ public class VentanaRegistro extends JFrame {
 		JLabel lblLogo = new JLabel("");
 		lblLogo.setHorizontalAlignment(SwingConstants.CENTER);
 		lblLogo.setBackground(naranjaClaro);
-		lblLogo.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/recursos/logo.PNG")));
+		lblLogo.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/logo.PNG")));
 		GridBagConstraints gbc_lblLogo = new GridBagConstraints();
 		gbc_lblLogo.gridheight = 4;
 		gbc_lblLogo.insets = new Insets(0, 0, 5, 5);
@@ -185,16 +185,16 @@ public class VentanaRegistro extends JFrame {
 				
 		
 		
-				lblIcon = new JLabel("");
+		lblIcon = new JLabel("");
 				
 						
-						lblIcon.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/recursos/account.png")));
-						GridBagConstraints gbc_lblIcon = new GridBagConstraints();
-						gbc_lblIcon.gridheight = 3;
-						gbc_lblIcon.insets = new Insets(0, 0, 5, 5);
-						gbc_lblIcon.gridx = 4;
-						gbc_lblIcon.gridy = 10;
-						contentPane.add(lblIcon, gbc_lblIcon);
+		lblIcon.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/account.png")));
+		GridBagConstraints gbc_lblIcon = new GridBagConstraints();
+		gbc_lblIcon.gridheight = 3;
+		gbc_lblIcon.insets = new Insets(0, 0, 5, 5);
+		gbc_lblIcon.gridx = 4;
+		gbc_lblIcon.gridy = 10;
+		contentPane.add(lblIcon, gbc_lblIcon);
 
 		// Saludo
 		JLabel lblSaludo = new JLabel("Saludo:");
@@ -257,37 +257,7 @@ public class VentanaRegistro extends JFrame {
 		contentPane.add(btnSeleccionarImagen, gbc_btnSeleccionarImagen);
 	}
 
-	private void cargarImagenDesdeURL() {
-	    String urlTexto = textFieldURL.getText().trim();
-	    if (urlTexto.isEmpty()) {
-	        try {
-	            imagenPerfil = ImageIO.read(VentanaRegistro.class.getResource("/recursos/account.png"));
-	            lblIcon.setIcon(new ImageIcon(imagenPerfil.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	        return;
-	    }
-	    try {
-	        URL url = new URL(urlTexto);
-	        imagenPerfil = ImageIO.read(url);
-	        if (imagenPerfil != null) {
-	            lblIcon.setIcon(new ImageIcon(imagenPerfil.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-	        } else {
-	            System.err.println("⚠️ No se pudo cargar la imagen del URL, usando predeterminada.");
-	            imagenPerfil = ImageIO.read(VentanaRegistro.class.getResource("/recursos/account.png"));
-	            lblIcon.setIcon(new ImageIcon(imagenPerfil.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-	        }
-	    } catch (IOException ex) {
-	        System.err.println("❌ Error descargando la imagen: " + ex.getMessage());
-	        try {
-	            imagenPerfil = ImageIO.read(VentanaRegistro.class.getResource("/recursos/account.png"));
-	            lblIcon.setIcon(new ImageIcon(imagenPerfil.getScaledInstance(100, 100, Image.SCALE_SMOOTH)));
-	        } catch (IOException e2) {
-	            e2.printStackTrace();
-	        }
-	    }
-	}
+	
 
 
 
@@ -296,11 +266,21 @@ public class VentanaRegistro extends JFrame {
 	    if (!datosCorrectos()) return;
 
 	    ImageIcon fotoPerfil = (ImageIcon) lblIcon.getIcon();
-	    if (fotoPerfil == null || fotoPerfil.getDescription() == null) {
-	        fotoPerfil = new ImageIcon(VentanaRegistro.class.getResource("/recursos/account.png"));
-	        fotoPerfil.setDescription("/recursos/account.png");
-	    }
 	    
+	    if (fotoPerfil == null || fotoPerfil.getDescription() == null) {
+	        try {
+	            URL urlRecurso = VentanaRegistro.class.getResource("/recursos/account.png");
+	            if (urlRecurso != null) {
+	                fotoPerfil = new ImageIcon(urlRecurso);
+	                fotoPerfil.setDescription("/recursos/account.png"); // Muy importante
+	            } else {
+	                System.err.println("❌ No se encontró recurso account.png.");
+	            }
+	        } catch (Exception ex) {
+	            ex.printStackTrace();
+	        }
+	    }
+
 	    boolean creado = Controlador.getInstancia().registrarUsuario(
 	        textFieldNombre.getText(),
 	        dateChooserFechaNac.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
@@ -311,7 +291,7 @@ public class VentanaRegistro extends JFrame {
 	    );
 
 	    if (!creado) {
-	        JOptionPane.showMessageDialog(this, "El usuario ya existe", "Crea una cuenta", JOptionPane.ERROR_MESSAGE);
+	        JOptionPane.showMessageDialog(this, "El usuario ya existe", "Error", JOptionPane.ERROR_MESSAGE);
 	    } else {
 	        JOptionPane.showMessageDialog(this, "Usuario registrado correctamente", "Registro", JOptionPane.INFORMATION_MESSAGE);
 	        Toolkit.getDefaultToolkit().beep();

@@ -61,7 +61,7 @@ public class VentanaLogin {
 		btnLogin.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
 		btnLogin.setForeground(Color.BLACK);
 		btnLogin.setPreferredSize(new Dimension(250, 40));
-		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/login.png")));
+		btnLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/login.png")));
 		btnLogin.addActionListener(this::accionLogin);
 		panel_1.add(btnLogin);
 
@@ -78,7 +78,7 @@ public class VentanaLogin {
 		btnRegistrar.setOpaque(true);
 		btnRegistrar.setFont(new Font("Segoe UI Symbol", Font.PLAIN, 13));
 		btnRegistrar.setBackground(boton);
-		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/register.png")));
+		btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/register.png")));
 		btnRegistrar.addActionListener(e -> {
 			frmLogin.dispose();
 			VentanaRegistro ventanaRegistro = new VentanaRegistro();
@@ -100,7 +100,7 @@ public class VentanaLogin {
 		gbc_lblFotoLogin.gridy = 0;
 
 		JLabel lblFotoLogin = new JLabel("");
-		lblFotoLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/recursos/chat150v2.PNG")));
+		lblFotoLogin.setIcon(new ImageIcon(VentanaLogin.class.getResource("/chat150v2.PNG")));
 		panelTop.add(lblFotoLogin, gbc_lblFotoLogin);
 
 		JLabel lblNewLabel = new JLabel("BlaBlaChat");
@@ -183,7 +183,7 @@ public class VentanaLogin {
 	private void mostrarDialogoError() {
 		JPanel panel = new JPanel(new BorderLayout());
 		JLabel mensaje = new JLabel("Login incorrecto", SwingConstants.CENTER);
-		ImageIcon icono = new ImageIcon(VentanaLogin.class.getResource("/recursos/cancel.png"));
+		ImageIcon icono = new ImageIcon(VentanaLogin.class.getResource("/cancel.png"));
 		panel.setBackground(naranjaClaro);
 		panel.add(mensaje, BorderLayout.CENTER);
 		panel.add(new JLabel(icono), BorderLayout.WEST);

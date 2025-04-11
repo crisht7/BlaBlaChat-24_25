@@ -180,6 +180,20 @@ public class Controlador {
 			contactos.add(contactoAnonimo);
 		}
 
+		// Asignar correctamente la foto a los ContactosIndividuales
+		for (Contacto contacto : contactos) {
+	        if (contacto instanceof ContactoIndividual) {
+	            ContactoIndividual cIndividual = (ContactoIndividual) contacto;
+	            Optional<Usuario> usuarioReal = repoUsuarios.buscarUsuario(cIndividual.getTelefono());
+	            usuarioReal.ifPresent(user -> {
+	                if (user.getFotoPerfil() != null) {
+	                    cIndividual.setFoto(user.getFotoPerfil());
+	                }
+	            });
+	        }
+	    }
+		
+		
 		return contactos;
 	}
 

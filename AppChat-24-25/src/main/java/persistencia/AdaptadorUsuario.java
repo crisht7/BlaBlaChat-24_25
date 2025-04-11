@@ -2,6 +2,7 @@ package persistencia;
 
 import appChat.*;
 
+import java.net.URL;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,7 +126,28 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	    LocalDate fechaRegistro = LocalDate.parse(servPersistencia.recuperarPropiedadEntidad(eUsuario, "fechaRegistro"));
 	    String direccionFoto = servPersistencia.recuperarPropiedadEntidad(eUsuario, "foto");
 
-	    ImageIcon fotoPerfil = new ImageIcon(direccionFoto);
+	    
+	    ImageIcon fotoPerfil = null;
+
+	    if (direccionFoto != null) {
+	        try {
+	            if (direccionFoto.startsWith("file:/")) {
+	                // Imagen predeterminada del proyecto
+	                URL url = new URL(direccionFoto);
+	                fotoPerfil = new ImageIcon(url);
+	            } else {
+	                // Imagen local del PC
+	                fotoPerfil = new ImageIcon(direccionFoto);
+	            }
+	        } catch (Exception e) {
+	            System.err.println("❌ Error cargando imagen: " + direccionFoto);
+	            fotoPerfil = new ImageIcon(getClass().getResource("/recursos/account.png"));
+	            if (fotoPerfil != null) {
+	                fotoPerfil.setDescription("/recursos/account.png");
+	            }
+	        }
+	    }
+
 
 	    Usuario usuario = new Usuario(nombre, fotoPerfil, contraseña, telefono, saludo, fechaRegistro, premium);
 	    usuario.setCodigo(codigo);

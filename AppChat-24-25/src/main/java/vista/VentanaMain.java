@@ -256,6 +256,8 @@ public class VentanaMain extends JFrame {
         JButton btnPremium = new JButton("Premium");
         btnPremium.setBackground(new Color(159, 213, 192));
         panelNorte.add(btnPremium);
+        
+        panelNorte.add(Box.createRigidArea(new Dimension(10, 0))); // 10 píxeles de separación
 
         Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
 
@@ -264,7 +266,7 @@ public class VentanaMain extends JFrame {
             JLabel lblFotoUsuario = new JLabel();
 
             if (fotoPerfil != null && fotoPerfil.getImage() != null) {
-                Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+            	Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
                 lblFotoUsuario.setIcon(new ImageIcon(imagenEscalada));
             }
 
@@ -335,7 +337,7 @@ public class VentanaMain extends JFrame {
      // Botón de emojis
         JButton btnEmoji = new JButton("");
         btnEmoji.setBackground(new Color(234, 158, 66));
-        btnEmoji.setIcon(new ImageIcon(VentanaMain.class.getResource("/recursos/emoji.png"))); // tu icono de emoji
+        btnEmoji.setIcon(new ImageIcon(VentanaMain.class.getResource("/emoji.png"))); // tu icono de emoji
 
         // Crear menú emergente
         JPopupMenu menuEmojis = new JPopupMenu();
@@ -370,7 +372,7 @@ public class VentanaMain extends JFrame {
 
         JButton btnEnviar = new JButton("");
         btnEnviar.setBackground(new Color(234, 158, 66));
-        btnEnviar.setIcon(new ImageIcon(VentanaMain.class.getResource("/recursos/enviar.png")));
+        btnEnviar.setIcon(new ImageIcon(VentanaMain.class.getResource("/enviar.png")));
         btnEnviar.addActionListener(e -> enviarMensaje(txtMensaje));
 
         panelMensajesSur.add(btnEnviar, BorderLayout.EAST);
