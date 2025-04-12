@@ -254,26 +254,39 @@ public class Controlador {
 	 * @param contacto
 	 */
 	public void enviarMensaje(String texto, Contacto contacto) {
-		if (usuarioActual == null || contacto == null || texto == null || texto.isEmpty()) return;
+	    if (usuarioActual == null || contacto == null || texto == null || texto.isEmpty()) return;
 
-		Mensaje mensaje = null;
+	    Mensaje mensaje = null;
 
-		if (contacto instanceof ContactoIndividual) {
-			if (!isEnListaContactos(contacto)) {
-				crearContactoAnonimo((ContactoIndividual) contacto);
-			}
+	    if (contacto instanceof ContactoIndividual) {
+	        if (!isEnListaContactos(contacto)) {
+	            crearContactoAnonimo((ContactoIndividual) contacto);
+	        }
 
-			mensaje = new Mensaje(texto, LocalDateTime.now(), usuarioActual, contacto);
-			contacto.enviarMensaje(mensaje);
-			adaptadorMensaje.registrarMensaje(mensaje);
+	        mensaje = new Mensaje(texto, LocalDateTime.now(), usuarioActual, contacto);
+	        contacto.enviarMensaje(mensaje);
+	        adaptadorMensaje.registrarMensaje(mensaje);
 
-			ContactoIndividual ci = (ContactoIndividual) contacto;
-			if (ci.getCodigo() != 0 && PoolDAO.getUnicaInstancia().contieneID(ci.getCodigo())) {
-				adaptadorContactoIndividual.modificarContacto(ci);
-			}
-		} else if (contacto instanceof Grupo) {
-			// TODO: lógica para grupos 
-		}
+	        adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
+	    } else if (contacto instanceof Grupo) {
+	        Grupo grupo = (Grupo) contacto;
+	        for (ContactoIndividual c : grupo.getIntegrantes()) {
+	            if (!isEnListaContactos(c)) {
+	                crearContactoAnonimo(c);
+	            }
+
+	            Mensaje mensajeGrupo = new Mensaje(texto, LocalDateTime.now(), usuarioActual, c);
+	            mensajeGrupo.setGroup(true);
+	            c.enviarMensaje(mensajeGrupo);
+	            adaptadorMensaje.registrarMensaje(mensajeGrupo);
+	            adaptadorContactoIndividual.modificarContacto(c);
+	        }
+
+	        mensaje = new Mensaje(texto, LocalDateTime.now(), usuarioActual, contacto);
+	        contacto.enviarMensaje(mensaje);
+	        adaptadorMensaje.registrarMensaje(mensaje);
+	        adaptadorGrupo.modificarGrupo(grupo);
+	    }
 	}
 
 	/**
@@ -283,18 +296,40 @@ public class Controlador {
 	 * @param contacto
 	 */
 	public void enviarMensaje(int emoticono, Contacto contacto) {
-		if (usuarioActual == null || contacto == null) return;
+	    if (usuarioActual == null || contacto == null) return;
 
-		Mensaje mensaje = new Mensaje(emoticono, LocalDateTime.now(), usuarioActual, contacto);
-		contacto.enviarMensaje(mensaje);
-		adaptadorMensaje.registrarMensaje(mensaje);
+	    Mensaje mensaje = null;
 
-		if (contacto instanceof ContactoIndividual) {
-			adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
-		} else if (contacto instanceof Grupo) {
-			// TODO lógica para grupo 
-		}
+	    if (contacto instanceof ContactoIndividual) {
+	        if (!isEnListaContactos(contacto)) {
+	            crearContactoAnonimo((ContactoIndividual) contacto);
+	        }
+
+	        mensaje = new Mensaje(emoticono, LocalDateTime.now(), usuarioActual, contacto);
+	        contacto.enviarMensaje(mensaje);
+	        adaptadorMensaje.registrarMensaje(mensaje);
+	        adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
+	    } else if (contacto instanceof Grupo) {
+	        Grupo grupo = (Grupo) contacto;
+	        for (ContactoIndividual c : grupo.getIntegrantes()) {
+	            if (!isEnListaContactos(c)) {
+	                crearContactoAnonimo(c);
+	            }
+
+	            Mensaje mensajeGrupo = new Mensaje(emoticono, LocalDateTime.now(), usuarioActual, c);
+	            mensajeGrupo.setGroup(true);
+	            c.enviarMensaje(mensajeGrupo);
+	            adaptadorMensaje.registrarMensaje(mensajeGrupo);
+	            adaptadorContactoIndividual.modificarContacto(c);
+	        }
+
+	        mensaje = new Mensaje(emoticono, LocalDateTime.now(), usuarioActual, contacto);
+	        contacto.enviarMensaje(mensaje);
+	        adaptadorMensaje.registrarMensaje(mensaje);
+	        adaptadorGrupo.modificarGrupo(grupo);
+	    }
 	}
+
 
 	/**
 	 * Crea un nuevo grupo y lo añade a la lista de contactos del usuario actual
@@ -316,12 +351,14 @@ public class Controlador {
 	 * @return
 	 */
 	private boolean isEnListaContactos(Contacto contacto) {
-		ContactoIndividual contactoIndividual = (ContactoIndividual) contacto;
-		return usuarioActual.getContactos().stream()
-				.filter(c -> c instanceof ContactoIndividual)
-				.map(c -> (ContactoIndividual) c)
-				.anyMatch(c -> c.getTelefono().equals(contactoIndividual.getTelefono()));
+	    if (!(contacto instanceof ContactoIndividual)) return false;
+	    ContactoIndividual contactoIndividual = (ContactoIndividual) contacto;
+	    return usuarioActual.getContactos().stream()
+	            .filter(c -> c instanceof ContactoIndividual)
+	            .map(c -> (ContactoIndividual) c)
+	            .anyMatch(c -> c.getTelefono().equals(contactoIndividual.getTelefono()));
 	}
+
 	
 	/**
 	 * Crea un contacto anónimo para el usuario actual si no existe
@@ -329,21 +366,52 @@ public class Controlador {
 	 * @param contacto
 	 */
 	private void crearContactoAnonimo(ContactoIndividual contacto) {
-		Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(contacto.getTelefono());
-		if (usuarioOpt.isEmpty()) return;
+	    Optional<Usuario> usuarioOpt = repoUsuarios.buscarUsuario(contacto.getTelefono());
+	    if (usuarioOpt.isEmpty()) return;
 
-		Usuario receptor = usuarioOpt.get();
-		if (!receptor.tieneContactoIndividualPorTelefono(usuarioActual.getTelefono())) {
-			ContactoIndividual nuevo = new ContactoIndividual(
-					usuarioActual.getTelefono(), usuarioActual, usuarioActual.getTelefono()
-					);
-			ImageIcon fotoAnonima = new ImageIcon(getClass().getResource("/recursos/account.png"));
-			nuevo.setFoto(fotoAnonima);
-			receptor.añadirContacto(nuevo);
-			adaptadorContactoIndividual.registrarContacto(nuevo);
-			adaptadorUsuario.modificarUsuario(receptor);
-		}
+	    Usuario receptor = usuarioOpt.get();
+
+	    // Asegurar que el receptor tenga al usuario actual en sus contactos
+	    if (!receptor.tieneContactoIndividualPorTelefono(usuarioActual.getTelefono())) {
+	        ContactoIndividual anonimoParaReceptor = new ContactoIndividual(
+	            usuarioActual.getTelefono(), usuarioActual, usuarioActual.getTelefono());
+
+	        ImageIcon fotoAnonima = new ImageIcon(getClass().getResource("/recursos/account.png"));
+	        anonimoParaReceptor.setFoto(fotoAnonima);
+
+	        receptor.añadirContacto(anonimoParaReceptor);
+	        adaptadorContactoIndividual.registrarContacto(anonimoParaReceptor);
+	        adaptadorUsuario.modificarUsuario(receptor);
+	    }
+
+	    // Asegurar que el usuario actual tenga al receptor en sus contactos
+	    if (!usuarioActual.tieneContactoIndividualPorTelefono(receptor.getTelefono())) {
+	        ContactoIndividual anonimoParaActual = new ContactoIndividual(
+	            receptor.getTelefono(), receptor, receptor.getTelefono());
+
+	        anonimoParaActual.setFoto(receptor.getFotoPerfil());
+
+	        usuarioActual.añadirContacto(anonimoParaActual);
+	        adaptadorContactoIndividual.registrarContacto(anonimoParaActual);
+	        adaptadorUsuario.modificarUsuario(usuarioActual);
+	    }
 	}
+	
+	public void renombrarContacto(Contacto contacto, String nuevoNombre) {
+	    if (contacto == null || nuevoNombre == null || nuevoNombre.trim().isEmpty()) return;
+
+	    contacto.setNombre(nuevoNombre);
+
+	    if (contacto instanceof ContactoIndividual) {
+	        adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
+	    } else if (contacto instanceof Grupo) {
+	        adaptadorGrupo.modificarGrupo((Grupo) contacto);
+	    }
+
+	    adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+
+
 
 	//Getters y Setters 
 	public RepositorioUsuarios getRepoUsuarios() {

@@ -224,9 +224,39 @@ public class VentanaMain extends JFrame {
             }
         });
 
+        // Menú contextual para contactos
+        JPopupMenu menuContextual = new JPopupMenu();
+        JMenuItem itemCambiarNombre = new JMenuItem("Cambiar nombre");
+
+        itemCambiarNombre.addActionListener(e -> {
+            Contacto seleccionado = listaChatRecientes.getSelectedValue();
+            if (seleccionado != null) {
+                String nuevoNombre = JOptionPane.showInputDialog(this, "Introduce el nuevo nombre:", seleccionado.getNombre());
+                if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+                    Controlador.getInstancia().renombrarContacto(seleccionado, nuevoNombre.trim());
+                    actualizarListaContactos();
+                }
+            }
+        });
+
+        menuContextual.add(itemCambiarNombre);
+
+        listaChatRecientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    int index = listaChatRecientes.locationToIndex(e.getPoint());
+                    if (index != -1) {
+                        listaChatRecientes.setSelectedIndex(index); // Selecciona el elemento sobre el que se hace click
+                        menuContextual.show(listaChatRecientes, e.getX(), e.getY());
+                    }
+                }
+            }
+        });
+
         JScrollPane scrollPane = new JScrollPane(listaChatRecientes);
         panelRecientes.add(scrollPane, BorderLayout.CENTER);
     }
+
 
 	/**
 	 * Método para configurar el panel norte de la ventana.
