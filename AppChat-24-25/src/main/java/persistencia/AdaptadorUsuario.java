@@ -210,7 +210,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				p.setValor(usuario.getFechaRegistro().toString());
 				break;
 			case "grupos":
-				p.setValor(usuario.getGrupos().toString());
+				p.setValor(obtenerCodigosGrupos(usuario.getGrupos()));
 				break;
 			}
 			servPersistencia.modificarPropiedad(p);

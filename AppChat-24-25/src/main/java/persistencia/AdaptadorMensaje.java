@@ -124,7 +124,6 @@ public class AdaptadorMensaje implements MensajeDAO {
 	 */
 	@Override
 	public Mensaje recuperarMensaje(int codigo) {
-		//Primero comprobamos que esté en el pool
 		if (PoolDAO.getUnicaInstancia().contieneID(codigo)) {
 			return (Mensaje) PoolDAO.getUnicaInstancia().getObjeto(codigo);
 		}
@@ -140,26 +139,32 @@ public class AdaptadorMensaje implements MensajeDAO {
 
 		PoolDAO.getUnicaInstancia().añadirObjeto(codigo, mensaje);
 
-		AdaptadorUsuario adaptadorUsuario = AdaptadorUsuario.getUnicaInstancia();
+		// Emisor
 		int codEmisor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "emisor"));
-		Usuario emisor = adaptadorUsuario.recuperarUsuario(codEmisor);
+		Usuario emisor = AdaptadorUsuario.getUnicaInstancia().recuperarUsuario(codEmisor);
 		mensaje.setEmisor(emisor);
 
-		AdaptadorContactoIndividual adaptadorContacto = AdaptadorContactoIndividual.getUnicaInstancia();
+		// Receptor - detectamos si es grupo o individual
 		int codReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
-		try {
-			Contacto receptor = adaptadorContacto.recuperarContacto(codReceptor);
-			mensaje.setReceptor(receptor);
-		} catch (Exception e) {
-			Contacto receptor = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(codReceptor);
-			mensaje.setReceptor(receptor);
+		Entidad entidadReceptor = servPersistencia.recuperarEntidad(codReceptor);
+
+		Contacto receptor;
+
+		if (entidadReceptor.getNombre().equalsIgnoreCase("grupo")) {
+			receptor = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(codReceptor);
+		} else {
+			receptor = AdaptadorContactoIndividual.getUnicaInstancia().recuperarContacto(codReceptor);
 		}
 
+		mensaje.setReceptor(receptor);
+
+		// Grupo flag
 		boolean grupo = Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eMensaje, "grupo"));
 		mensaje.setGroup(grupo);
 
 		return mensaje;
 	}
+
 
 	/**
 	 * Recupera todos los mensajes de la base de datos

@@ -336,11 +336,15 @@ public class Controlador {
 	 * 
 	 * @param grupo
 	 */
-	public void añadirGrupo(Grupo grupo) {
-		if (grupo == null || usuarioActual == null) return;
-		usuarioActual.añadirContacto(grupo);
-		adaptadorGrupo.registrarGrupo(grupo);
-		adaptadorUsuario.modificarUsuario(usuarioActual);
+	public Grupo añadirGrupo(String nombre) {
+		if (!usuarioActual.tieneGrupo(nombre)) {
+			Grupo nuevoGrupo = new Grupo(nombre);
+			usuarioActual.añadirContacto(nuevoGrupo);
+			adaptadorGrupo.registrarGrupo(nuevoGrupo);
+			adaptadorUsuario.modificarUsuario(usuarioActual);
+			return nuevoGrupo;
+		}
+		return null;
 	}
 
 
@@ -420,6 +424,10 @@ public class Controlador {
 
 	public ContactoIndividualDAO getAdaptadorContactoIndividual() {
 		return this.adaptadorContactoIndividual;
+	}
+
+	public GrupoDAO getAdaptadorGrupo() {
+		return this.adaptadorGrupo;
 	}
 
 	public UsuarioDAO getAdaptadorUsuario() {

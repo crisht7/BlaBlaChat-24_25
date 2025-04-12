@@ -656,10 +656,17 @@ public class VentanaMain extends JFrame {
                 return;
             }
 
+            // En lugar de llamar a añadirGrupo(nombre), haz esto:
             Grupo nuevoGrupo = new Grupo(nombre); // Imagen por defecto
             seleccionados.forEach(nuevoGrupo::agregarIntegrante);
 
-            Controlador.getInstancia().añadirGrupo(nuevoGrupo); // Esto debería persistir y añadir al usuario
+            // Añadir el grupo a la lista de contactos del usuario actual
+            Controlador.getInstancia().getUsuarioActual().añadirContacto(nuevoGrupo);
+
+            // Persistir el grupo con sus integrantes
+            Controlador.getInstancia().getAdaptadorGrupo().registrarGrupo(nuevoGrupo);
+            Controlador.getInstancia().getAdaptadorUsuario().modificarUsuario(Controlador.getInstancia().getUsuarioActual());
+
 
             actualizarListaContactos();
             dialogo.dispose();

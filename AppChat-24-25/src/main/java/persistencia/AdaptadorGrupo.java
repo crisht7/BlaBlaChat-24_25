@@ -2,8 +2,11 @@ package persistencia;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.StringTokenizer;
+
 
 import javax.swing.ImageIcon;
 
@@ -183,9 +186,9 @@ public class AdaptadorGrupo implements GrupoDAO{
 	 * @return codigo
 	 */
 	private String obtenerCodigosMensajes(List<Mensaje> mensajesRecibidos) {
-		return mensajesRecibidos.stream()
-                .map(m -> String.valueOf(m.getCodigo()))
-                .collect(Collectors.joining(","));
+		return mensajesRecibidos.stream().
+				map(m -> String.valueOf(m.getCodigo())).reduce("",(l, c) -> l + c + " ").trim();
+
 	}
 	
 	/**
@@ -195,8 +198,7 @@ public class AdaptadorGrupo implements GrupoDAO{
 	 */
 	private String obtenerCodigosMiembros(List<ContactoIndividual> miembros) {
 		return miembros.stream().
-				map(m -> String.valueOf(m.getCodigo())).
-				collect(Collectors.joining(","));
+				map(m -> String.valueOf(m.getCodigo())).reduce("",(l, c) -> l + c + " ").trim();
 	}
 	
 	
@@ -206,11 +208,12 @@ public class AdaptadorGrupo implements GrupoDAO{
 	 * @return lista de miembros
 	 */
 	private List<ContactoIndividual> obtenerMiembros(String codigos) {
-		List<ContactoIndividual> miembros = new ArrayList<>();
-        String[] codigosMiembros = codigos.split(",");
-        for (String codigo : codigosMiembros) {
-            miembros.add(AdaptadorContactoIndividual.getUnicaInstancia().recuperarContacto(Integer.valueOf(codigo)));
-        }
+		List<ContactoIndividual> miembros = new LinkedList<>();
+        StringTokenizer codigosMiembros = new StringTokenizer(codigos, " ");
+        AdaptadorContactoIndividual adaptadorCI = AdaptadorContactoIndividual.getUnicaInstancia();
+		while (codigosMiembros.hasMoreTokens()) {
+			miembros.add(adaptadorCI.recuperarContacto(Integer.valueOf(codigosMiembros.nextToken()))); // Se obtiene el contacto individual a partir del código
+		}
         return miembros;
     }
 	
@@ -220,14 +223,14 @@ public class AdaptadorGrupo implements GrupoDAO{
 	 * @param recuperarPropiedadEntidad
 	 * @return
 	 */
-	private List<Mensaje> obtenerMensajes(String recuperarPropiedadEntidad) {
-		List<Mensaje> mensajes = new ArrayList<>();
-		String[] codigosMensajes = recuperarPropiedadEntidad.split(",");
+	private List<Mensaje> obtenerMensajes(String mensajes) {
+		List<Mensaje> listMensajes = new ArrayList<>();
+		StringTokenizer codigosMensajes = new StringTokenizer(mensajes, " ");
 		AdaptadorMensaje adaptadorMensaje = AdaptadorMensaje.getUnicaInstancia();
-		for (String codigo : codigosMensajes) {
-			mensajes.add(adaptadorMensaje.recuperarMensaje(Integer.valueOf(codigo)));
+		while (codigosMensajes.hasMoreTokens()) {
+			listMensajes.add(adaptadorMensaje.recuperarMensaje(Integer.valueOf(codigosMensajes.nextToken())));
 		}
-		return mensajes;
+		return listMensajes;
 	}
 }
 	
