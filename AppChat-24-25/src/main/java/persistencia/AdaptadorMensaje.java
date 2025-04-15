@@ -148,15 +148,15 @@ public class AdaptadorMensaje implements MensajeDAO {
 		int codReceptor = Integer.parseInt(servPersistencia.recuperarPropiedadEntidad(eMensaje, "receptor"));
 		Entidad entidadReceptor = servPersistencia.recuperarEntidad(codReceptor);
 
-		Contacto receptor;
-
-		if (entidadReceptor.getNombre().equalsIgnoreCase("grupo")) {
-			receptor = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(codReceptor);
-		} else {
-			receptor = AdaptadorContactoIndividual.getUnicaInstancia().recuperarContacto(codReceptor);
-		}
-
-		mensaje.setReceptor(receptor);
+	    Contacto receptor = null;
+	    if (entidadReceptor != null) {
+	        if (entidadReceptor.getNombre().equalsIgnoreCase("grupo")) {
+	            receptor = AdaptadorGrupo.getUnicaInstancia().recuperarGrupo(codReceptor);
+	        } else {
+	            receptor = AdaptadorContactoIndividual.getUnicaInstancia().recuperarContacto(codReceptor);
+	        }
+	    }
+	    mensaje.setReceptor(receptor);
 
 		// Grupo flag
 		boolean grupo = Boolean.parseBoolean(servPersistencia.recuperarPropiedadEntidad(eMensaje, "grupo"));

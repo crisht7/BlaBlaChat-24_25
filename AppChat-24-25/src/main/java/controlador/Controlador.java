@@ -246,6 +246,17 @@ public class Controlador {
 		}
 		return null;
 	}
+	
+	// Crea un nuevo grupo de difucisón
+	
+	public void crearGrupo(String nombre, List<ContactoIndividual> integrantes) {
+	    Grupo grupo = new Grupo(nombre);
+	    integrantes.forEach(grupo::agregarIntegrante);
+	    usuarioActual.añadirContacto(grupo);
+	    adaptadorGrupo.registrarGrupo(grupo);
+	    adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+
 
 	/**
 	 * Envía un mensaje a un contacto específico
@@ -354,7 +365,7 @@ public class Controlador {
 	 * @param contacto
 	 * @return
 	 */
-	private boolean isEnListaContactos(Contacto contacto) {
+	public boolean isEnListaContactos(Contacto contacto) {
 	    if (!(contacto instanceof ContactoIndividual)) return false;
 	    ContactoIndividual contactoIndividual = (ContactoIndividual) contacto;
 	    return usuarioActual.getContactos().stream()

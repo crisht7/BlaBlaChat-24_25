@@ -163,6 +163,8 @@ public class VentanaContacto extends JFrame {
         panel_2.add(btnAdd);
     }
 
+
+    
     private boolean datosCorrectos() {
         List<String> errores = new LinkedList<>();
 

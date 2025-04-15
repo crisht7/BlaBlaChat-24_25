@@ -279,7 +279,8 @@ public class VentanaMain extends JFrame {
         panelNorte.add(crearBoton("Buscar", e -> new VentanaBuscar(this).setVisible(true)));
         panelNorte.add(crearBoton("Contactos", e -> new VentanaContacto(new DefaultListModel<>()).setVisible(true)));
         panelNorte.add(crearBoton("Tema", e -> {}));
-        panelNorte.add(crearBoton("Añadir Grupo", e -> abrirDialogoCrearGrupo()));
+        panelNorte.add(crearBoton("Añadir Grupo", e -> new VentanaGrupo(this).setVisible(true)));
+
 
         panelNorte.add(Box.createHorizontalGlue());
 
@@ -465,6 +466,7 @@ public class VentanaMain extends JFrame {
         String texto = textField.getText().trim();
         if (texto.isEmpty()) return;
 
+        
         Controlador.getInstancia().enviarMensaje(texto, contactoActual);
 
         // Obtener el chat real asociado al contacto
@@ -498,6 +500,13 @@ public class VentanaMain extends JFrame {
         actualizarListaContactos();
     }
     
+    private void abrirVentanaAgregarContacto(Contacto contacto) {
+        DefaultListModel<Contacto> modelo = new DefaultListModel<>();
+        VentanaContacto ventana = new VentanaContacto(modelo);
+        ventana.setVisible(true);
+    }
+
+
     
 	/**
 	 * Método para enviar un emoticono al contacto actual.
@@ -621,61 +630,7 @@ public class VentanaMain extends JFrame {
         cargarChat(contacto);
     }
     
-    private void abrirDialogoCrearGrupo() {
-        JDialog dialogo = new JDialog(this, "Crear Nuevo Grupo", true);
-        dialogo.setSize(400, 300);
-        dialogo.setLayout(new BorderLayout());
-
-        JPanel panelCentro = new JPanel(new GridLayout(3, 1));
-        
-        JTextField txtNombreGrupo = new JTextField();
-        panelCentro.add(new JLabel("Nombre del grupo:"));
-        panelCentro.add(txtNombreGrupo);
-
-        // Lista de contactos para elegir
-        List<ContactoIndividual> contactosDisponibles = Controlador.getInstancia().getUsuarioActual().getContactosIndividuales();
-        JList<ContactoIndividual> listaContactos = new JList<>(new Vector<>(contactosDisponibles));
-        listaContactos.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
-        panelCentro.add(new JScrollPane(listaContactos));
-
-        dialogo.add(panelCentro, BorderLayout.CENTER);
-
-        // Botón crear
-        JButton btnCrear = new JButton("Crear Grupo");
-        btnCrear.addActionListener(e -> {
-            String nombre = txtNombreGrupo.getText().trim();
-            List<ContactoIndividual> seleccionados = listaContactos.getSelectedValuesList();
-
-            if (nombre.isEmpty()) {
-                JOptionPane.showMessageDialog(dialogo, "Debe ingresar un nombre.");
-                return;
-            }
-
-            if (seleccionados.isEmpty()) {
-                JOptionPane.showMessageDialog(dialogo, "Debe seleccionar al menos un contacto.");
-                return;
-            }
-
-            // En lugar de llamar a añadirGrupo(nombre), haz esto:
-            Grupo nuevoGrupo = new Grupo(nombre); // Imagen por defecto
-            seleccionados.forEach(nuevoGrupo::agregarIntegrante);
-
-            // Añadir el grupo a la lista de contactos del usuario actual
-            Controlador.getInstancia().getUsuarioActual().añadirContacto(nuevoGrupo);
-
-            // Persistir el grupo con sus integrantes
-            Controlador.getInstancia().getAdaptadorGrupo().registrarGrupo(nuevoGrupo);
-            Controlador.getInstancia().getAdaptadorUsuario().modificarUsuario(Controlador.getInstancia().getUsuarioActual());
-
-
-            actualizarListaContactos();
-            dialogo.dispose();
-        });
-
-        dialogo.add(btnCrear, BorderLayout.SOUTH);
-        dialogo.setLocationRelativeTo(this);
-        dialogo.setVisible(true);
-    }
+    
 
 
 

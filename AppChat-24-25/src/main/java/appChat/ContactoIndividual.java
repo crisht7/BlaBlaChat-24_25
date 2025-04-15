@@ -123,6 +123,11 @@ public class ContactoIndividual extends Contacto {
 	}
 
 
+	@Override
+	public String toString() {
+	    return getNombre(); 
+	}
+
 
 }
 
