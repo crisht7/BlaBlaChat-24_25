@@ -285,6 +285,36 @@ public class VentanaMain extends JFrame {
 
         panelNorte.add(Box.createHorizontalGlue());
 
+        JButton btnExportarPDF = new JButton("Exportar PDF");
+        btnExportarPDF.setBackground(new Color(159, 213, 192));
+
+        btnExportarPDF.addActionListener(e -> {
+            Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
+
+            if (usuarioActual == null || !usuarioActual.isPremium()) {
+                JOptionPane.showMessageDialog(this, "Función disponible solo para usuarios premium.", "Acceso denegado", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (contactoActual == null) {
+                JOptionPane.showMessageDialog(this, "No hay ningún chat seleccionado para exportar.", "Atención", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Guardar como PDF");
+            fileChooser.setSelectedFile(new java.io.File("chat_exportado.pdf"));
+
+            int userSelection = fileChooser.showSaveDialog(this);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                java.io.File fileToSave = fileChooser.getSelectedFile();
+                exportarChatAPDF(usuarioActual, contactoActual, fileToSave.getAbsolutePath());
+            }
+        });
+
+        panelNorte.add(btnExportarPDF);
+
+        
         JButton btnPremium = new JButton("Premium");
         btnPremium.setBackground(new Color(159, 213, 192));
 
@@ -700,6 +730,39 @@ public class VentanaMain extends JFrame {
         return mensajes.stream()
                        .filter(m -> m.getTexto() != null && m.getTexto().toLowerCase().contains(f))
                        .collect(Collectors.toList());
+    }
+    
+    private void exportarChatAPDF(Usuario usuario, Contacto contacto, String rutaArchivo) {
+        try {
+            com.itextpdf.text.Document document = new com.itextpdf.text.Document();
+            com.itextpdf.text.pdf.PdfWriter.getInstance(document, new java.io.FileOutputStream(rutaArchivo));
+            document.open();
+
+            document.add(new com.itextpdf.text.Paragraph("Historial de Chat entre " + usuario.getNombre() + " y " + contacto.getNombre()));
+            document.add(new com.itextpdf.text.Paragraph(" ")); // espacio
+
+            List<Mensaje> mensajes = Controlador.getInstancia().getMensajes(contacto);
+            for (Mensaje m : mensajes) {
+                String emisor = m.getEmisor().equals(usuario) ? "Tú" : contacto.getNombre();
+                String contenido;
+
+                if (m.getTexto().isEmpty()) {
+                    contenido = emisor + ": [Emoticono]";
+                } else {
+                    contenido = emisor + ": " + m.getTexto();
+                }
+
+                document.add(new com.itextpdf.text.Paragraph(contenido));
+            }
+
+            document.close();
+
+            JOptionPane.showMessageDialog(this, "PDF generado exitosamente en:\n" + rutaArchivo, "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error al generar el PDF:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     
