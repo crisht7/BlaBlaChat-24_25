@@ -62,7 +62,7 @@ public class RepositorioUsuarios {
 	 *
 	 * @param user Usuario a eliminar.
 	 */
-	public void removeUser(Usuario user) {
+	public void eliminarUsuario(Usuario user) {
 		usuarios.remove(user.getTelefono());
 	}
 	
