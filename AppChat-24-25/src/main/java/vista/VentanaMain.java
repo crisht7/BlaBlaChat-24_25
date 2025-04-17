@@ -287,7 +287,43 @@ public class VentanaMain extends JFrame {
 
         JButton btnPremium = new JButton("Premium");
         btnPremium.setBackground(new Color(159, 213, 192));
+
+        btnPremium.addActionListener(e -> {
+            Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
+
+            if (usuarioActual != null && !usuarioActual.isPremium()) {
+                int opcion = JOptionPane.showConfirmDialog(
+                        this,
+                        "¿Quieres suscribirte a la versión Premium?\n(La suscripción es anual)",
+                        "Activar Premium",
+                        JOptionPane.YES_NO_OPTION,
+                        JOptionPane.QUESTION_MESSAGE
+                );
+
+                if (opcion == JOptionPane.YES_OPTION) {
+                    usuarioActual.setPremium(true);
+                    Controlador.getInstancia().getAdaptadorUsuario().modificarUsuario(usuarioActual);
+
+                    JOptionPane.showMessageDialog(
+                            this,
+                            "¡Felicidades! Ahora eres usuario premium.",
+                            "Suscripción activada",
+                            JOptionPane.INFORMATION_MESSAGE
+                    );
+                }
+
+            } else if (usuarioActual != null && usuarioActual.isPremium()) {
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Ya eres usuario premium",
+                        "Información",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        });
+
         panelNorte.add(btnPremium);
+
         
         panelNorte.add(Box.createRigidArea(new Dimension(10, 0))); // 10 píxeles de separación
 
