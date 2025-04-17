@@ -11,6 +11,7 @@ import java.util.LinkedList;
 import java.util.Optional;
 import javax.swing.*;
 import java.util.Vector;
+import java.util.stream.Collectors;
 
 import appChat.*;
 import controlador.Controlador;
@@ -421,7 +422,7 @@ public class VentanaMain extends JFrame {
 	 * 
 	 * @param contacto a cargar
 	 */
-    private void cargarChat(Contacto contacto) {
+    public void cargarChat(Contacto contacto) {
         if (contacto == null) return;
 
         this.contactoActual = contacto;
@@ -629,6 +630,42 @@ public class VentanaMain extends JFrame {
         // Cargar chat en pantalla
         cargarChat(contacto);
     }
+    
+    public void cargarChatDesdeExterno(Contacto contacto, Mensaje mensajeBuscado) {
+        // Cargar el chat normalmente
+        cargarChat(contacto);
+
+        // Hacer scroll hasta el final del chat (donde probablemente esté el mensaje)
+        SwingUtilities.invokeLater(() -> {
+            JScrollBar barra = getScrollChat();
+            barra.setValue(barra.getMaximum());
+        });
+
+        // Mensaje informativo
+        JOptionPane.showMessageDialog(this,
+                "Mostrando mensajes del contacto: " + contacto.getNombre() +
+                "\n(No se puede resaltar visualmente el mensaje por limitaciones de la vista)",
+                "Mensaje encontrado",
+                JOptionPane.INFORMATION_MESSAGE);
+    }
+
+
+    public JScrollBar getScrollChat() {
+        return scrollBarChat.getVerticalScrollBar();
+    }
+
+
+    
+    public List<Mensaje> getMensajesFiltradosPorTexto(Contacto contacto, String fragmento) {
+        List<Mensaje> mensajes = Controlador.getInstancia().getMensajes(contacto);
+        if (fragmento == null || fragmento.trim().isEmpty()) return mensajes;
+
+        String f = fragmento.toLowerCase();
+        return mensajes.stream()
+                       .filter(m -> m.getTexto() != null && m.getTexto().toLowerCase().contains(f))
+                       .collect(Collectors.toList());
+    }
+
     
     
 

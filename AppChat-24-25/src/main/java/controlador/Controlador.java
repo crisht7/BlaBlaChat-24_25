@@ -425,7 +425,7 @@ public class Controlador {
 
 	    adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
-
+	
 
 
 	//Getters y Setters 
