@@ -3,6 +3,7 @@ package vista;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Arrays;
@@ -15,6 +16,8 @@ import java.util.stream.Collectors;
 
 import appChat.*;
 import controlador.Controlador;
+import descuentos.DescuentoFecha;
+import descuentos.DescuentoMensaje;
 import tds.BubbleText;
 
 @SuppressWarnings("serial")
@@ -322,12 +325,35 @@ public class VentanaMain extends JFrame {
             Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
 
             if (usuarioActual != null && !usuarioActual.isPremium()) {
+                double precioBase = 50.0;
+
+                // Estrategias de descuento
+                DescuentoFecha descuentoFecha = new DescuentoFecha(
+                        LocalDate.of(2024, 1, 1),
+                        LocalDate.of(2024, 12, 31)
+                );
+                // Numero de mensajes necesario para el descuento
+                DescuentoMensaje descuentoMensaje = new DescuentoMensaje(10); 
+                // Calcular descuentos individuales
+                double d1 = descuentoFecha.obtenerPorcentajeDescuento(usuarioActual);
+                double d2 = descuentoMensaje.obtenerPorcentajeDescuento(usuarioActual);
+
+                double maxDescuento = Math.max(d1, d2);
+                double precioFinal = precioBase * (1 - maxDescuento / 100);
+
+                String mensaje = "¿Deseas adquirir la versión Premium?\n\n" +
+                        "Precio base: 50 €\n" +
+                        (maxDescuento > 0 ?
+                            String.format("Descuento aplicado: %.0f%%\n", maxDescuento) :
+                            "Sin descuentos aplicables.\n") +
+                        String.format("Precio final: %.2f €\n", precioFinal);
+
                 int opcion = JOptionPane.showConfirmDialog(
                         this,
-                        "¿Quieres suscribirte a la versión Premium?\n(La suscripción es anual)",
-                        "Activar Premium",
+                        mensaje,
+                        "Confirmar suscripción Premium",
                         JOptionPane.YES_NO_OPTION,
-                        JOptionPane.QUESTION_MESSAGE
+                        JOptionPane.INFORMATION_MESSAGE
                 );
 
                 if (opcion == JOptionPane.YES_OPTION) {
@@ -336,8 +362,8 @@ public class VentanaMain extends JFrame {
 
                     JOptionPane.showMessageDialog(
                             this,
-                            "¡Felicidades! Ahora eres usuario premium.",
-                            "Suscripción activada",
+                            "Ahora eres usuario premium ",
+                            "Suscripción exitosa",
                             JOptionPane.INFORMATION_MESSAGE
                     );
                 }
@@ -345,12 +371,13 @@ public class VentanaMain extends JFrame {
             } else if (usuarioActual != null && usuarioActual.isPremium()) {
                 JOptionPane.showMessageDialog(
                         this,
-                        "Ya eres usuario premium",
+                        "Ya eres usuario premium 😊",
                         "Información",
                         JOptionPane.INFORMATION_MESSAGE
                 );
             }
         });
+
 
         panelNorte.add(btnPremium);
 
