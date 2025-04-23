@@ -247,14 +247,41 @@ public class Controlador {
 		return null;
 	}
 	
-	// Crea un nuevo grupo de difucisón
-	
+	/**
+	 * Crea un nuevo grupo y lo añade a la lista de contactos del usuario actual
+	 * 
+	 * @param nombre
+	 * @param integrantes
+	 */
 	public void crearGrupo(String nombre, List<ContactoIndividual> integrantes) {
 	    Grupo grupo = new Grupo(nombre);
 	    integrantes.forEach(grupo::agregarIntegrante);
 	    usuarioActual.añadirContacto(grupo);
 	    adaptadorGrupo.registrarGrupo(grupo);
 	    adaptadorUsuario.modificarUsuario(usuarioActual);
+	}
+	
+	/**
+	 * Añade un contacto a un grupo si no está ya presente
+	 * 
+	 * @param nombreGrupo nombre del grupo existente
+	 * @param contacto contacto a añadir
+	 * @return true si fue añadido, false si ya existía o no se encontró el grupo
+	 */
+	public boolean añadirContactoAGrupo(String nombreGrupo, ContactoIndividual contacto) {
+	    if (usuarioActual == null || contacto == null || nombreGrupo == null || nombreGrupo.isBlank()) return false;
+
+	    Grupo grupo = usuarioActual.getGrupos().stream()
+	        .filter(g -> g.getNombre().equals(nombreGrupo))
+	        .findFirst()
+	        .orElse(null);
+
+	    if (grupo == null) return false;
+	    if (grupo.getIntegrantes().contains(contacto)) return false;
+
+	    grupo.agregarIntegrante(contacto);
+	    adaptadorGrupo.modificarGrupo(grupo);
+	    return true;
 	}
 
 

@@ -228,37 +228,10 @@ public class VentanaMain extends JFrame {
             }
         });
 
-        // Menú contextual para contactos
-        JPopupMenu menuContextual = new JPopupMenu();
-        JMenuItem itemCambiarNombre = new JMenuItem("Cambiar nombre");
-
-        itemCambiarNombre.addActionListener(e -> {
-            Contacto seleccionado = listaChatRecientes.getSelectedValue();
-            if (seleccionado != null) {
-                String nuevoNombre = JOptionPane.showInputDialog(this, "Introduce el nuevo nombre:", seleccionado.getNombre());
-                if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
-                    Controlador.getInstancia().renombrarContacto(seleccionado, nuevoNombre.trim());
-                    actualizarListaContactos();
-                }
-            }
-        });
-
-        menuContextual.add(itemCambiarNombre);
-
-        listaChatRecientes.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mousePressed(java.awt.event.MouseEvent e) {
-                if (SwingUtilities.isRightMouseButton(e)) {
-                    int index = listaChatRecientes.locationToIndex(e.getPoint());
-                    if (index != -1) {
-                        listaChatRecientes.setSelectedIndex(index); // Selecciona el elemento sobre el que se hace click
-                        menuContextual.show(listaChatRecientes, e.getX(), e.getY());
-                    }
-                }
-            }
-        });
-
         JScrollPane scrollPane = new JScrollPane(listaChatRecientes);
         panelRecientes.add(scrollPane, BorderLayout.CENTER);
+    
+        configurarMenuContextual();
     }
 
 
@@ -822,10 +795,78 @@ public class VentanaMain extends JFrame {
             ex.printStackTrace();
             JOptionPane.showMessageDialog(this, "Error al generar el PDF:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
-    }
+    }    
+   
+    private void configurarMenuContextual() {
+        JPopupMenu menuContextual = new JPopupMenu();
 
-    
-    
+        JMenuItem itemCambiarNombre = new JMenuItem("Cambiar nombre");
+        itemCambiarNombre.addActionListener(e -> {
+            Contacto seleccionado = listaChatRecientes.getSelectedValue();
+            if (seleccionado instanceof Grupo) return;
+            String nuevoNombre = JOptionPane.showInputDialog(this, "Introduce el nuevo nombre:", seleccionado.getNombre());
+            if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
+                Controlador.getInstancia().renombrarContacto(seleccionado, nuevoNombre.trim());
+                actualizarListaContactos();
+            }
+        });
+        menuContextual.add(itemCambiarNombre);
+
+        JMenuItem itemAñadirContactoGrupo = new JMenuItem("Añadir contacto al grupo");
+        itemAñadirContactoGrupo.addActionListener(ev -> {
+            Contacto seleccionado = listaChatRecientes.getSelectedValue();
+            if (!(seleccionado instanceof Grupo)) return;
+            Grupo grupo = (Grupo) seleccionado;
+
+            List<ContactoIndividual> disponibles = Controlador.getInstancia().getUsuarioActual()
+                .getContactosIndividuales().stream()
+                .filter(c -> !grupo.getIntegrantes().contains(c))
+                .toList();
+
+            if (disponibles.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "No hay contactos disponibles para añadir.");
+                return;
+            }
+
+            ContactoIndividual elegido = (ContactoIndividual) JOptionPane.showInputDialog(
+                this,
+                "Selecciona un contacto para añadir:",
+                "Añadir al grupo",
+                JOptionPane.PLAIN_MESSAGE,
+                null,
+                disponibles.toArray(),
+                disponibles.get(0)
+            );
+
+            if (elegido != null) {
+                boolean añadido = Controlador.getInstancia().añadirContactoAGrupo(grupo.getNombre(), elegido);
+                if (añadido) {
+                    JOptionPane.showMessageDialog(this, "Contacto añadido al grupo.");
+                } else {
+                    JOptionPane.showMessageDialog(this, "El contacto ya está en el grupo.");
+                }
+            }
+        });
+        menuContextual.add(itemAñadirContactoGrupo);
+
+        listaChatRecientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent e) {
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    int index = listaChatRecientes.locationToIndex(e.getPoint());
+                    if (index != -1) {
+                        listaChatRecientes.setSelectedIndex(index);
+                        Contacto seleccionado = listaChatRecientes.getModel().getElementAt(index);
+
+                        // Mostrar solo las opciones relevantes según el tipo de contacto
+                        itemCambiarNombre.setVisible(!(seleccionado instanceof Grupo));
+                        itemAñadirContactoGrupo.setVisible(seleccionado instanceof Grupo);
+
+                        menuContextual.show(listaChatRecientes, e.getX(), e.getY());
+                    }
+                }
+            }
+        });
+    }
 
 
 
