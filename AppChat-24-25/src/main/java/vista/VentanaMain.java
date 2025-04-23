@@ -754,16 +754,6 @@ public class VentanaMain extends JFrame {
 
 
     
-    public List<Mensaje> getMensajesFiltradosPorTexto(Contacto contacto, String fragmento) {
-        List<Mensaje> mensajes = Controlador.getInstancia().getMensajes(contacto);
-        if (fragmento == null || fragmento.trim().isEmpty()) return mensajes;
-
-        String f = fragmento.toLowerCase();
-        return mensajes.stream()
-                       .filter(m -> m.getTexto() != null && m.getTexto().toLowerCase().contains(f))
-                       .collect(Collectors.toList());
-    }
-    
     private void exportarChatAPDF(Usuario usuario, Contacto contacto, String rutaArchivo) {
         try {
             com.itextpdf.text.Document document = new com.itextpdf.text.Document();

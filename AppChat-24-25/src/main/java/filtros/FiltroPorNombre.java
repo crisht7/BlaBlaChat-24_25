@@ -29,17 +29,12 @@ public class FiltroPorNombre implements FiltroBusqueda {
                 Contacto receptor = m.getReceptor();
 
                 boolean emisorCoincide = emisor.getNombre().equals(nombre);
-
-                boolean receptorCoincide = false;
-                if (receptor instanceof ContactoIndividual) {
-                    receptorCoincide = receptor.getNombre().equals(nombre);
-                } else if (receptor instanceof Grupo) {
-                    receptorCoincide = ((Grupo) receptor).getIntegrantes().stream()
-                            .anyMatch(u -> u.getNombre().equals(nombre));
-                }
+                boolean receptorCoincide = (receptor instanceof ContactoIndividual) &&
+                        receptor.getNombre().equals(nombre);
 
                 return emisorCoincide || receptorCoincide;
             })
             .collect(Collectors.toList());
     }
+
 }

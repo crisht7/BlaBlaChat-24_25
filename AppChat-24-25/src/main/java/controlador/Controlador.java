@@ -292,7 +292,7 @@ public class Controlador {
 	 * @param contacto
 	 */
 	public void enviarMensaje(String texto, Contacto contacto) {
-	    if (usuarioActual == null || contacto == null || texto == null || texto.isEmpty()) return;
+	    if (usuarioActual == null || contacto == null || texto == null || texto.trim().isEmpty()) return;
 
 	    Mensaje mensaje = null;
 
@@ -452,6 +452,8 @@ public class Controlador {
 
 	    adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
+	
+	
 	
 
 

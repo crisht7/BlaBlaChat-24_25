@@ -1,4 +1,4 @@
-package appChat;
+package testHU;
 
 import static org.junit.Assert.*;
 

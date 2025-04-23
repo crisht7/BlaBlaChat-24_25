@@ -19,7 +19,8 @@ public class FiltroPorTexto implements FiltroBusqueda {
         if (texto == null || texto.isEmpty()) return mensajes;
 
         return mensajes.stream()
-            .filter(m -> m.getTexto() != null && m.getTexto().contains(texto))
-            .collect(Collectors.toList());
+        	    .filter(m -> m.getTexto() != null && m.getTexto().toLowerCase().contains(texto.toLowerCase()))
+        	    .collect(Collectors.toList());
+
     }
 }

@@ -7,6 +7,7 @@ import java.util.stream.Collectors;
 
 import filtros.*;
 import appChat.Mensaje;
+import appChat.Usuario;
 import appChat.Contacto;
 import controlador.Controlador;
 
@@ -121,4 +122,5 @@ public class VentanaBuscar extends JDialog {
 
         return panel;
     }
+    
 }

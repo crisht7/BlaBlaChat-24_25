@@ -1,6 +1,8 @@
-package descuentos;
+package testHU;
 
 import appChat.Usuario;
+import descuentos.DescuentoFecha;
+
 import org.junit.Test;
 import javax.swing.ImageIcon;
 import java.time.LocalDate;
