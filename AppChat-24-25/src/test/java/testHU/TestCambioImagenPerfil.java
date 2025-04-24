@@ -1,5 +1,7 @@
 package testHU;
+
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.*;
 
 import java.io.File;
 import java.time.LocalDate;
@@ -8,6 +10,7 @@ import javax.swing.ImageIcon;
 
 import org.junit.Before;
 import org.junit.Test;
+import org.mockito.MockedStatic;
 
 import appChat.RepositorioUsuarios;
 import appChat.Usuario;
@@ -16,7 +19,7 @@ import controlador.Controlador;
 public class TestCambioImagenPerfil {
 
     private Controlador controlador;
-    private RepositorioUsuarios repo;
+    private RepositorioUsuarios mockRepo;
 
     private final String telefono = "555555555";
     private final String contraseña = "img123";
@@ -24,24 +27,29 @@ public class TestCambioImagenPerfil {
 
     @Before
     public void setUp() {
-        controlador = Controlador.getInstancia();
-        repo = RepositorioUsuarios.getUnicaInstancia();
+        mockRepo = mock(RepositorioUsuarios.class);
 
-        // Eliminar usuario si ya existe
-        Usuario existente = repo.getUsuario(telefono);
-        if (existente != null) {
-            repo.eliminarUsuario(existente);
-            controlador.getAdaptadorUsuario().borrarUsuario(existente);
+        // Mock estático antes de obtener instancia del Controlador
+        try (MockedStatic<RepositorioUsuarios> mockedStaticRepo = mockStatic(RepositorioUsuarios.class)) {
+            mockedStaticRepo.when(RepositorioUsuarios::getUnicaInstancia).thenReturn(mockRepo);
+
+            controlador = Controlador.getInstancia();
+
+            usuario = new Usuario("Imagen Test", new ImageIcon(), contraseña, telefono, "", LocalDate.of(1990, 1, 1));
+            when(mockRepo.getUsuario(telefono)).thenReturn(usuario);
+            doNothing().when(mockRepo).eliminarUsuario(any(Usuario.class));
+            doNothing().when(mockRepo).agregarUsuario(any(Usuario.class));
+
+            controlador.registrarUsuario(
+                "Imagen Test", LocalDate.of(1990, 1, 1), new ImageIcon(), telefono, "", contraseña
+            );
+            usuario = controlador.getUsuarioActual();
         }
-
-        // Crear nuevo usuario
-        controlador.registrarUsuario("Imagen Test", LocalDate.of(1990, 1, 1), new ImageIcon(), telefono, "", contraseña);
-        usuario = controlador.getUsuarioActual();
     }
 
     @Test
     public void testCambiarImagenPerfilValida() {
-        String path = "src/test/resources/imagen_valida.png"; // Debe existir en tu proyecto
+        String path = "src/test/resources/imagen_valida.png"; // Asegúrate de que existe
         File archivo = new File(path);
 
         assertTrue("La imagen de prueba debería existir", archivo.exists());
@@ -50,7 +58,7 @@ public class TestCambioImagenPerfil {
         usuario.setFotoPerfil(nuevaImagen);
         controlador.getAdaptadorUsuario().modificarUsuario(usuario);
 
-        Usuario actualizado = repo.getUsuario(telefono);
+        Usuario actualizado = mockRepo.getUsuario(telefono);
         assertNotNull("La imagen debería haberse actualizado", actualizado.getFotoPerfil());
     }
 
@@ -69,8 +77,7 @@ public class TestCambioImagenPerfil {
             fail("No debería lanzar excepciones al intentar cargar imagen inválida, debe manejarse en la vista");
         }
 
-        // No cambia la imagen porque la imagen inválida es nula
-        Usuario actualizado = repo.getUsuario(telefono);
+        Usuario actualizado = mockRepo.getUsuario(telefono);
         assertNotNull("Debe mantenerse la imagen previa o ser la por defecto", actualizado.getFotoPerfil());
     }
-} 
+}

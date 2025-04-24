@@ -13,6 +13,7 @@ import controlador.Controlador;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.ArgumentCaptor;
+import org.mockito.MockedStatic;
 import persistencia.ContactoIndividualDAO;
 import persistencia.MensajeDAO;
 import persistencia.UsuarioDAO;
@@ -37,23 +38,29 @@ public class TestResponderDesconocido {
         mockUsuarioDAO = mock(UsuarioDAO.class);
         mockRepo = mock(RepositorioUsuarios.class);
 
-        controlador = Controlador.getInstancia();
+        // Mock estático de RepositorioUsuarios.getUnicaInstancia()
+        try (MockedStatic<RepositorioUsuarios> mockedStaticRepo = mockStatic(RepositorioUsuarios.class)) {
+            mockedStaticRepo.when(RepositorioUsuarios::getUnicaInstancia).thenReturn(mockRepo);
 
-        java.lang.reflect.Field f1 = Controlador.class.getDeclaredField("adaptadorMensaje");
-        java.lang.reflect.Field f2 = Controlador.class.getDeclaredField("adaptadorContactoIndividual");
-        java.lang.reflect.Field f3 = Controlador.class.getDeclaredField("adaptadorUsuario");
-        java.lang.reflect.Field f4 = Controlador.class.getDeclaredField("repoUsuarios");
+            controlador = Controlador.getInstancia();
 
-        f1.setAccessible(true); f2.setAccessible(true); f3.setAccessible(true); f4.setAccessible(true);
-        f1.set(controlador, mockMensajeDAO);
-        f2.set(controlador, mockContactoDAO);
-        f3.set(controlador, mockUsuarioDAO);
-        f4.set(controlador, mockRepo);
+            // Inyectamos los mocks usando reflexión
+            java.lang.reflect.Field f1 = Controlador.class.getDeclaredField("adaptadorMensaje");
+            java.lang.reflect.Field f2 = Controlador.class.getDeclaredField("adaptadorContactoIndividual");
+            java.lang.reflect.Field f3 = Controlador.class.getDeclaredField("adaptadorUsuario");
+            java.lang.reflect.Field f4 = Controlador.class.getDeclaredField("repoUsuarios");
 
-        when(mockUsuarioDAO.recuperarUsuarioPorTelefono("1000")).thenReturn(receptor);
-        controlador.hacerLogin("1000", "pass");
+            f1.setAccessible(true); f2.setAccessible(true); f3.setAccessible(true); f4.setAccessible(true);
+            f1.set(controlador, mockMensajeDAO);
+            f2.set(controlador, mockContactoDAO);
+            f3.set(controlador, mockUsuarioDAO);
+            f4.set(controlador, mockRepo);
 
-        when(mockRepo.buscarUsuario("2000")).thenReturn(Optional.of(emisor));
+            when(mockUsuarioDAO.recuperarUsuarioPorTelefono("1000")).thenReturn(receptor);
+            when(mockRepo.buscarUsuario("2000")).thenReturn(Optional.of(emisor));
+
+            controlador.hacerLogin("1000", "pass");
+        }
     }
 
     @Test
@@ -79,4 +86,3 @@ public class TestResponderDesconocido {
         verify(mockUsuarioDAO).modificarUsuario(receptor);
     }
 }
-

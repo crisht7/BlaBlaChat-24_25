@@ -227,7 +227,8 @@ public class Controlador {
 		}
 
 		boolean yaExistePorNombre = usuarioActual.tieneContactoIndividual(nombre);
-		boolean yaExistePorTelefono = usuarioActual.tieneContactoIndividual(numTelefono);
+		boolean yaExistePorTelefono = usuarioActual.getContactosIndividuales().stream()
+			    .anyMatch(c -> c.getTelefono() != null && c.getTelefono().trim().equals(numTelefono.trim()));
 
 		if (yaExistePorNombre || yaExistePorTelefono) {
 			return null;
