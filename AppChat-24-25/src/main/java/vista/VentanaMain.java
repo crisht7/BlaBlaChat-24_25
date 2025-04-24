@@ -187,7 +187,8 @@ public class VentanaMain extends JFrame {
 	 * Método para inicializar la ventana principal.
 	 */
     private void initialize() {
-        this.setBounds(100, 100, 746, 654);
+        this.setBounds(100, 100, 900, 700);
+
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.getContentPane().setLayout(new BorderLayout(0, 0));
 
@@ -244,13 +245,18 @@ public class VentanaMain extends JFrame {
         panelNorte.setLayout(new BoxLayout(panelNorte, BoxLayout.X_AXIS));
         this.getContentPane().add(panelNorte, BorderLayout.NORTH);
 
-        comboPanelRecientes = new JComboBox<>();
-        comboPanelRecientes.setMaximumSize(new Dimension(150, 30));
-        comboPanelRecientes.setBackground(new Color(234, 158, 66));
-        comboPanelRecientes.setEditable(true);
-        panelNorte.add(comboPanelRecientes);
+        JTextField campoTelefono = new JTextField();
+        Dimension tamañoFijo = new Dimension(100, 30); // Ajusta el tamaño a tu gusto
 
-        panelNorte.add(crearBoton("Ir al chat", e -> abrirChatConNumeroDesdeCombo()));
+        campoTelefono.setPreferredSize(tamañoFijo);
+        campoTelefono.setMaximumSize(tamañoFijo);
+        campoTelefono.setMinimumSize(tamañoFijo);
+        campoTelefono.setBackground(new Color(234, 158, 66));
+        panelNorte.add(campoTelefono);
+
+
+
+        panelNorte.add(crearBoton("Ir al chat", e -> abrirChatConTelefono(campoTelefono.getText().trim())));
 
         // Asegurate de agregar todos los botones:
         panelNorte.add(crearBoton("Buscar", e -> new VentanaBuscar(this).setVisible(true)));
@@ -684,12 +690,11 @@ public class VentanaMain extends JFrame {
         listaChatRecientes.setModel(nuevoModelo);
     }
     
-	/**
-	 * Método para abrir un chat con un número de teléfono desde el combo box.
-	 */
-    private void abrirChatConNumeroDesdeCombo() {
-        String telefono = ((String) comboPanelRecientes.getEditor().getItem()).trim();
 
+	/**
+	 * Método para abrir un chat con un número de teléfono.
+	 */
+    private void abrirChatConTelefono(String telefono) {
         if (telefono.isEmpty()) {
             JOptionPane.showMessageDialog(this, "Por favor, introduce un número de teléfono.");
             return;
@@ -697,7 +702,6 @@ public class VentanaMain extends JFrame {
 
         Usuario actual = Controlador.getInstancia().getUsuarioActual();
 
-        // Verificar si ya es contacto
         Optional<ContactoIndividual> existente = actual.getContactosIndividuales().stream()
             .filter(c -> c.getTelefono().equals(telefono))
             .findFirst();
@@ -706,28 +710,24 @@ public class VentanaMain extends JFrame {
         if (existente.isPresent()) {
             contacto = existente.get();
         } else {
-            // Buscar el usuario al que corresponde el teléfono
             Optional<Usuario> usuarioDestino = Controlador.getInstancia().getRepoUsuarios().buscarUsuario(telefono);
             if (usuarioDestino.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "No existe ningún usuario con ese número.");
                 return;
             }
 
-            // Crear contacto real y persistente
-            contacto = Controlador.getInstancia().crearContacto(telefono, telefono); // nombre = telefono
-
+            contacto = Controlador.getInstancia().crearContacto(telefono, telefono);
             if (contacto == null) {
                 JOptionPane.showMessageDialog(this, "No se pudo crear el contacto.");
                 return;
             }
 
-            // Actualizar lista de contactos en pantalla
             actualizarListaContactos();
         }
 
-        // Cargar chat en pantalla
         cargarChat(contacto);
     }
+
     
     public void cargarChatDesdeExterno(Contacto contacto, Mensaje mensajeBuscado) {
         // Cargar el chat normalmente
