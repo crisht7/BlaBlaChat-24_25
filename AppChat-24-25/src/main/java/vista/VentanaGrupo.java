@@ -4,9 +4,11 @@ package vista;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.File;
 import java.util.List;
 import controlador.Controlador;
 import appChat.ContactoIndividual;
+import appChat.Grupo;
 
 @SuppressWarnings("serial")
 public class VentanaGrupo extends JDialog {
@@ -16,13 +18,14 @@ public class VentanaGrupo extends JDialog {
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
     private final Color boton = Colores.NARANJA_BOTON.getColor();
+    private ImageIcon imagenSeleccionadaGrupo = null;
 
  
 
     public VentanaGrupo(JFrame parent) {
         super(parent, "Crear Nuevo Grupo", true);
         getContentPane().setBackground(naranjaOscuro);
-        setSize(400, 350);
+        setSize(400, 400);
         setLocationRelativeTo(parent);
         getContentPane().setLayout(new BorderLayout(10, 10));
 
@@ -49,15 +52,35 @@ public class VentanaGrupo extends JDialog {
         scrollLista.setBackground(naranjaOscuro);
         getContentPane().add(scrollLista, BorderLayout.CENTER);
 
-        // Panel inferior: Botón crear grupo
+        // Panel inferior: Botones
         JPanel panelBoton = new JPanel();
         panelBoton.setBackground(naranjaOscuro);
+
+        // Botón crear grupo
         JButton btnCrearGrupo = new JButton("Crear Grupo");
         btnCrearGrupo.setBackground(boton);
         btnCrearGrupo.addActionListener(e -> crearGrupo());
         panelBoton.add(btnCrearGrupo);
+
+        // Botón seleccionar imagen
+        JButton btnSeleccionarImagen = new JButton("Seleccionar imagen");
+        btnSeleccionarImagen.setBackground(boton);
+        btnSeleccionarImagen.addActionListener(e -> {
+            JFileChooser fileChooser = new JFileChooser();
+            fileChooser.setDialogTitle("Seleccionar imagen del grupo");
+            fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png"));
+
+            int resultado = fileChooser.showOpenDialog(this);
+            if (resultado == JFileChooser.APPROVE_OPTION) {
+                File archivo = fileChooser.getSelectedFile();
+                imagenSeleccionadaGrupo = new ImageIcon(archivo.getAbsolutePath());
+            }
+        });
+        panelBoton.add(btnSeleccionarImagen);
+
         getContentPane().add(panelBoton, BorderLayout.SOUTH);
     }
+
 
     private void cargarContactos() {
         DefaultListModel<ContactoIndividual> model = (DefaultListModel<ContactoIndividual>) listaContactos.getModel();
@@ -84,11 +107,23 @@ public class VentanaGrupo extends JDialog {
             return;
         }
 
-        Controlador.getInstancia().crearGrupo(nombreGrupo, contactosSeleccionados);
+        // 🟡 Crear y registrar el grupo en BD
+        Grupo nuevoGrupo = Controlador.getInstancia().crearGrupo(nombreGrupo, contactosSeleccionados);
 
+        // 🟡 Cambiar imagen si el usuario eligió una imagen personalizada
+        if (imagenSeleccionadaGrupo != null) {
+            nuevoGrupo.setFoto(imagenSeleccionadaGrupo);
+
+            // Aquí debes guardar los cambios del grupo
+            Controlador.getInstancia().getAdaptadorGrupo().modificarGrupo(nuevoGrupo);
+        }
+
+        // Actualizar interfaz
         VentanaMain.getInstancia().actualizarListaContactos();
 
         JOptionPane.showMessageDialog(this, "Grupo creado exitosamente.");
         dispose();
     }
+
+
 }

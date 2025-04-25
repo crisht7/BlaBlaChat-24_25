@@ -254,12 +254,13 @@ public class Controlador {
 	 * @param nombre
 	 * @param integrantes
 	 */
-	public void crearGrupo(String nombre, List<ContactoIndividual> integrantes) {
+	public Grupo crearGrupo(String nombre, List<ContactoIndividual> integrantes) {
 		Grupo grupo = new Grupo(nombre);
 		integrantes.forEach(grupo::agregarIntegrante);
 		usuarioActual.añadirContacto(grupo);
 		adaptadorGrupo.registrarGrupo(grupo);
 		adaptadorUsuario.modificarUsuario(usuarioActual);
+		return grupo;
 	}
 
 	/**

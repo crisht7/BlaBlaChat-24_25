@@ -149,6 +149,13 @@ public class VentanaMain extends JFrame {
                     ImageIcon fotoPerfil = cIndividual.getFoto();
                     Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
                     iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+                } else if (contacto instanceof Grupo) {
+                    Grupo grupo = (Grupo) contacto;
+                    telefonoLabel.setText("");
+
+                    ImageIcon fotoGrupo = grupo.getFoto();
+                    Image imagenEscalada = fotoGrupo.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                    iconoLabel.setIcon(new ImageIcon(imagenEscalada));
                 } else {
                     telefonoLabel.setText("");
                 }
@@ -661,7 +668,7 @@ public class VentanaMain extends JFrame {
         Color colorBurbuja;
 
         if (m.getEmisor().equals(Controlador.getInstancia().getUsuarioActual())) {
-            emisor = "You";
+            emisor = "Tú";
             direccionMensaje = BubbleText.SENT;
             colorBurbuja = turquesa;
             
@@ -685,10 +692,27 @@ public class VentanaMain extends JFrame {
         List<Contacto> contactos = Optional.ofNullable(Controlador.getInstancia().getContactosUsuarioActual())
                 .orElse(new LinkedList<>());
 
+        // Ordenar por último mensaje (más reciente primero)
+        contactos.sort((c1, c2) -> {
+            List<Mensaje> mensajes1 = Controlador.getInstancia().getMensajes(c1);
+            List<Mensaje> mensajes2 = Controlador.getInstancia().getMensajes(c2);
+
+            if (mensajes1.isEmpty() && mensajes2.isEmpty()) return 0;
+            if (mensajes1.isEmpty()) return 1;
+            if (mensajes2.isEmpty()) return -1;
+
+            Mensaje ultimo1 = mensajes1.get(mensajes1.size() - 1);
+            Mensaje ultimo2 = mensajes2.get(mensajes2.size() - 1);
+
+            return ultimo2.getHora().compareTo(ultimo1.getHora()); // Descendente
+        });
+
+        // Recargar modelo ordenado
         DefaultListModel<Contacto> nuevoModelo = new DefaultListModel<>();
         contactos.forEach(nuevoModelo::addElement);
         listaChatRecientes.setModel(nuevoModelo);
     }
+
     
 
 	/**
