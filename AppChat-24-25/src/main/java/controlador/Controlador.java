@@ -17,6 +17,9 @@ import appChat.Grupo;
 import appChat.Mensaje;
 import appChat.RepositorioUsuarios;
 import appChat.Usuario;
+import descuentos.Descuento;
+import descuentos.DescuentoFecha;
+import descuentos.DescuentoMensaje;
 import persistencia.*;
 
 public class Controlador {
@@ -483,6 +486,28 @@ public class Controlador {
 
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
+	
+	
+	public double calcularMejorDescuento() {
+	    if (usuarioActual == null) return 0.0;
+
+	    // Crear las estrategias de descuento que quieres aplicar
+	    DescuentoFecha descuentoFecha = new DescuentoFecha(
+	        LocalDate.of(2024, 1, 1),
+	        LocalDate.of(2024, 12, 31)
+	    );
+
+	    DescuentoMensaje descuentoMensaje = new DescuentoMensaje(10); // mínimo 10 mensajes enviados
+
+	    // Calcular cada descuento
+	    double d1 = descuentoFecha.obtenerPorcentajeDescuento(usuarioActual);
+	    double d2 = descuentoMensaje.obtenerPorcentajeDescuento(usuarioActual);
+
+	    // Devolver el mayor
+	    return Math.max(d1, d2);
+	}
+
+
 
 
 

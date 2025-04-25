@@ -304,21 +304,10 @@ public class VentanaMain extends JFrame {
             Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
 
             if (usuarioActual != null && !usuarioActual.isPremium()) {
-                double precioBase = 50.0;
+            	double precioBase = 50.0;
 
-                // Estrategias de descuento
-                DescuentoFecha descuentoFecha = new DescuentoFecha(
-                        LocalDate.of(2024, 1, 1),
-                        LocalDate.of(2024, 12, 31)
-                );
-                // Numero de mensajes necesario para el descuento
-                DescuentoMensaje descuentoMensaje = new DescuentoMensaje(10); 
-                // Calcular descuentos individuales
-                double d1 = descuentoFecha.obtenerPorcentajeDescuento(usuarioActual);
-                double d2 = descuentoMensaje.obtenerPorcentajeDescuento(usuarioActual);
-
-                double maxDescuento = Math.max(d1, d2);
-                double precioFinal = precioBase * (1 - maxDescuento / 100);
+            	double maxDescuento = Controlador.getInstancia().calcularMejorDescuento();
+            	double precioFinal = precioBase * (1 - maxDescuento / 100);
 
                 String mensaje = "¿Deseas adquirir la versión Premium?\n\n" +
                         "Precio base: 50 €\n" +
