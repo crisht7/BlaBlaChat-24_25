@@ -541,4 +541,9 @@ public class Controlador {
 	public Usuario getUsuarioActual() {
 		return this.usuarioActual;
 	}
+	
+	public void setUsuarioActual(Usuario usuario) {
+	    this.usuarioActual = usuario;
+	}
+
 }

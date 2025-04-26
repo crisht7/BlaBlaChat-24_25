@@ -12,16 +12,19 @@ public class VentanaPerfil extends JDialog {
 
     private Usuario usuario;
     private JLabel lblFotoPerfil;
-    private JTextField txtSaludo;
-    private final Color naranjaClaro = new Color(234, 158, 66);
-    private final Color naranjaOscuro = new Color(198, 101, 18);
+    private JTextArea txtSaludo;
+    private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor(); 
+	private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	private final Color boton = Colores.NARANJA_BOTON.getColor();
+
+
 
     public VentanaPerfil(JFrame parent) {
         super(parent, "Mi Perfil", true);
         this.usuario = Controlador.getInstancia().getUsuarioActual();
 
         getContentPane().setBackground(naranjaOscuro);
-        setSize(400, 500);
+        setSize(330, 350);
         setLocationRelativeTo(parent);
         getContentPane().setLayout(new BorderLayout(10, 10));
 
@@ -40,23 +43,37 @@ public class VentanaPerfil extends JDialog {
         panelFoto.add(lblFotoPerfil);
         getContentPane().add(panelFoto, BorderLayout.NORTH);
 
-        // Panel centro: Información usuario
+     // Panel centro: Información usuario
         JPanel panelInfo = new JPanel();
-        panelInfo.setBackground(naranjaClaro);
+        panelInfo.setBackground(naranjaOscuro);
         panelInfo.setLayout(new BoxLayout(panelInfo, BoxLayout.Y_AXIS));
         panelInfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
 
         panelInfo.add(crearLabel("Nombre: " + usuario.getNombre()));
         panelInfo.add(crearLabel("Teléfono: " + usuario.getTelefono()));
-        panelInfo.add(crearLabel("Fecha de nacimiento: " + usuario.getFechaRegistro()));
+        panelInfo.add(crearLabel("Fecha en la que te uniste: " + usuario.getFechaRegistro()));
 
         panelInfo.add(Box.createRigidArea(new Dimension(0, 10)));
 
-        panelInfo.add(new JLabel("Saludo:"));
-        txtSaludo = new JTextField(usuario.getSaludo() != null ? usuario.getSaludo() : "");
+        panelInfo.add(crearLabel("Saludo:"));
+
+        txtSaludo = new JTextArea(usuario.getSaludo() != null ? usuario.getSaludo() : "");
+        txtSaludo.setLineWrap(true);
+        txtSaludo.setWrapStyleWord(true);
+        txtSaludo.setBackground(naranjaClaro);
+        txtSaludo.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+
+        // Controlar tamaño de verdad
+        txtSaludo.setRows(2);
+        txtSaludo.setColumns(25);
+        txtSaludo.setMaximumSize(new Dimension(300, 50)); // <-- tamaño máximo REAL
+        txtSaludo.setPreferredSize(new Dimension(300, 50)); // <-- preferido también
+
+
         panelInfo.add(txtSaludo);
 
         getContentPane().add(panelInfo, BorderLayout.CENTER);
+
 
         // Panel inferior: Botón guardar
         JPanel panelBoton = new JPanel();
@@ -65,17 +82,29 @@ public class VentanaPerfil extends JDialog {
         JButton btnGuardar = new JButton("Guardar Cambios");
         btnGuardar.setBackground(Color.WHITE);
         btnGuardar.addActionListener(e -> guardarCambios());
+        btnGuardar.setBackground(boton);
         panelBoton.add(btnGuardar);
+
+        JButton btnCerrarSesion = new JButton("Cerrar Sesión");
+        btnCerrarSesion.setBackground(new Color(200, 23, 28));
+        btnCerrarSesion.setForeground(new Color(0, 0, 0));
+        btnCerrarSesion.addActionListener(e -> cerrarSesion());
+        panelBoton.add(btnCerrarSesion);
 
         getContentPane().add(panelBoton, BorderLayout.SOUTH);
     }
 
     private JLabel crearLabel(String texto) {
         JLabel label = new JLabel(texto);
-        label.setAlignmentX(Component.LEFT_ALIGNMENT);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        label.setForeground(Color.BLACK);
+        label.setHorizontalAlignment(SwingConstants.LEFT);
+        label.setMaximumSize(new Dimension(300, 20)); // máximo espacio permitido
         return label;
     }
 
+
+ 
     private void actualizarFotoPerfil() {
         ImageIcon fotoPerfil = usuario.getFotoPerfil();
         if (fotoPerfil != null) {
@@ -103,8 +132,32 @@ public class VentanaPerfil extends JDialog {
     private void guardarCambios() {
         usuario.setSaludo(txtSaludo.getText().trim());
         Controlador.getInstancia().getAdaptadorUsuario().modificarUsuario(usuario);
+        VentanaMain.getInstancia().refrescarFotoUsuario();
+
 
         JOptionPane.showMessageDialog(this, "Datos actualizados correctamente.");
         dispose();
     }
+    
+    private void cerrarSesion() {
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Seguro que quieres cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Poner usuario actual a null
+            Controlador.getInstancia().setUsuarioActual(null);
+            
+            // Cerrar ventana principal (VentanaMain)
+            VentanaMain.getInstancia().dispose();
+            
+            // Cerrar esta ventana (perfil)
+            dispose();
+
+            // Abrir ventana de login
+            SwingUtilities.invokeLater(() -> {
+                VentanaLogin ventanaLogin = new VentanaLogin();
+                ventanaLogin.setVisible(true);
+            });
+        }
+    }
+ 
+
 }
