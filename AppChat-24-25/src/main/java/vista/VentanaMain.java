@@ -35,6 +35,9 @@ public class VentanaMain extends JFrame {
     private final Color turquesaOscuro = Colores.TURQUESA_OSCURO.getColor();
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+    
+    private JLabel lblFotoUsuario;
+
 
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
@@ -62,6 +65,15 @@ public class VentanaMain extends JFrame {
         return instancia;
     }
     
+    public void refrescarFotoUsuario() {
+        ImageIcon nuevaFoto = Controlador.getInstancia().getUsuarioActual().getFotoPerfil();
+        if (nuevaFoto != null) {
+            Image imagenEscalada = nuevaFoto.getImage().getScaledInstance(50, 50, Image.SCALE_SMOOTH);
+            lblFotoUsuario.setIcon(new ImageIcon(imagenEscalada));
+        } else {
+            lblFotoUsuario.setIcon(new ImageIcon(getClass().getResource("/anonimo.png")));
+        }
+    }
 
 	/**
 	 * Clase interna para el panel de chat.
@@ -363,37 +375,17 @@ public class VentanaMain extends JFrame {
 
         if (usuarioActual != null) {
             ImageIcon fotoPerfil = usuarioActual.getFotoPerfil();  // Ya sabemos que no es null
-            JLabel lblFotoUsuario = new JLabel();
+            lblFotoUsuario = new JLabel();
             
             lblFotoUsuario.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             lblFotoUsuario.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override
                 public void mouseClicked(java.awt.event.MouseEvent e) {
-                    JFileChooser fileChooser = new JFileChooser();
-                    fileChooser.setDialogTitle("Seleccionar nueva imagen de perfil");
-                    fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter("Imágenes", "jpg", "jpeg", "png"));
-
-                    int resultado = fileChooser.showOpenDialog(VentanaMain.this);
-                    if (resultado == JFileChooser.APPROVE_OPTION) {
-                        java.io.File archivo = fileChooser.getSelectedFile();
-                        try {
-                            ImageIcon nuevaFoto = new ImageIcon(archivo.getAbsolutePath());
-                            Image imagenEscalada = nuevaFoto.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-                            nuevaFoto = new ImageIcon(imagenEscalada);
-
-                            lblFotoUsuario.setIcon(nuevaFoto);
-
-                            Usuario actual = Controlador.getInstancia().getUsuarioActual();
-                            actual.setFotoPerfil(nuevaFoto);
-                            Controlador.getInstancia().getAdaptadorUsuario().modificarUsuario(actual);
-
-                            JOptionPane.showMessageDialog(VentanaMain.this, "Imagen de perfil actualizada correctamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
-                        } catch (Exception ex) {
-                            JOptionPane.showMessageDialog(VentanaMain.this, "No se pudo cargar la imagen seleccionada.", "Error", JOptionPane.ERROR_MESSAGE);
-                        }
-                    }
+                    VentanaPerfil ventanaUsuario = new VentanaPerfil(VentanaMain.getInstancia());
+                    ventanaUsuario.setVisible(true);
                 }
             });
+
 
             if (fotoPerfil != null && fotoPerfil.getImage() != null) {
             	Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
@@ -870,6 +862,8 @@ public class VentanaMain extends JFrame {
             }
         });
     }
+
+
 
 
 
