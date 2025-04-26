@@ -269,7 +269,7 @@ public class VentanaMain extends JFrame {
         panelNorte.add(crearBoton("Buscar", e -> new VentanaBuscar(this).setVisible(true)));
         panelNorte.add(crearBoton("Contactos", e -> new VentanaContacto(new DefaultListModel<>()).setVisible(true)));
         panelNorte.add(crearBoton("Tema", e -> {}));
-        panelNorte.add(crearBoton("Añadir Grupo", e -> new VentanaGrupo(this).setVisible(true)));
+        panelNorte.add(crearBoton("Crear Grupo", e -> new VentanaGrupo(this).setVisible(true)));
 
 
         panelNorte.add(Box.createHorizontalGlue());

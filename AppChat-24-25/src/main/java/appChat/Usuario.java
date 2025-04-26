@@ -240,8 +240,18 @@ public class Usuario {
 	 * @return fechaRegistro
 	 */
 	public LocalDate getFechaRegistro() {
+		return this.fechaNacimiento; 				//
+	}
+	
+	/**
+	 * Devuelve la fecha de nacimiento del usuario
+	 * 
+	 * @return fechaNacimiento
+	 */
+	public LocalDate getFechaNacimiento() {
 		return this.fechaNacimiento;
 	}
+	
 	
 	/**
      * Devuelve la fotoPerfil del usuario
