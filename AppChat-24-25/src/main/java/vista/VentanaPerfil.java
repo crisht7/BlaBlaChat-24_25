@@ -85,6 +85,12 @@ public class VentanaPerfil extends JDialog {
         btnGuardar.setBackground(boton);
         panelBoton.add(btnGuardar);
 
+        JButton btnCerrarSesion = new JButton("Cerrar Sesión");
+        btnCerrarSesion.setBackground(new Color(200, 23, 28));
+        btnCerrarSesion.setForeground(new Color(0, 0, 0));
+        btnCerrarSesion.addActionListener(e -> cerrarSesion());
+        panelBoton.add(btnCerrarSesion);
+
         getContentPane().add(panelBoton, BorderLayout.SOUTH);
     }
 
@@ -132,4 +138,26 @@ public class VentanaPerfil extends JDialog {
         JOptionPane.showMessageDialog(this, "Datos actualizados correctamente.");
         dispose();
     }
+    
+    private void cerrarSesion() {
+        int confirmacion = JOptionPane.showConfirmDialog(this, "¿Seguro que quieres cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
+        if (confirmacion == JOptionPane.YES_OPTION) {
+            // Poner usuario actual a null
+            Controlador.getInstancia().setUsuarioActual(null);
+            
+            // Cerrar ventana principal (VentanaMain)
+            VentanaMain.getInstancia().dispose();
+            
+            // Cerrar esta ventana (perfil)
+            dispose();
+
+            // Abrir ventana de login
+            SwingUtilities.invokeLater(() -> {
+                VentanaLogin ventanaLogin = new VentanaLogin();
+                ventanaLogin.setVisible(true);
+            });
+        }
+    }
+ 
+
 }
