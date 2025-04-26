@@ -15,7 +15,7 @@ public class Usuario {
     private String telefono;
     private String saludo;
     private boolean premium;
-    private LocalDate fechaNacimiento;
+    private LocalDate fechaRegistro;
     private int codigo;
     private List<Contacto> contactos;
     
@@ -36,14 +36,14 @@ public class Usuario {
      * @param fechaRegistro
      */
     public Usuario(String nombre, ImageIcon imagen, String contraseña, 
-    			String telefono, String saludo, LocalDate fechaNacimiento) {
+    			String telefono, String saludo, LocalDate fechaRegistro) {
     	this.codigo = 0;
     	this.nombre = nombre;
     	this.fotoPerfil = imagen;
     	this.contraseña = contraseña;
     	this.telefono = telefono;
     	this.saludo = saludo;
-    	this.fechaNacimiento = fechaNacimiento;
+    	this.fechaRegistro = fechaRegistro;
     	this.premium = false;
     	this.contactos = new LinkedList<>();
     	
@@ -62,8 +62,8 @@ public class Usuario {
      * @param isPremium
      */
     public Usuario(String nombre, ImageIcon imagen, String contraseña, 
-			String telefono, String saludo, LocalDate fechaNacimiento, Boolean isPremium) {
-    	this(nombre, imagen, contraseña, telefono, saludo, fechaNacimiento);
+			String telefono, String saludo, LocalDate fechaRegistro, Boolean isPremium) {
+    	this(nombre, imagen, contraseña, telefono, saludo, fechaRegistro);
     	this.premium = isPremium;
     	this.contactos = new LinkedList<>();
 
@@ -240,16 +240,7 @@ public class Usuario {
 	 * @return fechaRegistro
 	 */
 	public LocalDate getFechaRegistro() {
-		return this.fechaNacimiento; 				//
-	}
-	
-	/**
-	 * Devuelve la fecha de nacimiento del usuario
-	 * 
-	 * @return fechaNacimiento
-	 */
-	public LocalDate getFechaNacimiento() {
-		return this.fechaNacimiento;
+		return this.fechaRegistro; 				//
 	}
 	
 	
@@ -370,6 +361,6 @@ public class Usuario {
 	public String toString() {
 		return "Usuario [nombre=" + nombre + "," + ", fotoPerfil=" + fotoPerfil + ", contraseña=" + contraseña
                 + ", telefono=" + telefono + ", saludo=" + saludo + ", premium=" + premium + ", fechaRegistro="
-                + fechaNacimiento + ", codigo=" + codigo + ", contactos=" + contactos + "]";
+                + fechaRegistro + ", codigo=" + codigo + ", contactos=" + contactos + "]";
 	}
 }

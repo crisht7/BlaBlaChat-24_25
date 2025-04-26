@@ -48,7 +48,7 @@ public class VentanaPerfil extends JDialog {
 
         panelInfo.add(crearLabel("Nombre: " + usuario.getNombre()));
         panelInfo.add(crearLabel("Teléfono: " + usuario.getTelefono()));
-        panelInfo.add(crearLabel("Fecha de nacimiento: " + usuario.getFechaNacimiento()));
+        panelInfo.add(crearLabel("Fecha de nacimiento: " + usuario.getFechaRegistro()));
 
         panelInfo.add(Box.createRigidArea(new Dimension(0, 10)));
 

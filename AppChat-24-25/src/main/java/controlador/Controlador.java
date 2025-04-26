@@ -102,21 +102,21 @@ public class Controlador {
 	 * Registra un nuevo usuario en la aplicación
 	 * 
 	 * @param nombre
-	 * @param fechaNacimiento
+	 * @param fechaRegistro
 	 * @param foto
 	 * @param telefono
 	 * @param saludo
 	 * @param contraseña
 	 * @return true si el registro es exitoso, false en caso contrario
 	 */
-	public boolean registrarUsuario(String nombre, LocalDate fechaNacimiento, ImageIcon foto, String telefono,
+	public boolean registrarUsuario(String nombre, LocalDate fechaRegistro, ImageIcon foto, String telefono,
 			String saludo, String contraseña) {
 		Usuario usuarioExistente = repoUsuarios.getUsuario(telefono);
 		if (usuarioExistente != null) {
 			return false;
 		}
 
-		Usuario nuevoUsuario = new Usuario(nombre, foto, contraseña, telefono, saludo, fechaNacimiento, false);
+		Usuario nuevoUsuario = new Usuario(nombre, foto, contraseña, telefono, saludo, fechaRegistro, false);
 
 		if (!repoUsuarios.existeUsuario(nuevoUsuario)) {
 			repoUsuarios.agregarUsuario(nuevoUsuario);
