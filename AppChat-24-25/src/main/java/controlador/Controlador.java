@@ -258,6 +258,13 @@ public class Controlador {
 	 * @param integrantes
 	 */
 	public Grupo crearGrupo(String nombre, List<ContactoIndividual> integrantes) {
+		if (integrantes == null || integrantes.isEmpty()) {
+	        return null; // No crear un grupo vacio
+	    }
+		
+		if (usuarioActual.tieneGrupo(nombre)) {
+	        return null; // No crear un grupo duplicado
+	    }
 		Grupo grupo = new Grupo(nombre);
 		integrantes.forEach(grupo::agregarIntegrante);
 		usuarioActual.añadirContacto(grupo);

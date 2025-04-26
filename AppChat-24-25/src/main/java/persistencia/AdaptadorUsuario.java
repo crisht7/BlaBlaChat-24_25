@@ -91,18 +91,21 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	 */
 	@Override
 	public void borrarUsuario(Usuario usuario) {
-		Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
-		servPersistencia.borrarEntidad(eUsuario);
-		
-		// Eliminar contactos asociados
-		usuario.getContactos().forEach(c -> {
-			AdaptadorContactoIndividual.getUnicaInstancia().borrarContacto((ContactoIndividual) c);
-		});
-		
-		if (PoolDAO.getUnicaInstancia().contieneID(usuario.getCodigo())) {
-			PoolDAO.getUnicaInstancia().eliminarObjeto(usuario.getCodigo());
-		}
+	    Entidad eUsuario = servPersistencia.recuperarEntidad(usuario.getCodigo());
+	    servPersistencia.borrarEntidad(eUsuario);
+	    
+	    // Eliminar contactos individuales asociados
+	    usuario.getContactos().forEach(c -> {
+	        if (c instanceof ContactoIndividual) {
+	            AdaptadorContactoIndividual.getUnicaInstancia().borrarContacto((ContactoIndividual) c);
+	        }
+	    });
+	    
+	    if (PoolDAO.getUnicaInstancia().contieneID(usuario.getCodigo())) {
+	        PoolDAO.getUnicaInstancia().eliminarObjeto(usuario.getCodigo());
+	    }
 	}
+
 
 	/**
 	 * Recupera un usuario de la base de datos a traves del codigo
