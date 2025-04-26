@@ -1,5 +1,6 @@
 package filtros;
 
+import java.text.Normalizer;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -23,18 +24,26 @@ public class FiltroPorNombre implements FiltroBusqueda {
     public List<Mensaje> filtrar(List<Mensaje> mensajes) {
         if (nombre == null || nombre.isEmpty()) return mensajes;
 
+        String nombreNormalizado = normalizarTexto(nombre);
+
         return mensajes.stream()
             .filter(m -> {
                 Usuario emisor = m.getEmisor();
                 Contacto receptor = m.getReceptor();
 
-                boolean emisorCoincide = emisor.getNombre().equals(nombre);
+                boolean emisorCoincide = normalizarTexto(emisor.getNombre()).equals(nombreNormalizado);
                 boolean receptorCoincide = (receptor instanceof ContactoIndividual) &&
-                        receptor.getNombre().equals(nombre);
+                        normalizarTexto(receptor.getNombre()).equals(nombreNormalizado);
 
                 return emisorCoincide || receptorCoincide;
             })
             .collect(Collectors.toList());
     }
 
+
+    private String normalizarTexto(String texto) {
+        if (texto == null) return "";
+        String textoNormalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);
+        return textoNormalizado.replaceAll("\\p{M}", "").toLowerCase().trim();
+    }
 }
