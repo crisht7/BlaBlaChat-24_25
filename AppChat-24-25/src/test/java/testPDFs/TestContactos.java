@@ -51,8 +51,11 @@ public class TestContactos {
         when(mockRepo.buscarUsuario("2000")).thenReturn(Optional.of(usuarioExistente));
         when(mockRepo.buscarUsuario("9999")).thenReturn(Optional.empty());
 
+        when(mockUsuarioDAO.recuperarUsuarioPorTelefono("1000")).thenReturn(usuarioActual);
+
         controlador.hacerLogin("1000", "pass");
     }
+
 
     @Test
     public void testAñadirContactoValido() {
