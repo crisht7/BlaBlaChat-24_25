@@ -8,6 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.time.ZoneId;
 
 import javax.imageio.ImageIO;
@@ -283,7 +284,8 @@ public class VentanaRegistro extends JFrame {
 
 	    boolean creado = Controlador.getInstancia().registrarUsuario(
 	        textFieldNombre.getText(),
-	        dateChooserFechaNac.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+	        //dateChooserFechaNac.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate(),
+	        LocalDate.now(),
 	        fotoPerfil,
 	        textFieldTelefono.getText(),
 	        textFieldSaludo.getText(),
