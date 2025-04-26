@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.time.LocalDate;
+import java.time.Period;
 import java.time.ZoneId;
 
 import javax.imageio.ImageIO;
@@ -314,6 +315,13 @@ public class VentanaRegistro extends JFrame {
 		String telefono = textFieldTelefono.getText().trim();
 		String contrasena = new String(passwordFieldContraseña.getPassword());
 		String repetir = new String(passwordFieldRepContraseña.getPassword());
+		
+		// Comprobar que tiene al menos 15 años
+		LocalDate fechaNacimiento = dateChooserFechaNac.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+		LocalDate hoy = LocalDate.now();
+		Period edad = Period.between(fechaNacimiento, hoy);
+
+
 		if (nombre.isEmpty()) {
 			mostrarError("El nombre no puede estar vacío."); return false;
 		}
@@ -328,6 +336,10 @@ public class VentanaRegistro extends JFrame {
 		}
 		if (dateChooserFechaNac.getDate() == null) {
 			mostrarError("Debe seleccionar una fecha de nacimiento."); return false;
+		}
+		if (edad.getYears() < 15) {
+		    mostrarError("Debes tener al menos 15 años para registrarte."); 
+		    return false;
 		}
 		return true;
 	}
