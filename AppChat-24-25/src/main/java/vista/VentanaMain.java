@@ -271,7 +271,7 @@ public class VentanaMain extends JFrame {
 
 
 
-        panelNorte.add(crearBoton("Ir al chat", e -> abrirChatConTelefono(campoTelefono.getText().trim())));
+        panelNorte.add(crearBoton("Ir al chat", e -> Controlador.getInstancia().abrirChatConTelefono(campoTelefono.getText().trim())));
 
         // Asegurate de agregar todos los botones:
         panelNorte.add(crearBoton("Buscar", e -> new VentanaBuscar(this).setVisible(true)));
@@ -658,68 +658,17 @@ public class VentanaMain extends JFrame {
 	 * Método para actualizar la lista de contactos en la interfaz.
 	 */
     public void actualizarListaContactos() {
-        List<Contacto> contactos = Optional.ofNullable(Controlador.getInstancia().getContactosUsuarioActual())
-                .orElse(new LinkedList<>());
+    	List<Contacto> contactos = Controlador.getInstancia().obtenerContactosOrdenadosPorUltimoMensaje();
 
-        // Ordenar por último mensaje (más reciente primero)
-        contactos.sort((c1, c2) -> {
-            List<Mensaje> mensajes1 = Controlador.getInstancia().getMensajes(c1);
-            List<Mensaje> mensajes2 = Controlador.getInstancia().getMensajes(c2);
-
-            if (mensajes1.isEmpty() && mensajes2.isEmpty()) return 0;
-            if (mensajes1.isEmpty()) return 1;
-            if (mensajes2.isEmpty()) return -1;
-
-            Mensaje ultimo1 = mensajes1.get(mensajes1.size() - 1);
-            Mensaje ultimo2 = mensajes2.get(mensajes2.size() - 1);
-
-            return ultimo2.getHora().compareTo(ultimo1.getHora()); // Descendente
-        });
-
-        // Recargar modelo ordenado
         DefaultListModel<Contacto> nuevoModelo = new DefaultListModel<>();
         contactos.forEach(nuevoModelo::addElement);
+
         listaChatRecientes.setModel(nuevoModelo);
     }
 
     
 
-	/**
-	 * Método para abrir un chat con un número de teléfono.
-	 */
-    private void abrirChatConTelefono(String telefono) {
-        if (telefono.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "Por favor, introduce un número de teléfono.");
-            return;
-        }
 
-        Usuario actual = Controlador.getInstancia().getUsuarioActual();
-
-        Optional<ContactoIndividual> existente = actual.getContactosIndividuales().stream()
-            .filter(c -> c.getTelefono().equals(telefono))
-            .findFirst();
-
-        ContactoIndividual contacto;
-        if (existente.isPresent()) {
-            contacto = existente.get();
-        } else {
-            Optional<Usuario> usuarioDestino = Controlador.getInstancia().getRepoUsuarios().buscarUsuario(telefono);
-            if (usuarioDestino.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "No existe ningún usuario con ese número.");
-                return;
-            }
-
-            contacto = Controlador.getInstancia().crearContacto(telefono, telefono);
-            if (contacto == null) {
-                JOptionPane.showMessageDialog(this, "No se pudo crear el contacto.");
-                return;
-            }
-
-            actualizarListaContactos();
-        }
-
-        cargarChat(contacto);
-    }
 
     
     public void cargarChatDesdeExterno(Contacto contacto, Mensaje mensajeBuscado) {

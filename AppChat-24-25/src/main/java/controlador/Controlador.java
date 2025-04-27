@@ -125,6 +125,37 @@ public class Controlador {
 
 		return false;
 	}
+	// ===================== Métodos de Chats =====================
+
+	/**
+	 * Abre un chat con un contacto específico por su número de teléfono.
+	 * 
+	 * @param contacto contacto con el que se quiere abrir el chat
+	 * @return contacto abierto o null si no se encuentra
+	 */
+	public Contacto abrirChatConTelefono(String telefono) {
+	    if (telefono == null || telefono.isBlank()) return null;
+
+	    Usuario actual = getUsuarioActual();
+	    if (actual == null) return null;
+
+	    Optional<ContactoIndividual> existente = actual.getContactosIndividuales().stream()
+	        .filter(c -> c.getTelefono().equals(telefono))
+	        .findFirst();
+
+	    if (existente.isPresent()) {
+	        return existente.get();
+	    } else {
+	        Optional<Usuario> usuarioDestino = repoUsuarios.buscarUsuario(telefono);
+	        if (usuarioDestino.isEmpty()) {
+	            return null;
+	        }
+
+	        ContactoIndividual contactoNuevo = crearContacto(telefono, telefono);
+	        return contactoNuevo;
+	    }
+	}
+
 
 	// ===================== Métodos de Contactos =====================
 
@@ -232,6 +263,32 @@ public class Controlador {
 			return nuevoContacto;
 		}
 		return null;
+	}
+	
+	/**
+	 * Obtiene la lista de contactos ordenados por el último mensaje recibido
+	 * 
+	 * @return lista de contactos ordenados
+	 */
+	public List<Contacto> obtenerContactosOrdenadosPorUltimoMensaje() {
+	    List<Contacto> contactos = Optional.ofNullable(getContactosUsuarioActual())
+	            .orElse(new LinkedList<>());
+
+	    contactos.sort((c1, c2) -> {
+	        List<Mensaje> mensajes1 = getMensajes(c1);
+	        List<Mensaje> mensajes2 = getMensajes(c2);
+
+	        if (mensajes1.isEmpty() && mensajes2.isEmpty()) return 0;
+	        if (mensajes1.isEmpty()) return 1;
+	        if (mensajes2.isEmpty()) return -1;
+
+	        Mensaje ultimo1 = mensajes1.get(mensajes1.size() - 1);
+	        Mensaje ultimo2 = mensajes2.get(mensajes2.size() - 1);
+
+	        return ultimo2.getHora().compareTo(ultimo1.getHora());
+	    });
+
+	    return contactos;
 	}
 	// ===================== Métodos de Grupos =====================
 
