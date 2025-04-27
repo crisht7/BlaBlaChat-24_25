@@ -34,15 +34,15 @@ public class VentanaMain extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
-                VentanaMain window = new VentanaMain();
-                window.setVisible(true);
+                VentanaMain.getInstancia().setVisible(true);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         });
     }
 
-    public VentanaMain() {
+
+    private VentanaMain() {
         chatsRecientes = new HashMap<>();
         instancia = this;
         initialize();
@@ -54,8 +54,12 @@ public class VentanaMain extends JFrame {
      * @return instancia de VentanaMain
      */
     public static VentanaMain getInstancia() {
+        if (instancia == null) {
+            instancia = new VentanaMain();
+        }
         return instancia;
     }
+
     
     public void refrescarFotoUsuario() {
         ImageIcon nuevaFoto = Controlador.getInstancia().getUsuarioActual().getFotoPerfil();

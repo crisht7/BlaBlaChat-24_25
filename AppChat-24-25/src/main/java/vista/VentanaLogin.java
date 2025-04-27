@@ -174,7 +174,7 @@ public class VentanaLogin {
         boolean login = Controlador.getInstancia().hacerLogin(telefono, password);
 
         if (login) {
-            VentanaMain ventanaMain = new VentanaMain();
+            VentanaMain ventanaMain = VentanaMain.getInstancia();
             ventanaMain.actualizarListaContactos();
             ventanaMain.setVisible(true);
             frmLogin.setVisible(false);
