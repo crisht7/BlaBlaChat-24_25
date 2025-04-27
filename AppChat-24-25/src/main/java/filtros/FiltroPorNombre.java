@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 
 import appChat.Contacto;
 import appChat.ContactoIndividual;
-import appChat.Grupo;
 import appChat.Mensaje;
 import appChat.Usuario;
 
@@ -40,7 +39,12 @@ public class FiltroPorNombre implements FiltroBusqueda {
             .collect(Collectors.toList());
     }
 
-
+    /**
+     * Normaliza un texto eliminando acentos y convirtiéndolo a minúsculas.
+     * 
+     * @param texto
+     * @return texto normalizado
+     */
     private String normalizarTexto(String texto) {
         if (texto == null) return "";
         String textoNormalizado = Normalizer.normalize(texto, Normalizer.Form.NFD);

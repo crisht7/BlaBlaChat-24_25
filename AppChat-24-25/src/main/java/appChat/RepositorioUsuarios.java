@@ -10,141 +10,145 @@ import persistencia.DAOException;
 import persistencia.FactoriaDAO;
 import persistencia.UsuarioDAO;
 
+/**
+ * Repositorio de usuarios de la aplicación. 
+ * Implementa el patrón Singleton para mantener una única instancia.
+ */
 public class RepositorioUsuarios {
-    
-	private Map<String,Usuario> usuarios;
+
+    private Map<String, Usuario> usuarios;
     private static RepositorioUsuarios instanciaUnica;
     private FactoriaDAO factoria;
     private UsuarioDAO daoUsuario;
 
+    // ===================== Constructor =====================
+
     /**
-     * Constructor privado
-     * Carga los usuarios de la base de datos
-     * Inicializa la instancia unica
+     * Constructor privado.
+     * Carga los usuarios de la base de datos.
      */
     private RepositorioUsuarios() {
-		try {
-			this.factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
-			if (factoria == null) {
-			    throw new RuntimeException("Error: FactoriaDAO no está inicializada correctamente."); //Comprobación depuración
-			}
-			this.daoUsuario = factoria.getUsuarioDAO();
-			this.usuarios = new HashMap<String, Usuario>();
-			this.cargarRepositorio();
-		} catch (DAOException eDAO) {
-			eDAO.printStackTrace();
-		}
+        try {
+            this.factoria = FactoriaDAO.getInstancia(FactoriaDAO.DAO_TDS);
+            if (factoria == null) {
+                throw new RuntimeException("Error: FactoriaDAO no está inicializada correctamente.");
+            }
+            this.daoUsuario = factoria.getUsuarioDAO();
+            this.usuarios = new HashMap<>();
+            this.cargarRepositorio();
+        } catch (DAOException eDAO) {
+            eDAO.printStackTrace();
+        }
     }
-    
+
     /**
-	 * Devuelve la instancia única del catálogo de usuarios.
-	 *
-	 * @return Instancia única de `UserCatalog`.
-	 */
-	public static RepositorioUsuarios getUnicaInstancia() {
-		if (instanciaUnica == null)
-			instanciaUnica = new RepositorioUsuarios();
-		return instanciaUnica;
-	}
-	
-    /**
-     * Agrega un usuario al repositorio
+     * Devuelve la instancia única del repositorio de usuarios.
      * 
-     * @param telefono
-     * @param usuario
+     * @return instancia única
+     */
+    public static RepositorioUsuarios getUnicaInstancia() {
+        if (instanciaUnica == null)
+            instanciaUnica = new RepositorioUsuarios();
+        return instanciaUnica;
+    }
+
+    // ===================== Operaciones CRUD =====================
+
+    /**
+     * Agrega un usuario al repositorio.
+     * 
+     * @param usuario usuario a agregar
      */
     public void agregarUsuario(Usuario usuario) {
         usuarios.put(usuario.getTelefono(), usuario);
     }
-    
-    /**
-	 * Elimina un usuario del catálogo.
-	 *
-	 * @param user Usuario a eliminar.
-	 */
-	public void eliminarUsuario(Usuario user) {
-		usuarios.remove(user.getTelefono());
-	}
-	
-	/**
-	 * Busca un usuario en el repositorio por su teléfono.
-	 * 
-	 * @param telefono
-	 * @return Un optional que tiene el usuario si existe.
-	 */
-	public Optional<Usuario> buscarUsuario(String telefono) {
-		return usuarios.values().stream().
-				filter(u -> u.getTelefono().equals(telefono)).
-				findFirst();
-	}
-	
-	/**
-	 * Devuelve una lista con todos los usuarios del repositorio.
-	 * 
-	 * @return Lista de usuarios.
-	 */
-	public List<Usuario> getUsuarios() {
-		return new ArrayList<>(usuarios.values());
-	}
-	
-	/**
-	 * Devuelve un usuario del repositorio por el codigo.
-	 * 
-	 * @param codigo
-	 * @return Usuario
-	 */
-	public Usuario getUsuario(int codigo) {
-		return usuarios.values().stream().
-				filter(u -> u.getCodigo() == codigo).
-				findAny().orElse(null);
-	}
 
-	/**
-	 * Devuelve un usuario del repositorio por el telefono.
-	 * 
-	 * @param codigo
-	 * @return Usuario
-	 */
-	public Usuario getUsuario(String telefono) {
-		return usuarios.values().stream()
-				.filter(u -> u.getTelefono().equals(telefono))
-				.findAny().orElse(null);
-	}
-	
-	/**
-	 * Devuelve un usuario del repositorio por el numero de telefono.
-	 * 
-	 * @param numTelefono
-	 * @return Usuario
-	 */
-	public Optional<Usuario> getUsuarioNumTelf(String numTelefono) {
-		return usuarios.values().stream().filter(u -> u.getTelefono() == numTelefono).findAny();
-	}
-	
-	/**
-	 * Comprueba si un usuario existe en el repositorio.
-	 *
-	 * @param usuario Usuario a comprobar.
-	 * @return `true` si el usuario existe, `false` en caso contrario.
-	 */
-	
-	public boolean existeUsuario(Usuario usuario) {
-		return usuarios.containsKey(usuario.getTelefono());
-	}
-	
     /**
-	 * Carga todos los usuarios desde la base de datos y los almacena en el
-	 * catálogo.
-	 *
-	 * @throws DAOException Si ocurre un error al interactuar con la capa de
-	 *                      persistencia.
-	 */	
+     * Elimina un usuario del repositorio.
+     * 
+     * @param user usuario a eliminar
+     */
+    public void eliminarUsuario(Usuario user) {
+        usuarios.remove(user.getTelefono());
+    }
+
+    /**
+     * Comprueba si un usuario existe en el repositorio.
+     * 
+     * @param usuario usuario a comprobar
+     * @return true si el usuario existe, false en caso contrario
+     */
+    public boolean existeUsuario(Usuario usuario) {
+        return usuarios.containsKey(usuario.getTelefono());
+    }
+
+    // ===================== Métodos de Búsqueda =====================
+
+    /**
+     * Busca un usuario por su número de teléfono.
+     * 
+     * @param telefono número de teléfono
+     * @return Optional que contiene el usuario si existe
+     */
+    public Optional<Usuario> buscarUsuario(String telefono) {
+        return usuarios.values().stream()
+                .filter(u -> u.getTelefono().equals(telefono))
+                .findFirst();
+    }
+
+    /**
+     * Devuelve una lista con todos los usuarios del repositorio.
+     * 
+     * @return lista de usuarios
+     */
+    public List<Usuario> getUsuarios() {
+        return new ArrayList<>(usuarios.values());
+    }
+
+    /**
+     * Devuelve un usuario del repositorio por su código.
+     * 
+     * @param codigo código del usuario
+     * @return usuario encontrado, o null si no existe
+     */
+    public Usuario getUsuario(int codigo) {
+        return usuarios.values().stream()
+                .filter(u -> u.getCodigo() == codigo)
+                .findAny()
+                .orElse(null);
+    }
+
+    /**
+     * Devuelve un usuario del repositorio por su teléfono.
+     * 
+     * @param telefono número de teléfono
+     * @return usuario encontrado, o null si no existe
+     */
+    public Usuario getUsuario(String telefono) {
+        return usuarios.get(telefono);
+    }
+
+    /**
+     * Devuelve un usuario del repositorio por número de teléfono (como Optional).
+     * 
+     * @param numTelefono número de teléfono
+     * @return Optional de usuario encontrado
+     */
+    public Optional<Usuario> getUsuarioNumTelf(String numTelefono) {
+        return Optional.ofNullable(usuarios.get(numTelefono));
+    }
+
+    // ===================== Métodos Internos =====================
+
+    /**
+     * Carga todos los usuarios desde la base de datos y los almacena en el repositorio.
+     * 
+     * @throws DAOException si ocurre un error al interactuar con la base de datos
+     */
     private void cargarRepositorio() throws DAOException {
-		List<Usuario> usuariosBD = daoUsuario.recuperarTodosUsuarios();
-		for (Usuario usuario : usuariosBD) {
-			usuarios.put(usuario.getTelefono(), usuario);
-		}
-	}
-    
-    
+        List<Usuario> usuariosBD = daoUsuario.recuperarTodosUsuarios();
+        for (Usuario usuario : usuariosBD) {
+            usuarios.put(usuario.getTelefono(), usuario);
+        }
+    }
 }
