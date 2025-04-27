@@ -198,28 +198,48 @@ public class VentanaContacto extends JFrame {
 	/**
 	 * Comprueba errores y añade el contacto si está todo correcto
 	 */
-	private void addContacto() {
-		// Comprobamos que los datos son correctos
-		if (!datosCorrectos())
-			return;
+    private void addContacto() {
+        if (!datosCorrectos())
+            return;
 
-		// Creamos el contacto
-		ContactoIndividual nuevoContacto = Controlador.getInstancia().crearContacto(textFieldName.getText(),
-				String.valueOf(textFieldTelf.getText()));
-		if (nuevoContacto == null) {
-			// No se ha podido crear el usuario
-			Toolkit.getDefaultToolkit().beep();
-			JOptionPane.showMessageDialog(VentanaContacto.this, "El contacto ya existe o no es un usuario real",
-					"Error", JOptionPane.ERROR_MESSAGE);
-		} else {
-			// Usuario creado
-			modelContacts.add(modelContacts.size(), nuevoContacto);
-			
-			// Actualizamos la lista de contactos
-			VentanaMain.getInstancia().actualizarListaContactos();
-			JOptionPane.showMessageDialog(VentanaContacto.this, "Contacto añadido correctamente", "Info",
-					JOptionPane.INFORMATION_MESSAGE);
-		}
-	}
+        String nombre = textFieldName.getText();
+        String telefono = textFieldTelf.getText();
+
+        Controlador controlador = Controlador.getInstancia();
+        Usuario usuarioActual = controlador.getUsuarioActual();
+
+        // 1. No puedes agregarte a ti mismo
+        if (telefono.equals(usuarioActual.getTelefono())) {
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, "No te puedes agregar a ti mismo.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 2. Ya tienes ese número en tus contactos
+        if (usuarioActual.tieneContactoIndividualPorTelefono(telefono)) {
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, "Este número ya está agregado como contacto.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 3. El teléfono no existe en el sistema
+        if (!controlador.getRepoUsuarios().buscarUsuario(telefono).isPresent()) {
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, "El teléfono no existe en la aplicación.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        // 4. Si pasa todo, lo creamos
+        ContactoIndividual nuevoContacto = controlador.crearContacto(nombre, telefono);
+        if (nuevoContacto != null) {
+            modelContacts.add(modelContacts.size(), nuevoContacto);
+            VentanaMain.getInstancia().actualizarListaContactos();
+            JOptionPane.showMessageDialog(this, "Contacto añadido correctamente", "Info", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            Toolkit.getDefaultToolkit().beep();
+            JOptionPane.showMessageDialog(this, "No se ha podido añadir el contacto.", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }
 
