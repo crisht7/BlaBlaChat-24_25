@@ -2,22 +2,15 @@ package vista;
 
 import java.awt.*;
 import java.awt.event.ActionListener;
-import java.net.URL;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Optional;
 import javax.swing.*;
-import java.util.Vector;
-import java.util.stream.Collectors;
 
 import appChat.*;
 import controlador.Controlador;
-import descuentos.DescuentoFecha;
-import descuentos.DescuentoMensaje;
 import tds.BubbleText;
 
 @SuppressWarnings("serial")
@@ -29,7 +22,6 @@ public class VentanaMain extends JFrame {
     private JScrollPane scrollBarChat;
     private Contacto contactoActual;
     private JList<Contacto> listaChatRecientes;
-    private JComboBox<String> comboPanelRecientes;
 
     private final Color turquesa = Colores.TURQUESA.getColor();
     private final Color turquesaOscuro = Colores.TURQUESA_OSCURO.getColor();
@@ -592,14 +584,6 @@ public class VentanaMain extends JFrame {
         // Actualizar lista de contactos
         actualizarListaContactos();
     }
-    
-    private void abrirVentanaAgregarContacto(Contacto contacto) {
-        DefaultListModel<Contacto> modelo = new DefaultListModel<>();
-        VentanaContacto ventana = new VentanaContacto(modelo);
-        ventana.setVisible(true);
-    }
-
-
     
 	/**
 	 * Método para enviar un emoticono al contacto actual.

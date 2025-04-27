@@ -2,8 +2,6 @@ package vista;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
-import java.awt.event.FocusAdapter;
-import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -24,7 +22,7 @@ import controlador.Controlador;
 public class VentanaRegistro extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textFieldNombre, textFieldApellidos, textFieldTelefono, textFieldSaludo, textFieldURL;
+	private JTextField textFieldNombre, textFieldApellidos, textFieldTelefono, textFieldSaludo;
 	private JPasswordField passwordFieldContraseña, passwordFieldRepContraseña;
 	private JDateChooser dateChooserFechaNac;
 	private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
@@ -356,7 +354,7 @@ public class VentanaRegistro extends JFrame {
 	        try {
 	            BufferedImage imagen = ImageIO.read(archivo);
 	            if (imagen != null) {
-	                imagenPerfil = imagen;
+	                setImagenPerfil(imagen);
 	                ImageIcon icono = new ImageIcon(imagen.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
 	                icono.setDescription(archivo.getAbsolutePath()); // 🔥 Aquí guardas la ruta
 	                lblIcon.setIcon(icono);
@@ -372,5 +370,13 @@ public class VentanaRegistro extends JFrame {
 
 	private void mostrarError(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+	}
+
+	public BufferedImage getImagenPerfil() {
+		return imagenPerfil;
+	}
+
+	public void setImagenPerfil(BufferedImage imagenPerfil) {
+		this.imagenPerfil = imagenPerfil;
 	}
 }
