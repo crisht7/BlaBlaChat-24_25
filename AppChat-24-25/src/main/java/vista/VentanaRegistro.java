@@ -352,21 +352,34 @@ public class VentanaRegistro extends JFrame {
 	    int resultado = seleccion.showOpenDialog(this);
 	    if (resultado == JFileChooser.APPROVE_OPTION) {
 	        File archivo = seleccion.getSelectedFile();
+
+	        if (!archivo.exists() || !archivo.canRead()) {
+	            JOptionPane.showMessageDialog(this, "No se puede leer el archivo seleccionado.", "Error", JOptionPane.ERROR_MESSAGE);
+	            return;
+	        }
+
 	        try {
+	        	// Cargamos la imagen seleccionada
 	            BufferedImage imagen = ImageIO.read(archivo);
 	            if (imagen != null) {
+	            	// Guardamos la imagen en el atributo
 	                setImagenPerfil(imagen);
+	                // Escalamos la imagen y la asignamos al JLabel
 	                ImageIcon icono = new ImageIcon(imagen.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-	                icono.setDescription(archivo.getAbsolutePath()); // Aquí guarda la ruta
+	                icono.setDescription(archivo.getAbsolutePath()); //Guardamos la ruta de la imagen
 	                lblIcon.setIcon(icono);
-	                lblIcon.setDisabledIcon(icono); // por si acaso
+	                lblIcon.setDisabledIcon(icono); // Para el caso de que se deshabilte el JLabel
+	            } else {
+	                JOptionPane.showMessageDialog(this, "El archivo seleccionado no es una imagen válida.", "Error", JOptionPane.ERROR_MESSAGE);
 	            }
 	        } catch (IOException e) {
-	            e.printStackTrace();
 	            JOptionPane.showMessageDialog(this, "Error al cargar la imagen.", "Error", JOptionPane.ERROR_MESSAGE);
+	            e.printStackTrace();
 	        }
 	    }
 	}
+
+
 
 
 	private void mostrarError(String mensaje) {
