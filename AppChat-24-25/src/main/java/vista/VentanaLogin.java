@@ -178,7 +178,9 @@ public class VentanaLogin {
 
         if (login) {
             VentanaMain ventanaMain = VentanaMain.getInstancia();
+            ventanaMain.limpiarEstadoChats(); 
             ventanaMain.actualizarListaContactos();
+            ventanaMain.actualizarDatosUsuario(); 
             ventanaMain.setVisible(true);
             frmLogin.setVisible(false);
         } else {
