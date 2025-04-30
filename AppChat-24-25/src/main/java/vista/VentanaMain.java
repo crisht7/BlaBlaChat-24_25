@@ -236,6 +236,21 @@ public class VentanaMain extends JFrame {
         Controlador.getInstancia().getContactosUsuarioActual().forEach(modelContactos::addElement);
 
         listaChatRecientes.setModel(modelContactos);
+        
+        listaChatRecientes.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseClicked(java.awt.event.MouseEvent e) {
+                int index = listaChatRecientes.locationToIndex(e.getPoint());
+                if (index != -1 && SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+                    Contacto contacto = listaChatRecientes.getModel().getElementAt(index);
+                    if (contacto instanceof ContactoIndividual) {
+                        mostrarInfoContacto((ContactoIndividual) contacto);
+                    }
+                }
+            }
+        });
+
+        
         listaChatRecientes.addListSelectionListener(e -> {
             if (!e.getValueIsAdjusting()) {
                 Contacto contactoSeleccionado = listaChatRecientes.getSelectedValue();
@@ -250,6 +265,72 @@ public class VentanaMain extends JFrame {
     
         configurarMenuContextual();
     }
+    
+    
+	/**
+	 * Método para mostrar la información de un contacto.
+	 */
+    private void mostrarInfoContacto(ContactoIndividual contacto) {
+        JDialog dialogo = new JDialog(this, "Información de contacto", true);
+        dialogo.setLayout(new BorderLayout());
+        dialogo.setSize(300, 320);
+        dialogo.setResizable(false);
+        dialogo.setLocationRelativeTo(this);
+
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15));
+        panel.setBackground(naranjaOscuro); 
+        
+        // Imagen
+        JLabel lblImagen = new JLabel();
+        ImageIcon foto = contacto.getFoto();
+        if (foto != null) {
+            Image img = foto.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+            lblImagen.setIcon(new ImageIcon(img));
+        }
+        lblImagen.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Nombre
+        JLabel lblNombre = new JLabel("Nombre: " + contacto.getNombre());
+        lblNombre.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblNombre.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Teléfono
+        JLabel lblTelefono = new JLabel("Teléfono: " + contacto.getTelefono());
+        lblTelefono.setFont(new Font("Segoe UI", Font.BOLD, 12));
+        lblTelefono.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Obtener saludo desde el Usuario real
+        Usuario usuarioContacto = Controlador.getInstancia().getUsuarioPorTelefono(contacto.getTelefono());
+        String saludo = (usuarioContacto != null && usuarioContacto.getSaludo() != null)
+            ? usuarioContacto.getSaludo()
+            : "Sin saludo";
+
+        // Saludo separado en dos etiquetas centradas
+        JLabel lblTituloSaludo = new JLabel("Saludo:");
+        lblTituloSaludo.setFont(new Font("Segoe UI", Font.BOLD, 13));
+        lblTituloSaludo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JLabel lblTextoSaludo = new JLabel("<html><i>" + saludo + "</i></html>");
+        lblTextoSaludo.setFont(new Font("Segoe UI", Font.PLAIN, 12));
+        lblTextoSaludo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Añadir componentes
+        panel.add(lblImagen);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(lblNombre);
+        panel.add(Box.createRigidArea(new Dimension(0, 5)));
+        panel.add(lblTelefono);
+        panel.add(Box.createRigidArea(new Dimension(0, 10)));
+        panel.add(lblTituloSaludo);
+        panel.add(Box.createRigidArea(new Dimension(0, 3)));
+        panel.add(lblTextoSaludo);
+
+        dialogo.add(panel, BorderLayout.CENTER);
+        dialogo.setVisible(true);
+    }
+
 
 
 	/**
