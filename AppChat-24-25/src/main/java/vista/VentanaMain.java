@@ -481,7 +481,12 @@ public class VentanaMain extends JFrame {
         }
 
         // Añadir el panel cuadrado al menú emergente
-        menuEmojis.add(panelEmojis);
+        JScrollPane scroll = new JScrollPane(panelEmojis);
+        scroll.setPreferredSize(new Dimension(400, 200)); // Ajusta el tamaño máximo visible
+        menuEmojis.add(scroll);
+
+
+
 
         // Acción al pulsar el botón de emoji
         btnEmoji.addActionListener(e -> menuEmojis.show(btnEmoji, 0, btnEmoji.getHeight()));
@@ -798,6 +803,34 @@ public class VentanaMain extends JFrame {
                 }
             }
         });
+    }
+
+    
+    public void actualizarDatosUsuario() {
+        Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
+        if (lblFotoUsuario != null && usuarioActual != null) {
+            // Actualizar texto del nombre
+            lblFotoUsuario.setText(" " + usuarioActual.getNombre());
+
+            // Actualizar foto de perfil
+            ImageIcon fotoPerfil = usuarioActual.getFotoPerfil();
+            if (fotoPerfil != null) {
+                Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                lblFotoUsuario.setIcon(new ImageIcon(imagenEscalada));
+            } else {
+                lblFotoUsuario.setIcon(new ImageIcon(getClass().getResource("/anonimo.png")));
+            }
+        }
+    }
+
+    
+    public void limpiarEstadoChats() {
+        chatsRecientes.clear();
+        contactoActual = null;
+        chat.removeAll(); // Limpia el panel visual del chat
+        chat.revalidate();
+        chat.repaint();
+        scrollBarChat.setViewportView(chat); // Aplica el cambio visualmente
     }
 
 
