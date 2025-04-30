@@ -178,6 +178,7 @@ public class VentanaLogin {
 
         if (login) {
             VentanaMain ventanaMain = VentanaMain.getInstancia();
+            ventanaMain.refrescarFotoUsuario();
             ventanaMain.actualizarListaContactos();
             ventanaMain.setVisible(true);
             frmLogin.setVisible(false);
