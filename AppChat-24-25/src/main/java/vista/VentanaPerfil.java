@@ -130,9 +130,17 @@ public class VentanaPerfil extends JDialog {
         int resultado = fileChooser.showOpenDialog(this);
         if (resultado == JFileChooser.APPROVE_OPTION) {
             File archivo = fileChooser.getSelectedFile();
-            ImageIcon nuevaFoto = new ImageIcon(archivo.getAbsolutePath());
-            usuario.setFotoPerfil(nuevaFoto);
-            actualizarFotoPerfil();
+            try {
+                ImageIcon nuevaFoto = new ImageIcon(archivo.getAbsolutePath());
+                // Validar si la imagen es válida
+                if (nuevaFoto.getIconWidth() <= 0 || nuevaFoto.getIconHeight() <= 0) {
+                    throw new Exception("Imagen inválida");
+                }
+                usuario.setFotoPerfil(nuevaFoto);
+                actualizarFotoPerfil();
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(this, "La imagen seleccionada no es válida.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
 
