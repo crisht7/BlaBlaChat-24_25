@@ -120,6 +120,17 @@ public class VentanaGrupo extends JDialog {
             JOptionPane.showMessageDialog(this, "El nombre del grupo no puede estar vacío.");
             return;
         }
+        
+        // Validar que no exista un grupo con el mismo nombre para el usuario actual
+        boolean nombreDuplicado = Controlador.getInstancia()
+            .getGruposUsuarioActual()
+            .stream()
+            .anyMatch(g -> g.getNombre().equalsIgnoreCase(nombreGrupo));
+
+        if (nombreDuplicado) {
+            JOptionPane.showMessageDialog(this, "Ya existe un grupo con ese nombre. Por favor, elige otro nombre.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
 
         List<ContactoIndividual> contactosSeleccionados = listaContactos.getSelectedValuesList();
         if (contactosSeleccionados.isEmpty()) {

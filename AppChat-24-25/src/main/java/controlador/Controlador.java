@@ -570,4 +570,8 @@ public class Controlador {
 	public void setUsuarioActual(Usuario usuario) {
 		this.usuarioActual = usuario;
 	}
+	public List<Grupo> getGruposUsuarioActual() {
+	    return getUsuarioActual().getGrupos(); // O como almacenes los grupos del usuario
+	}
+
 }
