@@ -136,14 +136,15 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	        try {
 	            if (direccionFoto.startsWith("file:/")) {
 	                // Imagen predeterminada del proyecto
-	                URL url = new URL(direccionFoto);
+	                @SuppressWarnings("deprecation")
+					URL url = new URL(direccionFoto);
 	                fotoPerfil = new ImageIcon(url);
 	            } else {
 	                // Imagen local del PC
 	                fotoPerfil = new ImageIcon(direccionFoto);
 	            }
 	        } catch (Exception e) {
-	            System.err.println("❌ Error cargando imagen: " + direccionFoto);
+	            System.err.println(" Error cargando imagen: " + direccionFoto);
 	            fotoPerfil = new ImageIcon(getClass().getResource("/recursos/account.png"));
 	            if (fotoPerfil != null) {
 	                fotoPerfil.setDescription("/recursos/account.png");
