@@ -539,6 +539,12 @@ public class Controlador {
 		adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 
+	
+	public Usuario getUsuarioPorTelefono(String telefono) {
+	    return adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
+	}
+
+	
 	// ===================== Getters y Setters =====================
 
 	public RepositorioUsuarios getRepoUsuarios() {

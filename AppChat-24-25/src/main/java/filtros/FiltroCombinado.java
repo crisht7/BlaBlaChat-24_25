@@ -36,4 +36,9 @@ public class FiltroCombinado implements FiltroBusqueda {
     public List<FiltroBusqueda> getFiltros() {
         return new ArrayList<>(filtros);
     }
+    
+    public boolean estaVacio() {
+        return filtros.isEmpty();
+    }
+
 }
