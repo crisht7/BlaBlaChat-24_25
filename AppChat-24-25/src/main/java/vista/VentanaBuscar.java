@@ -140,6 +140,12 @@ public class VentanaBuscar extends JDialog {
         if (!contacto.isEmpty() && !contacto.equals(PLACEHOLDER_CONTACTO)) {
             filtroCombinado.añadirFiltro(new FiltroPorNombre(contacto));
         }
+        
+        if (filtroCombinado.estaVacio()) {
+            JOptionPane.showMessageDialog(this, "Por favor, introduzca al menos un criterio de búsqueda.", "Búsqueda vacía", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
 
         Controlador ctrl = Controlador.getInstancia();
 
