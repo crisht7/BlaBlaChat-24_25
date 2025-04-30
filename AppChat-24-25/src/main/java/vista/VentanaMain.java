@@ -481,7 +481,12 @@ public class VentanaMain extends JFrame {
         }
 
         // Añadir el panel cuadrado al menú emergente
-        menuEmojis.add(panelEmojis);
+        JScrollPane scroll = new JScrollPane(panelEmojis);
+        scroll.setPreferredSize(new Dimension(400, 200)); // Ajusta el tamaño máximo visible
+        menuEmojis.add(scroll);
+
+
+
 
         // Acción al pulsar el botón de emoji
         btnEmoji.addActionListener(e -> menuEmojis.show(btnEmoji, 0, btnEmoji.getHeight()));
