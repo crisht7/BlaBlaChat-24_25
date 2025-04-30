@@ -37,6 +37,7 @@ public class VentanaRegistro extends JFrame {
 	public VentanaRegistro() {
 		setTitle("Register");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/chat150.png")));
 		setBounds(100, 100, 901, 497);
 		inicializarComponentes();
 	}
@@ -356,7 +357,7 @@ public class VentanaRegistro extends JFrame {
 	            if (imagen != null) {
 	                setImagenPerfil(imagen);
 	                ImageIcon icono = new ImageIcon(imagen.getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-	                icono.setDescription(archivo.getAbsolutePath()); // 🔥 Aquí guardas la ruta
+	                icono.setDescription(archivo.getAbsolutePath()); // Aquí guarda la ruta
 	                lblIcon.setIcon(icono);
 	                lblIcon.setDisabledIcon(icono); // por si acaso
 	            }

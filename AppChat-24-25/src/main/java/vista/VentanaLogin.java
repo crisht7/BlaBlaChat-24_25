@@ -14,7 +14,7 @@ public class VentanaLogin {
 
     // ===================== Constantes de color =====================
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
-    //private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+    private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
     private final Color turquesa = Colores.TURQUESA.getColor();
     private final Color boton = Colores.NARANJA_BOTON.getColor();
 
@@ -41,6 +41,7 @@ public class VentanaLogin {
         frmLogin.setTitle("Login");
         frmLogin.setBounds(100, 100, 720, 480);
         frmLogin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frmLogin.setIconImage(Toolkit.getDefaultToolkit().getImage(VentanaLogin.class.getResource("/chat150.png")));
         frmLogin.getContentPane().setLayout(new BorderLayout());
 
         crearPanelBotones();
@@ -99,6 +100,8 @@ public class VentanaLogin {
         GridBagConstraints gbc = new GridBagConstraints();
 
         JLabel lblFotoLogin = new JLabel(new ImageIcon(VentanaLogin.class.getResource("/chat150v2.PNG")));
+        
+        
         gbc.anchor = GridBagConstraints.NORTHWEST;
         gbc.insets = new Insets(0, 0, 0, 5);
         gbc.gridx = 1;
@@ -133,7 +136,7 @@ public class VentanaLogin {
 
         textFieldTelefono = new JTextField();
         textFieldTelefono.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
-        textFieldTelefono.setBackground(new Color(237, 165, 112));
+        textFieldTelefono.setBackground(naranjaOscuro);
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 5, 5);
@@ -153,7 +156,7 @@ public class VentanaLogin {
 
         passwordFieldContraseña = new JPasswordField();
         passwordFieldContraseña.setBorder(new SoftBevelBorder(BevelBorder.LOWERED));
-        passwordFieldContraseña.setBackground(new Color(237, 165, 112));
+        passwordFieldContraseña.setBackground(naranjaOscuro);
         passwordFieldContraseña.setMinimumSize(new Dimension(15, 20));
         gbc = new GridBagConstraints();
         gbc.fill = GridBagConstraints.HORIZONTAL;

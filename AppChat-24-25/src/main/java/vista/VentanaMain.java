@@ -205,6 +205,7 @@ public class VentanaMain extends JFrame {
         this.setBounds(100, 100, 900, 700);
 
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/chat150.png")));
         this.getContentPane().setLayout(new BorderLayout(0, 0));
 
         scrollBarChat = new JScrollPane();
@@ -276,7 +277,6 @@ public class VentanaMain extends JFrame {
         // Asegurate de agregar todos los botones:
         panelNorte.add(crearBoton("Buscar", e -> new VentanaBuscar(this).setVisible(true)));
         panelNorte.add(crearBoton("Contactos", e -> new VentanaContacto(new DefaultListModel<>()).setVisible(true)));
-        panelNorte.add(crearBoton("Tema", e -> {}));
         panelNorte.add(crearBoton("Crear Grupo", e -> new VentanaGrupo(this).setVisible(true)));
 
 

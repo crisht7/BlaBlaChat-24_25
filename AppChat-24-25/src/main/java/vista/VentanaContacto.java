@@ -23,7 +23,6 @@ public class VentanaContacto extends JFrame {
     // ===================== Constantes de color =====================
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
-    //private final Color turquesa = Colores.TURQUESA.getColor();
     private final Color boton = Colores.NARANJA_BOTON.getColor();
 
     // ===================== Componentes =====================

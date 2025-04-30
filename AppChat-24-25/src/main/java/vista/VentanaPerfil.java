@@ -31,12 +31,30 @@ public class VentanaPerfil extends JDialog {
 
         lblFotoPerfil = new JLabel();
         actualizarFotoPerfil();
+        
+        JPopupMenu menuFoto = new JPopupMenu();
+        JMenuItem itemBorrar = new JMenuItem("Borrar foto de perfil");
+
+        itemBorrar.addActionListener(e -> {
+            usuario.setFotoPerfil(new ImageIcon(getClass().getResource("/account.png")));
+            actualizarFotoPerfil();
+
+        });
+
+
+        menuFoto.add(itemBorrar);
+        
         lblFotoPerfil.setCursor(new Cursor(Cursor.HAND_CURSOR));
         lblFotoPerfil.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                cambiarFotoPerfil();
+                if (SwingUtilities.isRightMouseButton(e)) {
+                    menuFoto.show(lblFotoPerfil, e.getX(), e.getY());
+                } else if (SwingUtilities.isLeftMouseButton(e)) {
+                    cambiarFotoPerfil();
+                }
             }
         });
+        
         panelFoto.add(lblFotoPerfil);
         getContentPane().add(panelFoto, BorderLayout.NORTH);
 
@@ -91,15 +109,18 @@ public class VentanaPerfil extends JDialog {
         return label;
     }
 
+
+    
     private void actualizarFotoPerfil() {
         ImageIcon fotoPerfil = usuario.getFotoPerfil();
-        if (fotoPerfil != null) {
-            Image img = fotoPerfil.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
-            lblFotoPerfil.setIcon(new ImageIcon(img));
-        } else {
-            lblFotoPerfil.setIcon(new ImageIcon(getClass().getResource("/anonimo.png")));
-        }
+        Image img = fotoPerfil.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
+        lblFotoPerfil.setIcon(new ImageIcon(img));
     }
+
+
+
+    
+    
 
     private void cambiarFotoPerfil() {
         JFileChooser fileChooser = new JFileChooser();
