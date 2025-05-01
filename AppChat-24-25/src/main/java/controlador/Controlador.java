@@ -319,10 +319,8 @@ public class Controlador {
 	public boolean añadirContactoAGrupo(String nombreGrupo, ContactoIndividual contacto) {
 		if (usuarioActual == null || contacto == null || nombreGrupo == null || nombreGrupo.isBlank()) return false;
 
-		Grupo grupo = usuarioActual.getGrupos().stream()
-				.filter(g -> g.getNombre().equals(nombreGrupo))
-				.findFirst()
-				.orElse(null);
+		Grupo grupo = getGruposPorNombre(nombreGrupo);
+				
 
 		if (grupo == null || grupo.getIntegrantes().contains(contacto)) return false;
 
@@ -330,6 +328,7 @@ public class Controlador {
 		adaptadorGrupo.modificarGrupo(grupo);
 		return true;
 	}
+
 
 	/**
 	 * Crea un grupo vacío con un nombre
@@ -345,6 +344,13 @@ public class Controlador {
 			return nuevoGrupo;
 		}
 		return null;
+	}
+	
+	private Grupo getGruposPorNombre(String nombreGrupo) {
+		return usuarioActual.getGrupos().stream()
+				.filter(g -> g.getNombre().equals(nombreGrupo))
+				.findFirst()
+				.orElse(null);
 	}
 
 	// ===================== Métodos de Mensajes =====================
@@ -573,5 +579,6 @@ public class Controlador {
 	public List<Grupo> getGruposUsuarioActual() {
 	    return getUsuarioActual().getGrupos(); // O como almacenes los grupos del usuario
 	}
+	
 
 }
