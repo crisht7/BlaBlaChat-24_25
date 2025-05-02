@@ -111,7 +111,7 @@ public class VentanaMain extends JFrame {
 	/**
 	 * Clase interna para el renderizado de la lista de contactos.
 	 */
-	class CellRenderer extends JPanel implements ListCellRenderer<Contacto> {
+    class CellRenderer extends JPanel implements ListCellRenderer<Contacto> {
         private JLabel nombreLabel;
         private JLabel telefonoLabel;
         private JLabel mensajePreviewLabel;
@@ -120,8 +120,10 @@ public class VentanaMain extends JFrame {
         public CellRenderer() {
             setLayout(new BorderLayout(5, 5));
 
+            // Icono del contacto
             iconoLabel = new JLabel();
 
+            // Panel de texto
             nombreLabel = new JLabel();
             nombreLabel.setFont(new Font("Arial", Font.BOLD, 14));
 
@@ -133,12 +135,14 @@ public class VentanaMain extends JFrame {
             mensajePreviewLabel.setForeground(Color.DARK_GRAY);
 
             JPanel panelTexto = new JPanel(new GridLayout(3, 1));
+            panelTexto.setOpaque(false);
             panelTexto.add(nombreLabel);
             panelTexto.add(telefonoLabel);
             panelTexto.add(mensajePreviewLabel);
 
             add(iconoLabel, BorderLayout.WEST);
             add(panelTexto, BorderLayout.CENTER);
+
             setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         }
 
@@ -153,22 +157,30 @@ public class VentanaMain extends JFrame {
                     ContactoIndividual cIndividual = (ContactoIndividual) contacto;
                     telefonoLabel.setText(cIndividual.getTelefono());
 
-                    // Cargar directamente la foto de perfil
                     ImageIcon fotoPerfil = cIndividual.getFoto();
-                    Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-                    iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+                    if (fotoPerfil != null && fotoPerfil.getImage() != null) {
+                        Image imagenEscalada = fotoPerfil.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                        iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+                    } else {
+                        iconoLabel.setIcon(null);
+                    }
                 } else if (contacto instanceof Grupo) {
                     Grupo grupo = (Grupo) contacto;
                     telefonoLabel.setText("");
 
                     ImageIcon fotoGrupo = grupo.getFoto();
-                    Image imagenEscalada = fotoGrupo.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
-                    iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+                    if (fotoGrupo != null && fotoGrupo.getImage() != null) {
+                        Image imagenEscalada = fotoGrupo.getImage().getScaledInstance(40, 40, Image.SCALE_SMOOTH);
+                        iconoLabel.setIcon(new ImageIcon(imagenEscalada));
+                    } else {
+                        iconoLabel.setIcon(null);
+                    }
                 } else {
                     telefonoLabel.setText("");
+                    iconoLabel.setIcon(null);
                 }
 
-                // 🟡 Mostrar último mensaje (texto)
+                // Último mensaje
                 List<Mensaje> mensajes = Controlador.getInstancia().getMensajes(contacto);
                 if (!mensajes.isEmpty()) {
                     Mensaje ultimo = mensajes.get(mensajes.size() - 1);
@@ -177,16 +189,15 @@ public class VentanaMain extends JFrame {
                 } else {
                     mensajePreviewLabel.setText("Sin mensajes");
                 }
-                
-                Color fondo = isSelected ?  naranjaClaro : naranjaOscuro;
 
+                // Colores y opacidad
+                Color fondo = isSelected ? naranjaClaro : naranjaOscuro;
                 setBackground(fondo);
                 nombreLabel.setBackground(fondo);
                 telefonoLabel.setBackground(fondo);
                 mensajePreviewLabel.setBackground(fondo);
-                iconoLabel.setBackground(fondo); // También si quieres el fondo detrás del icono
-                
-                // los ponemos opacos
+                iconoLabel.setBackground(fondo);
+
                 setOpaque(true);
                 nombreLabel.setOpaque(true);
                 telefonoLabel.setOpaque(true);
@@ -197,6 +208,8 @@ public class VentanaMain extends JFrame {
             return this;
         }
     }
+
+
     
     /**
 	 * Método para inicializar la ventana principal.
@@ -241,14 +254,42 @@ public class VentanaMain extends JFrame {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
                 int index = listaChatRecientes.locationToIndex(e.getPoint());
-                if (index != -1 && SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
-                    Contacto contacto = listaChatRecientes.getModel().getElementAt(index);
-                    if (contacto instanceof ContactoIndividual) {
-                        mostrarInfoContacto((ContactoIndividual) contacto);
+                if (index == -1) return;
+
+                Contacto posible = listaChatRecientes.getModel().getElementAt(index);
+                if (!(posible instanceof ContactoIndividual)) return;
+
+                ContactoIndividual ci = (ContactoIndividual) posible;
+
+                boolean noAgregado = Controlador.getInstancia()
+                    .getUsuarioActual()
+                    .getContactosIndividuales()
+                    .stream()
+                    .noneMatch(c -> c.getTelefono().equals(ci.getTelefono()));
+
+                Rectangle cellBounds = listaChatRecientes.getCellBounds(index, index);
+                Point clickPoint = e.getPoint();
+
+                // Si se hace clic en el área derecha (donde está el "+"), activamos
+                if (noAgregado && clickPoint.getX() > (cellBounds.getMaxX() - 35)) {
+                    int confirm = JOptionPane.showConfirmDialog(
+                        VentanaMain.this,
+                        "¿Deseas agregar a " + ci.getTelefono() + " como contacto?",
+                        "Agregar contacto",
+                        JOptionPane.YES_NO_OPTION
+                    );
+
+                    if (confirm == JOptionPane.YES_OPTION) {
+                        String nombre = JOptionPane.showInputDialog(VentanaMain.this, "Nombre para el contacto:");
+                        if (nombre != null && !nombre.trim().isEmpty()) {
+                            Controlador.getInstancia().crearContacto(nombre.trim(), ci.getTelefono());
+                            actualizarListaContactos();
+                        }
                     }
                 }
             }
         });
+
 
         
         listaChatRecientes.addListSelectionListener(e -> {
@@ -270,7 +311,7 @@ public class VentanaMain extends JFrame {
 	/**
 	 * Método para mostrar la información de un contacto.
 	 */
-    private void mostrarInfoContacto(ContactoIndividual contacto) {
+    public void mostrarInfoContacto(ContactoIndividual contacto) {
         JDialog dialogo = new JDialog(this, "Información de contacto", true);
         dialogo.setLayout(new BorderLayout());
         dialogo.setSize(300, 320);
@@ -352,8 +393,19 @@ public class VentanaMain extends JFrame {
         panelNorte.add(campoTelefono);
 
 
-
-        panelNorte.add(crearBoton("Ir al chat", e -> Controlador.getInstancia().abrirChatConTelefono(campoTelefono.getText().trim())));
+        
+        panelNorte.add(crearBoton("Ir al chat", e -> {
+            String telefono = campoTelefono.getText().trim();
+            if (!telefono.isEmpty()) {
+                Contacto contacto = Controlador.getInstancia().abrirChatConTelefono(telefono);
+                if (contacto != null) {
+                    actualizarListaContactos();
+                    cargarChat(contacto);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se encontró ningún usuario con ese número.", "Error", JOptionPane.WARNING_MESSAGE);
+                }
+            }
+        }));
 
         // Asegurate de agregar todos los botones:
         panelNorte.add(crearBoton("Buscar", e -> new VentanaBuscar(this).setVisible(true)));
@@ -866,6 +918,23 @@ public class VentanaMain extends JFrame {
             }
         });
         menuContextual.add(itemAñadirContactoGrupo);
+        
+        JMenuItem itemAñadirContacto = new JMenuItem("Añadir contacto");
+        itemAñadirContacto.addActionListener(ev -> {
+            Contacto seleccionado = listaChatRecientes.getSelectedValue();
+            if (!(seleccionado instanceof ContactoIndividual)) return;
+
+            ContactoIndividual ci = (ContactoIndividual) seleccionado;
+
+            String nombre = JOptionPane.showInputDialog(
+                VentanaMain.this, "Introduce el nombre del nuevo contacto:", ci.getTelefono());
+            if (nombre != null && !nombre.trim().isEmpty()) {
+                Controlador.getInstancia().crearContacto(nombre.trim(), ci.getTelefono());
+                actualizarListaContactos();
+            }
+        });
+        menuContextual.add(itemAñadirContacto);
+
 
         listaChatRecientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent e) {
@@ -875,9 +944,23 @@ public class VentanaMain extends JFrame {
                         listaChatRecientes.setSelectedIndex(index);
                         Contacto seleccionado = listaChatRecientes.getModel().getElementAt(index);
 
-                        // Mostrar solo las opciones relevantes según el tipo de contacto
-                        itemCambiarNombre.setVisible(!(seleccionado instanceof Grupo));
-                        itemAñadirContactoGrupo.setVisible(seleccionado instanceof Grupo);
+                        boolean esGrupo = seleccionado instanceof Grupo;
+                        boolean esContactoIndividual = seleccionado instanceof ContactoIndividual;
+                        boolean noAgregado = false;
+
+                        if (esContactoIndividual) {
+                            ContactoIndividual ci = (ContactoIndividual) seleccionado;
+                            noAgregado = Controlador.getInstancia()
+                                .getUsuarioActual()
+                                .getContactosIndividuales()
+                                .stream()
+                                .noneMatch(c -> c.getTelefono().equals(ci.getTelefono()));
+                        }
+
+                        itemCambiarNombre.setVisible(esContactoIndividual && !noAgregado);
+                        itemAñadirContacto.setVisible(esContactoIndividual && noAgregado);
+                        itemAñadirContactoGrupo.setVisible(esGrupo);
+                        	
 
                         menuContextual.show(listaChatRecientes, e.getX(), e.getY());
                     }

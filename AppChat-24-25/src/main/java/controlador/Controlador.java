@@ -532,18 +532,27 @@ public class Controlador {
 	 * @param nuevoNombre nuevo nombre a asignar
 	 */
 	public void renombrarContacto(Contacto contacto, String nuevoNombre) {
-		if (contacto == null || nuevoNombre == null || nuevoNombre.trim().isEmpty()) return;
+	    if (contacto == null || nuevoNombre == null || nuevoNombre.trim().isEmpty()) return;
 
-		contacto.setNombre(nuevoNombre);
+	    contacto.setNombre(nuevoNombre.trim());
 
-		if (contacto instanceof ContactoIndividual) {
-			adaptadorContactoIndividual.modificarContacto((ContactoIndividual) contacto);
-		} else if (contacto instanceof Grupo) {
-			adaptadorGrupo.modificarGrupo((Grupo) contacto);
-		}
+	    if (contacto instanceof ContactoIndividual) {
+	        ContactoIndividual ci = (ContactoIndividual) contacto;
 
-		adaptadorUsuario.modificarUsuario(usuarioActual);
+	        // Validación clave: si el contacto no tiene código, no se puede modificar
+	        if (ci.getCodigo() == 0) {
+	            System.err.println("ERROR: El contacto '" + ci.getNombre() + "' no está registrado en la base de datos (código = 0).");
+	            return;
+	        }
+
+	        adaptadorContactoIndividual.modificarContacto(ci);
+	    } else if (contacto instanceof Grupo) {
+	        adaptadorGrupo.modificarGrupo((Grupo) contacto);
+	    }
+
+	    adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
+
 
 	
 	public Usuario getUsuarioPorTelefono(String telefono) {
