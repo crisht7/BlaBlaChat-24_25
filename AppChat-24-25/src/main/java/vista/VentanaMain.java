@@ -918,7 +918,7 @@ public class VentanaMain extends JFrame {
             }
         });
         menuContextual.add(itemAñadirContactoGrupo);
-        
+
         JMenuItem itemAñadirContacto = new JMenuItem("Añadir contacto");
         itemAñadirContacto.addActionListener(ev -> {
             Contacto seleccionado = listaChatRecientes.getSelectedValue();
@@ -934,7 +934,6 @@ public class VentanaMain extends JFrame {
             }
         });
         menuContextual.add(itemAñadirContacto);
-
 
         listaChatRecientes.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent e) {
@@ -960,14 +959,23 @@ public class VentanaMain extends JFrame {
                         itemCambiarNombre.setVisible(esContactoIndividual && !noAgregado);
                         itemAñadirContacto.setVisible(esContactoIndividual && noAgregado);
                         itemAñadirContactoGrupo.setVisible(esGrupo);
-                        	
 
                         menuContextual.show(listaChatRecientes, e.getX(), e.getY());
+                    }
+                }
+
+                // Aquí se añade el manejo de doble clic izquierdo
+                int index = listaChatRecientes.locationToIndex(e.getPoint());
+                if (index != -1 && SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
+                    Contacto contacto = listaChatRecientes.getModel().getElementAt(index);
+                    if (contacto instanceof ContactoIndividual) {
+                        mostrarInfoContacto((ContactoIndividual) contacto);
                     }
                 }
             }
         });
     }
+
 
     
     public void actualizarDatosUsuario() {
