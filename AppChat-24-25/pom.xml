@@ -85,9 +85,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>tds</groupId>
+			<groupId>umu.tds</groupId>
   			<artifactId>chatWindowLib</artifactId>
-  			<version>1.1</version>
+  			<version>1.0</version>
 		</dependency>
 		
 		<!-- https://mvnrepository.com/artifact/com.itextpdf/itextpdf -->
