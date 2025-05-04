@@ -22,6 +22,8 @@ public class VentanaLogin {
     public JFrame frmLogin;
     private JTextField textFieldTelefono;
     private JPasswordField passwordFieldContraseña;
+    private static VentanaLogin instancia;
+
 
     // ===================== Constructor =====================
     /**
@@ -29,6 +31,13 @@ public class VentanaLogin {
      */
     public VentanaLogin() {
         initialize();
+    }
+    
+    public static VentanaLogin getInstancia() {
+        if (instancia == null) {
+            instancia = new VentanaLogin();
+        }
+        return instancia;
     }
 
     // ===================== Inicialización de Componentes =====================
@@ -86,8 +95,7 @@ public class VentanaLogin {
         btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/register.png")));
         btnRegistrar.addActionListener(e -> {
             frmLogin.dispose();
-            VentanaRegistro ventanaRegistro = new VentanaRegistro();
-            ventanaRegistro.setVisible(true);
+            VentanaRegistro.getInstancia().setVisible(true);
         });
         panelRegistrar.add(btnRegistrar);
     }

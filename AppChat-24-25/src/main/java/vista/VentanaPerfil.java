@@ -6,6 +6,10 @@ import java.io.File;
 import controlador.Controlador;
 import appChat.Usuario;
 
+/**
+ * Ventana de perfil del usuario, que permite ver y modificar la información del
+ * usuario.
+ */
 public class VentanaPerfil extends JDialog {
 
 	private static final long serialVersionUID = 1L;
@@ -17,6 +21,7 @@ public class VentanaPerfil extends JDialog {
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
     private final Color boton = Colores.NARANJA_BOTON.getColor();
 
+    // ===================== Constructor =====================
     public VentanaPerfil(JFrame parent) {
         super(parent, "Mi Perfil", true);
         this.usuario = Controlador.getInstancia().getUsuarioActual();
@@ -99,7 +104,12 @@ public class VentanaPerfil extends JDialog {
 
         getContentPane().add(panelBoton, BorderLayout.SOUTH);
     }
-
+    /**
+     * Crea un JLabel con el texto especificado.
+     * 
+     * @param texto
+     * @return
+     */
     private JLabel crearLabel(String texto) {
         JLabel label = new JLabel(texto);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -110,18 +120,18 @@ public class VentanaPerfil extends JDialog {
     }
 
 
-    
+	/**
+	 * Actualiza la foto de perfil del usuario en la interfaz.
+	 */
     private void actualizarFotoPerfil() {
         ImageIcon fotoPerfil = usuario.getFotoPerfil();
         Image img = fotoPerfil.getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH);
         lblFotoPerfil.setIcon(new ImageIcon(img));
     }
 
-
-
-    
-    
-
+	/**
+	 * Cambia la foto de perfil del usuario.
+	 */
     private void cambiarFotoPerfil() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Seleccionar nueva foto de perfil");
@@ -144,6 +154,9 @@ public class VentanaPerfil extends JDialog {
         }
     }
 
+	/**
+	 * Guarda los cambios realizados en el perfil del usuario.
+	 */
     private void guardarCambios() {
         usuario.setSaludo(txtSaludo.getText().trim());
         Controlador.getInstancia().getAdaptadorUsuario().modificarUsuario(usuario);
@@ -151,7 +164,9 @@ public class VentanaPerfil extends JDialog {
         JOptionPane.showMessageDialog(this, "Datos actualizados correctamente.");
         dispose();
     }
-
+    /**
+     * Cierra la sesión del usuario actual y vuelve a la ventana de inicio de sesión.
+     */
     private void cerrarSesion() {
         int confirmacion = JOptionPane.showConfirmDialog(this, "¿Seguro que quieres cerrar sesión?", "Cerrar sesión", JOptionPane.YES_NO_OPTION);
         if (confirmacion == JOptionPane.YES_OPTION) {
@@ -159,8 +174,8 @@ public class VentanaPerfil extends JDialog {
             VentanaMain.getInstancia().dispose();
             dispose();
             SwingUtilities.invokeLater(() -> {
-                VentanaLogin ventanaLogin = new VentanaLogin();
-                ventanaLogin.setVisible(true);
+                VentanaLogin.getInstancia().setVisible(true);
+                
             });
         }
     }

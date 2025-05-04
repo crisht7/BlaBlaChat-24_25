@@ -804,11 +804,12 @@ public class VentanaMain extends JFrame {
         listaChatRecientes.setModel(nuevoModelo);
     }
 
-    
-
-
-
-    
+    /**
+     * Método para cargar un chat desde un contacto externo.
+     * 
+     * @param contacto
+     * @param mensajeBuscado
+     */
     public void cargarChatDesdeExterno(Contacto contacto, Mensaje mensajeBuscado) {
         // Cargar el chat normalmente
         cargarChat(contacto);
@@ -833,7 +834,13 @@ public class VentanaMain extends JFrame {
     }
 
 
-    
+    /**
+     * Método para exportar el chat a un archivo PDF.
+     * 
+     * @param usuario
+     * @param contacto
+     * @param rutaArchivo
+     */
     private void exportarChatAPDF(Usuario usuario, Contacto contacto, String rutaArchivo) {
         try {
             com.itextpdf.text.Document document = new com.itextpdf.text.Document();

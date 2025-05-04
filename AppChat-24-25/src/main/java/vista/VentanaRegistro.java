@@ -31,6 +31,7 @@ public class VentanaRegistro extends JFrame {
 	private final Color boton = Colores.NARANJA_BOTON.getColor();
 	private JLabel lblIcon;
 	private BufferedImage imagenPerfil;  // Guardamos la imagen real aquí
+    private static VentanaRegistro instancia;
 
 
 	
@@ -40,6 +41,13 @@ public class VentanaRegistro extends JFrame {
         this.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource("/chat150.png")));
 		setBounds(100, 100, 901, 497);
 		inicializarComponentes();
+	}
+	
+	public static VentanaRegistro getInstancia() {
+		if (instancia == null) {
+            instancia = new VentanaRegistro();
+        }
+        return instancia;
 	}
 
 	private void inicializarComponentes() {
@@ -393,4 +401,6 @@ public class VentanaRegistro extends JFrame {
 	public void setImagenPerfil(BufferedImage imagenPerfil) {
 		this.imagenPerfil = imagenPerfil;
 	}
+
+	
 }
