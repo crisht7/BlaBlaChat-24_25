@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"appChat"},{"l":"controlador"},{"l":"descuentos"},{"l":"filtros"},{"l":"lanzador"},{"l":"persistencia"},{"l":"vista"}];updateSearchResults();

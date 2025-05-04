@@ -27,17 +27,33 @@ import persistencia.*;
  */
 public class Controlador {
 
-	// Singleton: única instancia
+	/**
+	 *  Singleton: única instancia
+	 */
 	private static Controlador unicaInstancia = null;
-
-	// Repositorios y adaptadores de base de datos
+	/**
+	 *  Repositorio de usuarios
+	 */
 	private RepositorioUsuarios repoUsuarios;
+	/**
+	 * Adaptadores de grupos
+	 */
 	private GrupoDAO adaptadorGrupo;
+	/**
+	 * Adaptador de mensajes
+	 */
 	private MensajeDAO adaptadorMensaje;
+	/**
+	 * Adaptador de usuarios
+	 */
 	private UsuarioDAO adaptadorUsuario;
+	/**
+	 *  Adaptador de contactos individuales
+	 */
 	private ContactoIndividualDAO adaptadorContactoIndividual;
-
-	// Usuario actual autenticado
+	/**
+	 *  Usuario actual autenticado
+	 */
 	private Usuario usuarioActual;
 
 	// ===================== Constructor e Inicialización =====================
@@ -130,8 +146,8 @@ public class Controlador {
 	/**
 	 * Abre un chat con un contacto específico por su número de teléfono.
 	 * 
-	 * @param contacto contacto con el que se quiere abrir el chat
-	 * @return contacto abierto o null si no se encuentra
+	 * @param telefono contacto con el que se quiere abrir el chat
+	 * @return el contacto abierto o null si no se pudo abrir 
 	 */
 	public Contacto abrirChatConTelefono(String telefono) {
 	    if (telefono == null || telefono.isBlank()) return null;
@@ -345,13 +361,7 @@ public class Controlador {
 		}
 		return null;
 	}
-	
-	private Grupo getGruposPorNombre(String nombreGrupo) {
-		return usuarioActual.getGrupos().stream()
-				.filter(g -> g.getNombre().equals(nombreGrupo))
-				.findFirst()
-				.orElse(null);
-	}
+
 
 	// ===================== Métodos de Mensajes =====================
 
@@ -370,6 +380,12 @@ public class Controlador {
 		}
 	}
 
+	/**
+	 * Envía un mensaje de texto a un contacto individual
+	 * 
+	 * @param texto    mensaje de texto
+	 * @param contacto destinatario
+	 */
 	private void enviarMensajeAContactoIndividual(String texto, ContactoIndividual contacto) {
 		if (!isEnListaContactos(contacto)) {
 			crearContactoAnonimo(contacto);
@@ -390,6 +406,12 @@ public class Controlador {
 		}
 	}
 
+	/**
+	 * Envía un mensaje de texto a un grupo
+	 * 
+	 * @param texto mensaje de texto
+	 * @param grupo destinatario
+	 */
 	private void enviarMensajeAGrupo(String texto, Grupo grupo) {
 		for (ContactoIndividual integrante : grupo.getIntegrantes()) {
 			if (!isEnListaContactos(integrante)) {
@@ -567,38 +589,95 @@ public class Controlador {
 
 	
 	// ===================== Getters y Setters =====================
-
+	/**
+	 * Obtiene la instancia del repositorio de usuarios
+	 * 
+	 * @return repositorio de usuarios
+	 */
 	public RepositorioUsuarios getRepoUsuarios() {
 		return this.repoUsuarios;
 	}
-
+	/**
+	 * Obtiene el adaptador de contactos
+	 * 
+	 * @return adaptador de contactos
+	 */
 	public ContactoIndividualDAO getAdaptadorContactoIndividual() {
 		return this.adaptadorContactoIndividual;
 	}
-
+	/**
+	 * Obtiene el adaptador de grupo
+	 * 
+	 * @return adaptador de grupo
+	 */
 	public GrupoDAO getAdaptadorGrupo() {
 		return this.adaptadorGrupo;
 	}
-
+	/**
+	 * Obtiene el adaptador de usuario
+	 * 
+	 * @return	adaptador de usuario
+	 */
 	public UsuarioDAO getAdaptadorUsuario() {
 		return this.adaptadorUsuario;
 	}
+	
+	/**
+	 * Obtiene el adaptador de mensajes
+	 * 
+	 * @return adaptador de mensajes
+	 */
+	public MensajeDAO getAdaptadorMensaje() {
+		return this.adaptadorMensaje;
+	}
 
+	/**
+	 * Obtiene el usuario actual autenticado
+	 * 
+	 * @return usuario actual
+	 */
 	public Usuario getUsuarioActual() {
 		return this.usuarioActual;
 	}
 
+	/**
+	 * Establece el usuario actual autenticado
+	 * 
+	 * @param usuario usuario a establecer
+	 */
 	public void setUsuarioActual(Usuario usuario) {
 		this.usuarioActual = usuario;
 	}
+	
+	/**
+	 * Obtiene la lista de grupos del usuario actual
+	 * 
+	 * @return lista de grupos
+	 */
 	public List<Grupo> getGruposUsuarioActual() {
-	    return getUsuarioActual().getGrupos(); // O como almacenes los grupos del usuario
+	    return getUsuarioActual().getGrupos(); 
 	}
 	
+	/**
+	 * Obtiene un usuario por su número de teléfono
+	 * 
+	 * @param telefono número de teléfono del usuario
+	 * @return usuario encontrado o null si no existe
+     */
 	public Usuario getUsuarioPorTelefono(String telefono) {
 	    return adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
 	}
-
-	
+	/**
+	 * Obtiene un grupo específico del usuario actual
+	 * 
+	 * @param nombreGrupo nombre del grupo a buscar
+	 * @return grupo encontrado o null si no existe
+	 */
+	private Grupo getGruposPorNombre(String nombreGrupo) {
+		return usuarioActual.getGrupos().stream()
+				.filter(g -> g.getNombre().equals(nombreGrupo))
+				.findFirst()
+				.orElse(null);
+	}
 
 }

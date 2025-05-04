@@ -219,8 +219,8 @@ public class AdaptadorGrupo implements GrupoDAO{
 	/**
 	 * Convierte un String de codigos a una lista de mensajes
 	 * 
-	 * @param recuperarPropiedadEntidad
-	 * @return
+	 * @param mensajes a convertir
+	 * @return lista de mensajes
 	 */
 	private List<Mensaje> obtenerMensajes(String mensajes) {
 		List<Mensaje> listMensajes = new ArrayList<>();

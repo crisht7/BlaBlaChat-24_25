@@ -19,7 +19,7 @@ public class FiltroCombinado implements FiltroBusqueda {
 
     /**
      * Añade un filtro a la lista de filtros.
-     * @param filtro
+     * @param filtro Filtro a añadir.
      */
     public void añadirFiltro(FiltroBusqueda filtro) {
         if (filtro != null) {
@@ -30,7 +30,7 @@ public class FiltroCombinado implements FiltroBusqueda {
 	/**
 	 * Elimina un filtro de la lista de filtros.
 	 * 
-	 * @param filtro
+	 * @param filtro Filtro a eliminar.
 	 * @return true si se eliminó el filtro, false si no estaba en la lista.
 	 */
     public boolean eliminarFiltro(FiltroBusqueda filtro) {

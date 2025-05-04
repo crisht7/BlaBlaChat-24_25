@@ -10,6 +10,9 @@ import javax.swing.ImageIcon;
  */
 public class Grupo extends Contacto {
 
+	/**
+	 * Lista de contactos individuales que forman parte del grupo.
+	 */
     private List<ContactoIndividual> integrantes;
 
     // ===================== Constructores =====================

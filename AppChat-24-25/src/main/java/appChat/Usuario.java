@@ -12,15 +12,41 @@ import javax.swing.ImageIcon;
  * Representa un usuario de la aplicación de chat.
  */
 public class Usuario {
-
+	/**
+	 * Nombre del usuario.
+	 */
     private String nombre;
+    /**
+     * Foto de perfil del usuario.
+     */
     private ImageIcon fotoPerfil;
+	/**
+	 * Contraseña del usuario.
+	 */
     private String contraseña;
+    /**
+     * Número de teléfono del usuario.
+     */
     private String telefono;
+	/**
+	 * Saludo del usuario.
+	 */
     private String saludo;
+	/**
+	 * Indica si el usuario es premium.
+	 */
     private boolean premium;
+    /**
+     * Fecha de registro del usuario.
+     */
     private LocalDate fechaRegistro;
+    /**
+     * Código único del usuario.
+     */
     private int codigo;
+    /**
+     * Lista de contactos del usuario.
+     */
     private List<Contacto> contactos;
 
     // ===================== Constructores =====================
@@ -159,64 +185,132 @@ public class Usuario {
 
     // ===================== Getters =====================
 
+	/**
+	 * Devuelve el nombre del usuario.
+	 * 
+	 * @return nombre del usuario
+	 */
     public String getNombre() {
         return this.nombre;
     }
-
+    /**
+     * Devuelve el número de teléfono del usuario.
+     * 
+     * @return número de teléfono
+     */
     public String getTelefono() {
         return this.telefono;
     }
 
+	/**
+	 * Devuelve el saludo del usuario.
+	 * 
+	 * @return saludo del usuario
+	 */
     public String getSaludo() {
         return this.saludo;
     }
-
+    /**
+     * Devuelve la contraseña del usuario.
+     * 
+     * @return contraseña del usuario
+     */
     public String getContraseña() {
         return this.contraseña;
     }
-
+    /**
+     * Devuelve el estado premium del usuario.
+     * 
+     * @return true si es premium, false en caso contrario
+     */
     public boolean isPremium() {
         return this.premium;
     }
-
+	/**
+	 * Devuelve la fecha de registro del usuario.
+	 * 
+	 * @return fecha de registro
+	 */
     public LocalDate getFechaRegistro() {
         return this.fechaRegistro;
     }
-
+	/**
+	 * Devuelve la foto de perfil del usuario.
+	 * 
+	 * @return foto de perfil
+	 */
     public ImageIcon getFotoPerfil() {
         return this.fotoPerfil;
     }
-
+	/**
+	 * Devuelve el código único del usuario.
+	 * 
+	 * @return código único
+	 */
     public int getCodigo() {
         return this.codigo;
     }
 
     // ===================== Setters =====================
 
+    /**
+     * Establece el nombre del usuario.
+     * 
+     * @param nombre nuevo nombre del usuario
+     */
     public void setNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * Establece el número de teléfono del usuario.
+     * @param telefono nuevo número de teléfono
+     */
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
 
+	/**
+	 * Establece el saludo del usuario.
+	 * 
+	 * @param saludo nuevo saludo del usuario
+	 */
     public void setSaludo(String saludo) {
         this.saludo = saludo;
     }
 
+	/**
+	 * Establece la contraseña del usuario.
+	 * 
+	 * @param contraseña nueva contraseña del usuario
+	 */
     public void setContraseña(String contraseña) {
         this.contraseña = contraseña;
     }
 
+    /**
+     * Establece el estado premium del usuario.
+     * 
+     * @param premium nuevo estado premium
+     */
     public void setPremium(boolean premium) {
         this.premium = premium;
     }
 
+	/**
+	 * Establece la foto de perfil del usuario.
+	 * 
+	 * @param imagen nueva foto de perfil
+	 */
     public void setFotoPerfil(ImageIcon imagen) {
         this.fotoPerfil = imagen;
     }
 
+    /**
+     * Establece un nuevo codigo único para el usuario.
+     * 
+     * @param codigo nuevo código único
+     */
     public void setCodigo(int codigo) {
         this.codigo = codigo;
     }
@@ -225,6 +319,8 @@ public class Usuario {
 
     /**
      * Cuenta el total de mensajes enviados por el usuario a todos sus contactos.
+     * 
+     * @return total de mensajes enviados
      */
     public int totalMensajesEnviados() {
         int total = 0;
@@ -240,6 +336,9 @@ public class Usuario {
 
     /**
      * Compara dos usuarios por su número de teléfono.
+     * 
+     * @param obj objeto a comparar
+     * @return true si son iguales, false en caso contrario
      */
     @Override
     public boolean equals(Object obj) {
@@ -251,6 +350,8 @@ public class Usuario {
 
     /**
      * Representa el usuario como una cadena de texto.
+     * 
+     * @return representación en cadena del usuario
      */
     @Override
     public String toString() {

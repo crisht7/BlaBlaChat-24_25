@@ -1,11 +1,15 @@
 package persistencia;
 
 public abstract class FactoriaDAO {
-
+	// Constante para el nombre de la fábrica DAO
 	public static final String DAO_TDS = "persistencia.AdaptadorFactoriaDAO";
 	
+	// Atributo estático para la instancia única de la fábrica DAO
 	private static FactoriaDAO unicaInstancia = null;
 
+	/**
+	 * Constructor privado para garantizar el patrón Singleton
+	 */
 	public FactoriaDAO() {
 	}
 	/**

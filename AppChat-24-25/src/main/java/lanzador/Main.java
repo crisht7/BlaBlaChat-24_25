@@ -3,21 +3,18 @@ package lanzador;
 import java.awt.EventQueue;
 
 import vista.VentanaLogin;
-
+/**
+ * Clase principal para lanzar la aplicación.
+ */
 public class Main {
 	/**
-	 * Launch the application.
+	 * Lanza la aplicacion.
 	 */
-	//
 	public static void main(String[] args) {
 		EventQueue.invokeLater(new Runnable() { //Clase anónima que implementa la interfaz Runnable privada para ejecutar el código en un hilo separado
 			public void run() { 
 				try {
-					VentanaLogin window = new VentanaLogin(); //Constructor de la clase actual
-					window.frmLogin.setVisible(true); //Hace visible 
-					// TODO: VER VENTANAS DIALOGO PAGINA 73
-					// int JOptionPane.showMessageDialog(window, frame, "Login", JOptionPane.PLAIN_MESSAGE);
-					
+					VentanaLogin.getInstancia().setVisible(true); //Llama a la ventana de login
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -6,13 +6,33 @@ import java.time.LocalDateTime;
  * Representa un mensaje en la aplicación de chat.
  */
 public class Mensaje implements Comparable<Mensaje> {
-
+	/**
+	 * Código único del mensaje.
+	 */
     private int codigo;
+	/**
+	 * Texto del mensaje.
+	 */
     private String texto;
+    /**
+     * Emisor del mensaje.
+     */
     private Usuario emisor;
+	/**
+	 * Receptor del mensaje.
+	 */
     private Contacto receptor;
+    /**
+     * Emoticono asociado al mensaje.
+     */
     private int emoticono;
+	/**
+	 * Fecha y hora en que se envió el mensaje.
+	 */
     private LocalDateTime hora;
+    /**
+     * Indica si el mensaje pertenece a un grupo.
+     */
     private boolean grupo = false;
 
     // ===================== Constructores =====================

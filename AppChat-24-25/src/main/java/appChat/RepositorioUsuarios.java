@@ -16,9 +16,21 @@ import persistencia.UsuarioDAO;
  */
 public class RepositorioUsuarios {
 
+	/**
+	 * Mapa que almacena los usuarios, donde la clave es el número de teléfono.
+	 */
     private Map<String, Usuario> usuarios;
+	/**
+	 * Instancia única del repositorio de usuarios.
+	 */
     private static RepositorioUsuarios instanciaUnica;
+    /**
+     * Fábrica de DAOs para acceder a la base de datos.
+     */
     private FactoriaDAO factoria;
+	/**
+	 * DAO para acceder a los usuarios en la base de datos.
+	 */
     private UsuarioDAO daoUsuario;
 
     // ===================== Constructor =====================

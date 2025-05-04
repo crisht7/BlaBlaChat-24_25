@@ -10,7 +10,13 @@ import java.util.Optional;
  */
 public class ContactoIndividual extends Contacto {
 
+	/**
+	 * Usuario asociado al contacto individual.
+	 */
     private Usuario usuario;
+	/**
+	 * Número de teléfono del contacto individual.
+	 */
     private String telefono;
 
     // ===================== Constructores =====================

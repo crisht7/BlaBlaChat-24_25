@@ -9,9 +9,21 @@ import javax.swing.ImageIcon;
  */
 public class Contacto {
 
+    /**
+     * Nombre del contacto.
+     */
     private String nombre;
+	/**
+	 * Código único del contacto.
+	 */
     private int codigo;
+	/**
+	 * Lista de mensajes enviados por el contacto.
+	 */
     private List<Mensaje> mensajes;
+	/**
+	 * Foto de perfil del contacto.
+	 */
     private ImageIcon foto;
 
     // ===================== Constructores =====================

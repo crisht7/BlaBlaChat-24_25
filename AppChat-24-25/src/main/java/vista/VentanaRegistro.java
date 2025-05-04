@@ -372,9 +372,7 @@ public class VentanaRegistro extends JFrame {
 	}
 	
 	/**
-	 * Método para mostrar un mensaje de error.
-	 * 
-	 * @param mensaje Mensaje a mostrar.
+	 * Método para seleccionar una imagen desde el PC.
 	 */
 	private void seleccionarImagenDesdePC() {
 	    JFileChooser seleccion = new JFileChooser();
@@ -424,9 +422,9 @@ public class VentanaRegistro extends JFrame {
 	}
 
 	/**
-	 * Método para mostrar un mensaje de información.
+	 * Método para obtener la imagen de perfil.
 	 * 
-	 * @param mensaje Mensaje a mostrar.
+	 * @return Imagen de perfil.
 	 */
 	public BufferedImage getImagenPerfil() {
 		return imagenPerfil;

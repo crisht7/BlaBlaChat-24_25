@@ -29,23 +29,23 @@ public interface UsuarioDAO {
 	/**
 	 * Recupera el usuario de la base de datos a traves del codigo
 	 * 
-	 * @param codigo
-	 * @return 
+	 * @param codigo codigo del usuario
+	 * @return usuario
 	 */
 	public Usuario recuperarUsuario(int codigo);
 	
 	/**
 	 * Modifica un usuario de la base de datos
 	 * 
-	 * @param usuario
+	 * @param usuario usuario a modificar
 	 */
 	public void modificarUsuario(Usuario usuario);
 
 	/**
 	 * Devuelve un usuario del repositorio por el numero de telefono.
 	 * 
-	 * @param numTelefono
-	 * @return Usuario
+	 * @param telefono número de teléfono del usuario
+	 * @return usuario
 	 */
 	public Usuario recuperarUsuarioPorTelefono(String telefono);
 
