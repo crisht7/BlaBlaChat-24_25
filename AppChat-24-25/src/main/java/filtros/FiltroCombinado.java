@@ -10,20 +10,38 @@ import appChat.Mensaje;
 public class FiltroCombinado implements FiltroBusqueda {
     private List<FiltroBusqueda> filtros;
 
+	/**
+	 * Constructor por defecto que inicializa la lista de filtros.
+	 */
     public FiltroCombinado() {
         this.filtros = new ArrayList<>();
     }
 
+    /**
+     * Añade un filtro a la lista de filtros.
+     * @param filtro
+     */
     public void añadirFiltro(FiltroBusqueda filtro) {
         if (filtro != null) {
             filtros.add(filtro);
         }
     }
 
+	/**
+	 * Elimina un filtro de la lista de filtros.
+	 * 
+	 * @param filtro
+	 * @return true si se eliminó el filtro, false si no estaba en la lista.
+	 */
     public boolean eliminarFiltro(FiltroBusqueda filtro) {
         return filtros.remove(filtro);
     }
 
+    /**
+     * Filtra una lista de mensajes aplicando todos los filtros en secuencia.
+     * @param mensajes La lista de mensajes a filtrar.
+     * @return Una nueva lista de mensajes que cumplen con todos los filtros.
+     */
     @Override
     public List<Mensaje> filtrar(List<Mensaje> mensajes) {
         List<Mensaje> resultado = new ArrayList<>(mensajes);
@@ -33,10 +51,20 @@ public class FiltroCombinado implements FiltroBusqueda {
         return resultado;
     }
 
+	/**
+	 * Devuelve la lista de filtros.
+	 * 
+	 * @return Lista de filtros.
+	 */
     public List<FiltroBusqueda> getFiltros() {
         return new ArrayList<>(filtros);
     }
     
+	/**
+	 * Comprueba si la lista de filtros está vacía.
+	 * 
+	 * @return true si la lista de filtros está vacía, false en caso contrario.
+	 */
     public boolean estaVacio() {
         return filtros.isEmpty();
     }

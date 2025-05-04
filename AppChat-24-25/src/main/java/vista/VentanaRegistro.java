@@ -19,6 +19,9 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import com.toedter.calendar.JDateChooser;
 import controlador.Controlador;
 
+/**
+ * Ventana de registro de usuario.
+ */
 public class VentanaRegistro extends JFrame {
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
@@ -34,7 +37,9 @@ public class VentanaRegistro extends JFrame {
     private static VentanaRegistro instancia;
 
 
-	
+	/**
+	 * Crea la ventana de registro.
+	 */
 	public VentanaRegistro() {
 		setTitle("Register");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -42,7 +47,10 @@ public class VentanaRegistro extends JFrame {
 		setBounds(100, 100, 901, 497);
 		inicializarComponentes();
 	}
-	
+
+	/**
+	 * Método para obtener la instancia de la ventana de registro (Singleton).
+	 */
 	public static VentanaRegistro getInstancia() {
 		if (instancia == null) {
             instancia = new VentanaRegistro();
@@ -50,6 +58,9 @@ public class VentanaRegistro extends JFrame {
         return instancia;
 	}
 
+	/**
+	 * Inicializa los componentes de la ventana.
+	 */
 	private void inicializarComponentes() {
 		contentPane = new JPanel();
 		contentPane.setBackground(naranjaClaro);
@@ -228,6 +239,9 @@ public class VentanaRegistro extends JFrame {
 		agregarBotones();
 	}
 
+	/**
+	 * Método para agregar los botones de registrar y cancelar.
+	 */
 	private void agregarBotones() {
 		JPanel panel = new JPanel();
 		panel.setBackground(naranjaClaro);
@@ -266,11 +280,11 @@ public class VentanaRegistro extends JFrame {
 		contentPane.add(btnSeleccionarImagen, gbc_btnSeleccionarImagen);
 	}
 
-	
-
-
-
-	
+	/**
+	 * Método para registrar un nuevo usuario.
+	 * 
+	 * @param e Evento de acción.
+	 */
 	private void registrarUsuario(ActionEvent e) {
 	    if (!datosCorrectos()) return;
 
@@ -310,13 +324,19 @@ public class VentanaRegistro extends JFrame {
 	    }
 	}
 
-
-
+	/**
+	 * Método para cancelar el registro y volver a la ventana de inicio de sesión.
+	 */
 	private void cancelarRegistro() {
 		dispose();
 		new VentanaLogin().frmLogin.setVisible(true);
 	}
 
+	/**
+	 * Método para comprobar si los datos introducidos son correctos.
+	 * 
+	 * @return true si los datos son correctos, false en caso contrario.
+	 */
 	private boolean datosCorrectos() {
 		String nombre = textFieldNombre.getText().trim();
 		String telefono = textFieldTelefono.getText().trim();
@@ -351,6 +371,11 @@ public class VentanaRegistro extends JFrame {
 		return true;
 	}
 	
+	/**
+	 * Método para mostrar un mensaje de error.
+	 * 
+	 * @param mensaje Mensaje a mostrar.
+	 */
 	private void seleccionarImagenDesdePC() {
 	    JFileChooser seleccion = new JFileChooser();
 	    FileNameExtensionFilter filter = new FileNameExtensionFilter("Imágenes", "jpg", "png", "jpeg");
@@ -389,15 +414,29 @@ public class VentanaRegistro extends JFrame {
 
 
 
-
+	/**
+	 * Método para mostrar un mensaje de error.
+	 * 
+	 * @param mensaje Mensaje a mostrar.
+	 */
 	private void mostrarError(String mensaje) {
 		JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
 	}
 
+	/**
+	 * Método para mostrar un mensaje de información.
+	 * 
+	 * @param mensaje Mensaje a mostrar.
+	 */
 	public BufferedImage getImagenPerfil() {
 		return imagenPerfil;
 	}
-
+	
+	/**
+	 * Método para establecer la imagen de perfil.
+	 * 
+	 * @param imagenPerfil Imagen de perfil a establecer.
+	 */
 	public void setImagenPerfil(BufferedImage imagenPerfil) {
 		this.imagenPerfil = imagenPerfil;
 	}

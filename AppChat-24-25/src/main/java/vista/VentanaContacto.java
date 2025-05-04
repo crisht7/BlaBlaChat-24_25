@@ -43,6 +43,9 @@ public class VentanaContacto extends JFrame {
 
     // ===================== Inicialización de Componentes =====================
 
+	/**
+	 * Inicializa los componentes de la ventana.
+	 */
     private void inicializarComponentes() {
         contentPane = new JPanel();
         contentPane.setBackground(naranjaClaro);
@@ -99,6 +102,10 @@ public class VentanaContacto extends JFrame {
         contentPane.add(panelBoton, gbc);
     }
 
+    /**
+     * Crea un campo de texto con propiedades específicas.
+     * @return Un JTextField configurado.
+     */
     private JTextField crearCampoTexto() {
         JTextField campo = new JTextField(10);
         campo.setForeground(Color.BLACK);
@@ -116,6 +123,13 @@ public class VentanaContacto extends JFrame {
         return campo;
     }
 
+	/**
+	 * Crea un GridBagConstraints con los valores especificados.
+	 *
+	 * @param x Posición en el eje X.
+	 * @param y Posición en el eje Y.
+	 * @return Un objeto GridBagConstraints configurado.
+	 */
     private GridBagConstraints crearGbc(int x, int y) {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = x;
@@ -127,6 +141,11 @@ public class VentanaContacto extends JFrame {
 
     // ===================== Validaciones =====================
 
+	/**
+	 * Comprueba si los datos introducidos son correctos.
+	 *
+	 * @return true si los datos son correctos, false en caso contrario.
+	 */
     private boolean datosCorrectos() {
         List<String> errores = new LinkedList<>();
 
@@ -148,6 +167,12 @@ public class VentanaContacto extends JFrame {
         return true;
     }
 
+	/**
+	 * Comprueba si una cadena es un número.
+	 *
+	 * @param strNum Cadena a comprobar.
+	 * @return true si es un número, false en caso contrario.
+	 */
     private boolean isNumeric(String strNum) {
         try {
             Integer.parseInt(strNum);

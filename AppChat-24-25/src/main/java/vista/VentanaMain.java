@@ -60,7 +60,9 @@ public class VentanaMain extends JFrame {
         return instancia;
     }
 
-    
+	/**
+	 * Método para actualizar la lista de contactos.
+	 */
     public void refrescarFotoUsuario() {
         ImageIcon nuevaFoto = Controlador.getInstancia().getUsuarioActual().getFotoPerfil();
         if (nuevaFoto != null) {

@@ -38,11 +38,12 @@ public class VentanaBuscar extends JDialog {
 
         configurarVentana();
         inicializarComponentes();
-        configurarAcciones();
     }
 
     // ===================== Métodos de configuración =====================
-
+    /**
+     * Configura la ventana de búsqueda.
+     */
     private void configurarVentana() {
         getContentPane().setBackground(naranjaOscuro);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
@@ -51,6 +52,9 @@ public class VentanaBuscar extends JDialog {
         getContentPane().setLayout(null);
     }
 
+	/**
+	 * Inicializa los componentes de la ventana.
+	 */
     private void inicializarComponentes() {
         // Panel superior
         JPanel panelSuperior = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 10));
@@ -91,6 +95,12 @@ public class VentanaBuscar extends JDialog {
         SwingUtilities.invokeLater(btnBuscar::requestFocusInWindow);
     }
 
+	/**
+	 * Crea un campo de texto con un placeholder.
+	 * 
+	 * @param placeholder El texto que se mostrará como placeholder.
+	 * @return El campo de texto creado.
+	 */
     private JTextField crearCampoTexto(String placeholder) {
         JTextField campo = new JTextField();
         campo.setPreferredSize(new Dimension(150, 25));
@@ -115,12 +125,12 @@ public class VentanaBuscar extends JDialog {
         return campo;
     }
 
-    private void configurarAcciones() {
-        // Separé esta función si quieres en el futuro expandir acciones en init
-    }
 
     // ===================== Lógica de búsqueda =====================
 
+	/**
+	 * Realiza la búsqueda de mensajes aplicando los filtros seleccionados.
+	 */
     private void realizarBusqueda() {
         panelResultados.removeAll();
 
@@ -170,6 +180,11 @@ public class VentanaBuscar extends JDialog {
 
     // ===================== Métodos auxiliares =====================
 
+    /**
+     * Crea un panel para mostrar un mensaje.
+     * @param m mensaje a mostrar
+     * @return
+     */
     private JPanel crearPanelMensaje(Mensaje m) {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));

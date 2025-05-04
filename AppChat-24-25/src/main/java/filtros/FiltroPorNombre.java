@@ -15,10 +15,20 @@ import appChat.Usuario;
 public class FiltroPorNombre implements FiltroBusqueda {
     private String nombre;
 
+	/**
+	 * Constructor que inicializa el filtro con un nombre específico.
+	 * 
+	 * @param nombre Nombre del usuario o contacto a filtrar.
+	 */
     public FiltroPorNombre(String nombre) {
         this.nombre = nombre;
     }
 
+    /**
+     * Filtra una lista de mensajes según el nombre del usuario o contacto.
+     * @param mensajes La lista de mensajes a filtrar.
+     * @return Una nueva lista de mensajes que cumplen con el criterio del filtro.
+     */
     @Override
     public List<Mensaje> filtrar(List<Mensaje> mensajes) {
         if (nombre == null || nombre.isEmpty()) return mensajes;

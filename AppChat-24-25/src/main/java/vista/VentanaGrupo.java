@@ -41,7 +41,10 @@ public class VentanaGrupo extends JDialog {
         setLocationRelativeTo(getParent());
         getContentPane().setLayout(new BorderLayout(10, 10));
     }
-
+    
+    /**
+     * Inicializa los componentes de la ventana.
+     */
     private void inicializarComponentes() {
         // Panel superior: nombre del grupo
         JPanel panelNombre = new JPanel(new BorderLayout(5, 5));
@@ -87,7 +90,9 @@ public class VentanaGrupo extends JDialog {
     }
 
     // ===================== Métodos auxiliares =====================
-
+	/**
+	 * Carga los contactos del usuario actual en la lista.
+	 */
     private void cargarContactos() {
         DefaultListModel<ContactoIndividual> model = (DefaultListModel<ContactoIndividual>) listaContactos.getModel();
 
@@ -102,6 +107,9 @@ public class VentanaGrupo extends JDialog {
         }
     }
 
+	/**
+	 * Abre un diálogo para seleccionar una imagen de grupo.
+	 */
     private void seleccionarImagen() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Seleccionar imagen del grupo");
@@ -114,6 +122,10 @@ public class VentanaGrupo extends JDialog {
         }
     }
 
+	/**
+	 * Crea un nuevo grupo con los contactos seleccionados y lo registra en la base
+	 * de datos.
+	 */
     private void crearGrupo() {
         String nombreGrupo = txtNombreGrupo.getText().trim();
         if (nombreGrupo.isEmpty()) {

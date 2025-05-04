@@ -429,6 +429,12 @@ public class Controlador {
 		}
 	}
 
+	/**
+	 * Envía un emoticono a un contacto individual
+	 * 
+	 * @param emoticono código del emoticono
+	 * @param contacto  destinatario
+	 */
 	private void enviarEmoticonoAContactoIndividual(int emoticono, ContactoIndividual contacto) {
 		if (!isEnListaContactos(contacto)) {
 			crearContactoAnonimo(contacto);
@@ -440,6 +446,12 @@ public class Controlador {
 		adaptadorContactoIndividual.modificarContacto(contacto);
 	}
 
+	/**
+	 * Envía un emoticono a un grupo
+	 * 
+	 * @param emoticono código del emoticono
+	 * @param grupo     destinatario
+	 */
 	private void enviarEmoticonoAGrupo(int emoticono, Grupo grupo) {
 		for (ContactoIndividual integrante : grupo.getIntegrantes()) {
 			if (!isEnListaContactos(integrante)) {
@@ -553,12 +565,6 @@ public class Controlador {
 	    adaptadorUsuario.modificarUsuario(usuarioActual);
 	}
 
-
-	
-	public Usuario getUsuarioPorTelefono(String telefono) {
-	    return adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
-	}
-
 	
 	// ===================== Getters y Setters =====================
 
@@ -588,6 +594,11 @@ public class Controlador {
 	public List<Grupo> getGruposUsuarioActual() {
 	    return getUsuarioActual().getGrupos(); // O como almacenes los grupos del usuario
 	}
+	
+	public Usuario getUsuarioPorTelefono(String telefono) {
+	    return adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
+	}
+
 	
 
 }

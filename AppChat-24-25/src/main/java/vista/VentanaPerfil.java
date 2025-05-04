@@ -22,6 +22,11 @@ public class VentanaPerfil extends JDialog {
     private final Color boton = Colores.NARANJA_BOTON.getColor();
 
     // ===================== Constructor =====================
+	/**
+	 * Crea la ventana de perfil del usuario.
+	 * 
+	 * @param parent Ventana padre.
+	 */
     public VentanaPerfil(JFrame parent) {
         super(parent, "Mi Perfil", true);
         this.usuario = Controlador.getInstancia().getUsuarioActual();
