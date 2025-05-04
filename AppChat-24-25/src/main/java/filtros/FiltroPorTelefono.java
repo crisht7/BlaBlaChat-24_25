@@ -8,11 +8,14 @@ import appChat.Mensaje;
  * Filtro que selecciona mensajes cuyo emisor tiene un número de teléfono específico.
  */
 public class FiltroPorTelefono implements FiltroBusqueda {
+	/**
+	 * Número de teléfono del emisor a filtrar.
+	 */
     private String numeroTelefono;
 
     /**
      * Constructor que inicializa el filtro con un número de teléfono específico.
-     * @param numeroTelefono
+     * @param numeroTelefono Número de teléfono del emisor a filtrar.
      */
     public FiltroPorTelefono(String numeroTelefono) {
         this.numeroTelefono = numeroTelefono;

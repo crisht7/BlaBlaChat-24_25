@@ -12,13 +12,34 @@ import appChat.Usuario;
  */
 public class VentanaPerfil extends JDialog {
 
+	/**
+	 * SerialVersionUID para la serialización de la clase.
+	 */
 	private static final long serialVersionUID = 1L;
 
+	/**
+	 * Usuario actual.
+	 */
     private Usuario usuario;
+    /**
+     * Etiqueta para mostrar la foto de perfil del usuario.
+     */
     private JLabel lblFotoPerfil;
+	/**
+	 * Área de texto para mostrar y editar el saludo del usuario.
+	 */
     private JTextArea txtSaludo;
+	/**
+	 * Color de fondo claro.
+	 */
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor(); 
+    /**
+     * Color de fondo oscuro.
+     */
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	/**
+	 * Color de fondo naranja.
+	 */
     private final Color boton = Colores.NARANJA_BOTON.getColor();
 
     // ===================== Constructor =====================
@@ -112,8 +133,8 @@ public class VentanaPerfil extends JDialog {
     /**
      * Crea un JLabel con el texto especificado.
      * 
-     * @param texto
-     * @return
+     * @param texto Texto a mostrar en el JLabel.
+     * @return Un JLabel configurado.
      */
     private JLabel crearLabel(String texto) {
         JLabel label = new JLabel(texto);

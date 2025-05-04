@@ -17,22 +17,63 @@ import controlador.Controlador;
 public class VentanaBuscar extends JDialog {
 
     // ===================== Constantes de color y texto =====================
+	/**
+	 * Constante para el texto del placeholder del campo de texto.
+     */
     private static final String PLACEHOLDER_TEXTO = "Texto del mensaje";
+	/**
+	 * Constante para el texto del placeholder del campo de teléfono.
+	 */
     private static final String PLACEHOLDER_TELEFONO = "Teléfono del contacto";
+    /**
+     * Constante para el texto del placeholder del campo de contacto.
+     */
     private static final String PLACEHOLDER_CONTACTO = "Nombre del contacto";
+	/**
+	 * Color naranja claro
+	 */
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+    /**
+     * Color naranja oscuro
+     */
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	/**
+	 * Color naranja boton
+	 */
     private final Color boton = Colores.NARANJA_BOTON.getColor();
+	/**
+	 * Color turquesa
+	 */
     private final Color turquesa = Colores.TURQUESA.getColor();
+    /**
+     * Color turquesa oscuro
+     */
     private final Color turquesaOscuro = Colores.TURQUESA_OSCURO.getColor();
 
     // ===================== Componentes de la vista =====================
+    /**
+     * Campo de texto para ingresar el texto del mensaje.
+     */
     private JTextField textFieldTexto;
+    /**
+     * Campo de texto para ingresar el teléfono del contacto.
+     */
     private JTextField textFieldTelefono;
+	/**
+	 * Campo de texto para ingresar el nombre del contacto.
+	 */
     private JTextField textFieldContacto;
+    /**
+     * Panel para mostrar los resultados de la búsqueda.
+     */
     private JPanel panelResultados;
 
     // ===================== Constructor =====================
+	/**
+	 * Crea la ventana de búsqueda.
+	 *
+	 * @param parent Ventana padre.
+	 */
     public VentanaBuscar(JFrame parent) {
         super(parent, "Buscar", true);
 
@@ -183,7 +224,7 @@ public class VentanaBuscar extends JDialog {
     /**
      * Crea un panel para mostrar un mensaje.
      * @param m mensaje a mostrar
-     * @return
+     * @return el panel creado
      */
     private JPanel crearPanelMensaje(Mensaje m) {
         JPanel panel = new JPanel(new BorderLayout());

@@ -16,16 +16,39 @@ import appChat.Grupo;
 public class VentanaGrupo extends JDialog {
 
     // ===================== Constantes de color =====================
-    private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
-    private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	/**
+	 * Color naranja claro
+	 */
+	private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+	/**
+	 * Color naranja oscuro
+	 */
+	private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	/**
+	 * Color naranja boton
+	 */
     private final Color boton = Colores.NARANJA_BOTON.getColor();
 
     // ===================== Componentes =====================
+    /**
+     * Campo de texto para ingresar el nombre del grupo.
+     */
     private JTextField txtNombreGrupo;
+	/**
+	 * Lista de contactos seleccionables.
+	 */
     private JList<ContactoIndividual> listaContactos;
+    /**
+     * Imagen seleccionada para el grupo.
+     */
     private ImageIcon imagenSeleccionadaGrupo = null;
 
     // ===================== Constructor =====================
+	/**
+	 * Crea la ventana de creación de grupo.
+	 * 
+	 * @param parent Ventana padre.
+	 */
     public VentanaGrupo(JFrame parent) {
         super(parent, "Crear Nuevo Grupo", true);
 
@@ -34,7 +57,9 @@ public class VentanaGrupo extends JDialog {
     }
 
     // ===================== Métodos de configuración =====================
-
+    /**
+     * Configura la ventana de creación de grupo.
+     */
     private void configurarVentana() {
         getContentPane().setBackground(naranjaOscuro);
         setSize(400, 400);

@@ -13,7 +13,10 @@ import appChat.Usuario;
  * Filtro que selecciona mensajes relacionados con un nombre de usuario o contacto.
  */
 public class FiltroPorNombre implements FiltroBusqueda {
-    private String nombre;
+	/**
+	 * Nombre del usuario o contacto a filtrar.
+	 */
+	private String nombre;
 
 	/**
 	 * Constructor que inicializa el filtro con un nombre específico.
@@ -52,7 +55,7 @@ public class FiltroPorNombre implements FiltroBusqueda {
     /**
      * Normaliza un texto eliminando acentos y convirtiéndolo a minúsculas.
      * 
-     * @param texto
+     * @param texto Texto a normalizar.
      * @return texto normalizado
      */
     private String normalizarTexto(String texto) {

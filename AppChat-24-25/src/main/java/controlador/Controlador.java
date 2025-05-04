@@ -58,13 +58,17 @@ public class Controlador {
 
 	// ===================== Constructor e Inicialización =====================
 
-	// Constructor privado del controlador
+	/**
+	 * Constructor privado del controlador
+	 */
 	private Controlador() {
 		inicializarAdaptadores();
 		inicializarRepositorios();
 	}
 
-	// Inicialización de adaptadores
+	/**
+	 * Inicializa los adaptadores de la base de datos
+     */
 	private void inicializarAdaptadores() {
 		FactoriaDAO factoria = null;
 		try {
@@ -78,7 +82,9 @@ public class Controlador {
 		adaptadorContactoIndividual = factoria.getContactoIndividualDAO();
 	}
 
-	// Inicialización de repositorios
+	/**
+	 * Inicializa el repositorio de usuarios
+	 */
 	private void inicializarRepositorios() {
 		this.repoUsuarios = RepositorioUsuarios.getUnicaInstancia();
 	}

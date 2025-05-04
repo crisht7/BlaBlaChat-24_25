@@ -1,10 +1,16 @@
 package persistencia;
-
+/**
+ * Clase abstracta que define la fábrica de DAOs para la persistencia
+ */
 public abstract class FactoriaDAO {
-	// Constante para el nombre de la fábrica DAO
+	/**
+	 * Constante para el nombre de la fábrica DAO
+	 */
 	public static final String DAO_TDS = "persistencia.AdaptadorFactoriaDAO";
 	
-	// Atributo estático para la instancia única de la fábrica DAO
+	/**
+	 * Atributo estático para la instancia única de la fábrica DAO
+	 */
 	private static FactoriaDAO unicaInstancia = null;
 
 	/**

@@ -7,7 +7,13 @@ import java.util.Hashtable;
  * Permite gestionar objetos en la base de datos
  */
 public class PoolDAO {
+	/**
+	 * Instancia única de PoolDAO (Singleton).
+	 */
 	private static PoolDAO unicaInstancia; 
+	/**
+	 * Caché de objetos.
+	 */
 	private Hashtable<Integer, Object> pool; 
 
 	/**

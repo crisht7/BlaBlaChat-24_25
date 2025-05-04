@@ -4,6 +4,10 @@ import java.util.List;
 
 import appChat.Mensaje;
 
+/**
+ * Interfaz MensajeDAO que define los métodos para la persistencia de mensajes.
+ * 
+ */
 public interface MensajeDAO {
 
 	
@@ -23,14 +27,14 @@ public interface MensajeDAO {
 	/**
 	 * Modifica un mensaje de la base de datos
 	 * 
-	 * @param mensaje
+	 * @param mensaje a modificar
 	 */
 	public void modificarMensaje(Mensaje mensaje);
 
 	/**
      * Recupera un mensaje de la base de datos a traves del codigo
      * 
-     * @param codigo
+     * @param codigo codigo del mensaje a recuperar
      * @return mensaje
      */
 	public Mensaje recuperarMensaje(int codigo);

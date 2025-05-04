@@ -13,24 +13,62 @@ import appChat.*;
 import controlador.Controlador;
 import tds.BubbleText;
 
+/**
+ * Ventana principal de la aplicación de chat.
+ */
 @SuppressWarnings("serial")
 public class VentanaMain extends JFrame {
 
+	/**
+	 * Chat actual que se muestra en la ventana.
+	 */
     public Chat chat;
+	/**
+	 * Instancia única de la ventana principal.
+	 */
     private static VentanaMain instancia;
+    /**
+     * Mapa que almacena los chats recientes.
+     */
     private Map<Contacto, Chat> chatsRecientes;
+    /**
+     * ScrollBar para el chat.
+     */
     private JScrollPane scrollBarChat;
+	/**
+	 * Contacto actual seleccionado.
+	 */
     private Contacto contactoActual;
+    /**
+     * Lista de contactos recientes.
+     */
     private JList<Contacto> listaChatRecientes;
 
+	/**
+	 * Color turquesa claro.
+	 */
     private final Color turquesa = Colores.TURQUESA.getColor();
+    /**
+     * Color turquesa oscuro.
+     */
     private final Color turquesaOscuro = Colores.TURQUESA_OSCURO.getColor();
+	/**
+	 * Color naranja claro.
+	 */
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+    /**
+     * Color naranja oscuro.
+     */
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
-    
+    /**
+     * Label para mostrar la foto del usuario.
+     */
     private JLabel lblFotoUsuario;
 
-
+    /**
+     * Método main para iniciar la aplicación.
+     * @param args argumentos de la línea de comandos
+     */
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             try {
@@ -41,7 +79,9 @@ public class VentanaMain extends JFrame {
         });
     }
 
-
+    /**
+     * Constructor privado para la ventana principal.
+     */
     private VentanaMain() {
         chatsRecientes = new HashMap<>();
         instancia = this;
@@ -77,6 +117,14 @@ public class VentanaMain extends JFrame {
 	 * Clase interna para el panel de chat.
 	 */
     class Chat extends JPanel implements Scrollable {
+    	/**
+    	 * Constructor de la clase Chat predeterminado.
+    	 */
+		public Chat() {
+		}
+    	/**
+    	 * Serialización de la clase
+    	 */
         private static final long serialVersionUID = 1L;
 
         @Override
@@ -114,11 +162,26 @@ public class VentanaMain extends JFrame {
 	 * Clase interna para el renderizado de la lista de contactos.
 	 */
     class CellRenderer extends JPanel implements ListCellRenderer<Contacto> {
+    	/**
+    	 * Etiqueta para mostrar el nombre del contacto.
+    	 */
         private JLabel nombreLabel;
+        /**
+         * Etiqueta para mostrar el teléfono del contacto.
+         */
         private JLabel telefonoLabel;
+		/**
+		 * Etiqueta para mostrar el mensaje de preview.
+		 */
         private JLabel mensajePreviewLabel;
+        /**
+         * Etiqueta para mostrar el icono del contacto.
+         */
         private JLabel iconoLabel;
 
+		/**
+		 * Constructor de la clase CellRenderer.
+		 */
         public CellRenderer() {
             setLayout(new BorderLayout(5, 5));
 
@@ -312,6 +375,8 @@ public class VentanaMain extends JFrame {
     
 	/**
 	 * Método para mostrar la información de un contacto.
+	 * 
+	 * @param contacto a mostrar información
 	 */
     public void mostrarInfoContacto(ContactoIndividual contacto) {
         JDialog dialogo = new JDialog(this, "Información de contacto", true);
@@ -809,8 +874,8 @@ public class VentanaMain extends JFrame {
     /**
      * Método para cargar un chat desde un contacto externo.
      * 
-     * @param contacto
-     * @param mensajeBuscado
+     * @param contacto contacto a cargar
+     * @param mensajeBuscado mensaje a buscar
      */
     public void cargarChatDesdeExterno(Contacto contacto, Mensaje mensajeBuscado) {
         // Cargar el chat normalmente
@@ -830,7 +895,11 @@ public class VentanaMain extends JFrame {
                 JOptionPane.INFORMATION_MESSAGE);
     }
 
-
+	/**
+	 * Método para obtener el JScrollBar del chat.
+	 * 
+	 * @return JScrollBar del chat
+	 */
     public JScrollBar getScrollChat() {
         return scrollBarChat.getVerticalScrollBar();
     }
@@ -838,10 +907,10 @@ public class VentanaMain extends JFrame {
 
     /**
      * Método para exportar el chat a un archivo PDF.
-     * 
-     * @param usuario
-     * @param contacto
-     * @param rutaArchivo
+     *  
+     * @param usuario usuario actual
+     * @param contacto contacto del chat
+     * @param rutaArchivo ruta del archivo PDF a crear
      */
     private void exportarChatAPDF(Usuario usuario, Contacto contacto, String rutaArchivo) {
         try {
@@ -875,7 +944,9 @@ public class VentanaMain extends JFrame {
             JOptionPane.showMessageDialog(this, "Error al generar el PDF:\n" + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }    
-   
+    /**
+     * Método para configurar el menú contextual de la lista de contactos.
+     */
     private void configurarMenuContextual() {
         JPopupMenu menuContextual = new JPopupMenu();
 
@@ -986,7 +1057,9 @@ public class VentanaMain extends JFrame {
     }
 
 
-    
+    /**
+     * Método para actualizar los datos del usuario actual en la interfaz.
+     */
     public void actualizarDatosUsuario() {
         Usuario usuarioActual = Controlador.getInstancia().getUsuarioActual();
         if (lblFotoUsuario != null && usuarioActual != null) {
@@ -1004,7 +1077,9 @@ public class VentanaMain extends JFrame {
         }
     }
 
-    
+    /**
+     * Metodo para limpiar el estado de los chats recientes.
+     */
     public void limpiarEstadoChats() {
         chatsRecientes.clear();
         contactoActual = null;

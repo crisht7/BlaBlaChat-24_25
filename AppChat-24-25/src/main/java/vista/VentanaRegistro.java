@@ -22,18 +22,68 @@ import controlador.Controlador;
 /**
  * Ventana de registro de usuario.
  */
+@SuppressWarnings("serial")
 public class VentanaRegistro extends JFrame {
-	private static final long serialVersionUID = 1L;
+
+	/**
+	 * Panel de contenido de la ventana.
+	 */
 	private JPanel contentPane;
-	private JTextField textFieldNombre, textFieldApellidos, textFieldTelefono, textFieldSaludo;
-	private JPasswordField passwordFieldContraseña, passwordFieldRepContraseña;
+	/**
+	 * Campo de texto para ingresar el nombre del usuario.
+	 */
+	private JTextField textFieldNombre;
+	/**
+	 * Campo de texto para ingresar los apellidos del usuario.
+	 */
+	private JTextField textFieldApellidos; 
+	/**
+	 * Campo de texto para ingresar el teléfono del usuario.
+	 */
+	private JTextField textFieldTelefono;
+	/**
+	 * Campo de texto para ingresar el saludo del usuario.
+	 */
+	private JTextField textFieldSaludo;
+	/**
+	 * Campo de texto para ingresar el nombre del usuario.
+	 */
+	private JPasswordField passwordFieldContraseña;
+	/**
+	 * Campo de texto para repetir la contraseña del usuario.
+	 */
+	private JPasswordField passwordFieldRepContraseña;
+	/**
+	 * Campo de texto para ingresar la fecha de nacimiento del usuario.
+	 */
 	private JDateChooser dateChooserFechaNac;
+	/**
+	 * Color naranja claro
+	 */
 	private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+	/**
+	 * Color naranja oscuro
+	 */
 	private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	/**
+	 * Color turquesa
+	 */
 	private final Color turquesa = Colores.TURQUESA.getColor();
+	/**
+	 * Color naranja boton
+	 */
 	private final Color boton = Colores.NARANJA_BOTON.getColor();
+	/**
+	 * Etiqueta para mostrar la imagen de perfil.
+	 */
 	private JLabel lblIcon;
+	/**
+	 * Imagen de perfil seleccionada.
+	 */
 	private BufferedImage imagenPerfil;  // Guardamos la imagen real aquí
+	/**
+	 * Instancia de la ventana de registro (Singleton).
+	 */
     private static VentanaRegistro instancia;
 
 
@@ -50,6 +100,8 @@ public class VentanaRegistro extends JFrame {
 
 	/**
 	 * Método para obtener la instancia de la ventana de registro (Singleton).
+	 * 
+	 * @return Instancia de la ventana de registro.
 	 */
 	public static VentanaRegistro getInstancia() {
 		if (instancia == null) {

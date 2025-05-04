@@ -8,7 +8,10 @@ import appChat.Mensaje;
  * Filtro que permite combinar múltiples filtros aplicándolos en secuencia.
  */
 public class FiltroCombinado implements FiltroBusqueda {
-    private List<FiltroBusqueda> filtros;
+	/**
+	 * Lista de filtros a aplicar.
+	 */
+	private List<FiltroBusqueda> filtros;
 
 	/**
 	 * Constructor por defecto que inicializa la lista de filtros.

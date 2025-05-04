@@ -9,9 +9,17 @@ import java.time.LocalDate;
  * se aplica un porcentaje de descuento fijo.
  */
 public class DescuentoFecha implements Descuento {
-
+	/**
+	 * Fecha de inicio del rango para aplicar el descuento.
+	 */
     private LocalDate inicio;
+    /**
+     * Fecha de fin del rango para aplicar el descuento.
+     */
     private LocalDate fin;
+	/**
+	 * Porcentaje de descuento aplicable.
+	 */
     private static final double PORCENTAJE_DESCUENTO = 15.0;
 
     /**

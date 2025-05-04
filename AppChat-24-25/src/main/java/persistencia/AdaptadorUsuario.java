@@ -18,12 +18,23 @@ import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
+/**
+ * Clase que implementa el Adaptador de Usuario para base de datos
+ */
 public class AdaptadorUsuario implements UsuarioDAO {
 	
+	/**
+	 * Instancia única de la clase AdaptadorUsuario (Singleton)
+	 */
 	private static AdaptadorUsuario unicaInstancia = null;
+	/**
+	 * Servicio de persistencia para la base de datos
+	 */
 	private static ServicioPersistencia servPersistencia;
 	
-	// Constructor privado Singleton
+	/**
+	 * Constructor privado Singleton
+	 */
 	private AdaptadorUsuario() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
@@ -256,7 +267,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	/**
 	 * Obtiene los contactos asociados a un usuario
 	 * 
-	 * @param codigos
+	 * @param codigos a convertir
 	 * @return lista de contactos
 	 */
 	private List<ContactoIndividual> obtenerContactosDesdeCodigos(String codigos) {
@@ -286,7 +297,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	/**
 	 * Convierte un String de codigos en una lista de grupos
 	 * 
-	 * @param codigos
+	 * @param codigos a convertir
 	 * @return lista de grupos
 	 */
 	private List<Grupo> obtenerGruposDesdeCodigos(String codigos) {
@@ -315,7 +326,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	/**
 	 * Convierte una lista de contactos a un String de codigos
 	 * 
-	 * @param contactos
+	 * @param contactos a convertir
 	 * @return codigo
 	 */
 	private String obtenerCodigosContactoIndividual(List<Contacto> contactos) {
@@ -327,7 +338,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	/**
 	 * Verifica si el usuario existe en la base de datos
 	 * 
-	 * @param usuario
+	 * @param usuario a verificar
 	 * @return true si existe, false si no
 	 */
 	private boolean existeUsuario(Usuario usuario) {
@@ -337,6 +348,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 	/**
 	 * Convierte una lista de grupos a un String de codigos
 	 * 
+	 * @param grupos a convertir
 	 * @return codigo
 	 */
 	private String obtenerCodigosGrupos(List<Grupo> grupos) {

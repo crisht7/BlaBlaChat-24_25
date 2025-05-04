@@ -15,14 +15,14 @@ public interface UsuarioDAO {
 	/**
 	 * Registra un usuario en la base de datos
 	 * 
-	 * @param usuario
+	 * @param usuario a registrar
 	 */
 	public void registrarUsuario(Usuario usuario);
 	
 	/**
 	 * Elimina un usuario de la base de datos
 	 * 
-	 * @param usuario
+	 * @param usuario a eliminar
 	 */
 	public void borrarUsuario(Usuario usuario);
 

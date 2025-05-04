@@ -61,6 +61,13 @@ public class Usuario {
 
     /**
      * Constructor que inicializa los atributos básicos.
+     * 
+     * @param nombre nombre del usuario
+     * @param imagen foto de perfil
+     * @param contraseña contraseña del usuario
+     * @param telefono número de teléfono
+     * @param saludo saludo del usuario
+     * @param fechaRegistro fecha de registro
      */
     public Usuario(String nombre, ImageIcon imagen, String contraseña, 
                    String telefono, String saludo, LocalDate fechaRegistro) {
@@ -75,6 +82,14 @@ public class Usuario {
 
     /**
      * Constructor que inicializa un usuario con premium especificado.
+     * 
+     * @param nombre nombre del usuario
+     * @param imagen foto de perfil
+     * @param contraseña contraseña del usuario
+     * @param telefono número de teléfono
+     * @param saludo saludo del usuario
+     * @param fechaRegistro fecha de registro
+     * @param isPremium estado premium del usuario
      */
     public Usuario(String nombre, ImageIcon imagen, String contraseña, 
                    String telefono, String saludo, LocalDate fechaRegistro, Boolean isPremium) {
@@ -84,6 +99,16 @@ public class Usuario {
 
     /**
      * Constructor que inicializa un usuario con premium y código especificados.
+     * 
+     * @param nombre nombre del usuario
+     * @param fecha fecha de registro
+     * @param imagen foto de perfil
+     * @param contraseña contraseña del usuario
+     * @param telefono número de teléfono
+     * @param saludo saludo del usuario
+     * @param fechaRegistro fecha de registro
+     * @param isPremium estado premium del usuario
+     * @param codigo código único del usuario
      */
     public Usuario(String nombre, LocalDate fecha, ImageIcon imagen, String contraseña, 
                    String telefono, String saludo, LocalDate fechaRegistro, Boolean isPremium, int codigo) {
@@ -95,6 +120,9 @@ public class Usuario {
 
     /**
      * Verifica si el usuario tiene un contacto individual por nombre.
+     * 
+     * @param nombreContacto nombre del contacto
+     * @return true si el contacto existe, false en caso contrario
      */
     public boolean tieneContactoIndividual(String nombreContacto) {
         return contactos.stream()
@@ -103,6 +131,9 @@ public class Usuario {
 
     /**
      * Verifica si el usuario ya tiene un contacto individual con el teléfono especificado.
+     * 
+     * @param telefono número de teléfono del contacto
+     * @return true si el contacto existe, false en caso contrario
      */
     public boolean tieneContactoIndividualPorTelefono(String telefono) {
         return contactos.stream()
@@ -113,6 +144,9 @@ public class Usuario {
 
     /**
      * Verifica si el usuario tiene un grupo por nombre.
+     * 
+     * @param nombre nombre del grupo
+     * @return true si el grupo existe, false en caso contrario
      */
     public boolean tieneGrupo(String nombre) {
         return contactos.stream()
@@ -123,6 +157,8 @@ public class Usuario {
 
     /**
      * Añade un contacto a la lista de contactos del usuario.
+     * 
+     * @param contacto contacto a añadir
      */
     public void añadirContacto(Contacto contacto) {
         this.contactos.add(contacto);
@@ -130,6 +166,8 @@ public class Usuario {
 
     /**
      * Devuelve la lista de contactos del usuario.
+     * 
+     * @return lista de contactos
      */
     public List<Contacto> getContactos() {
         if (this.contactos == null) {
@@ -140,6 +178,8 @@ public class Usuario {
 
     /**
      * Devuelve la lista de grupos del usuario.
+     * 
+     * @return lista de grupos
      */
     public List<Grupo> getGrupos() {
         return contactos.stream()
@@ -150,6 +190,8 @@ public class Usuario {
 
     /**
      * Devuelve la lista de contactos individuales del usuario.
+     * 
+     * @return lista de contactos individuales
      */
     public List<ContactoIndividual> getContactosIndividuales() {
         return contactos.stream()
@@ -160,6 +202,8 @@ public class Usuario {
 
     /**
      * Devuelve una lista de contactos ordenados por el número total de mensajes enviados.
+     * 
+     * @return lista de contactos ordenados
      */
     public List<Contacto> getContactosOrdenadosPorMensaje() {
         if (contactos == null || contactos.isEmpty()) {
@@ -174,6 +218,8 @@ public class Usuario {
 
     /**
      * Establece la lista de contactos del usuario.
+     * 
+     * @param contactos nueva lista de contactos
      */
     public void setContactos(List<Contacto> contactos) {
         if (contactos == null) {

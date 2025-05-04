@@ -8,8 +8,13 @@ import appChat.Usuario;
  * de mensajes, se aplica un porcentaje de descuento fijo.
  */
 public class DescuentoMensaje implements Descuento {
-
+	/**
+	 * Porcentaje de descuento aplicable.
+	 */
     private static final double PORCENTAJE_DESCUENTO = 30.0;
+    /**
+     * Número mínimo de mensajes requeridos para aplicar el descuento.
+     */
     private int minimoMensajes;
 
     /**

@@ -8,11 +8,14 @@ import appChat.Mensaje;
  * Filtro que selecciona mensajes que contienen un texto específico.
  */
 public class FiltroPorTexto implements FiltroBusqueda {
-    private String texto;
+	/**
+	 * Texto que se utilizará para filtrar los mensajes.
+	 */
+	private String texto;
 
     /**
      * Constructor que inicializa el filtro con un texto específico.
-     * @param texto
+     * @param texto Texto a filtrar.
      */
     public FiltroPorTexto(String texto) {
         this.texto = texto;

@@ -21,11 +21,19 @@ import tds.driver.ServicioPersistencia;
  */
 public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 
+	/**
+	 * Instancia única de la clase AdaptadorContactoIndividual (Singleton)
+	 */
 	private static AdaptadorContactoIndividual unicaInstancia = null;
+	/**
+	 * Servicio de persistencia
+	 */
 	private static ServicioPersistencia servPersistencia;
 	
 	
-	//Constructor privado Singleton
+	/**
+	 * Constructor privado Singleton
+	 */
 	private AdaptadorContactoIndividual() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
@@ -197,7 +205,7 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	/**
 	 * Registra los mensajes del contacto individual si no existen
 	 * 
-	 * @param messages
+	 * @param messages lista de mensajes a registrar
 	 */
 	private void registrarSiNoExistenMensajes(List<Mensaje> messages) {
 		AdaptadorMensaje adaptadorMensajes = AdaptadorMensaje.getUnicaInstancia();
@@ -207,7 +215,7 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	/**
 	 * Registra el usuario si no existe
 	 * 
-	 * @param usuario
+	 * @param usuario a registrar
 	 */
 	private void registrarSiNoExiste(Usuario usuario) {
 		AdaptadorUsuario adaptadorUsuario = AdaptadorUsuario.getUnicaInstancia();
@@ -217,7 +225,7 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	/**
 	 * Convierte una lista de mensajes a una cadena de códigos
 	 * 
-	 * @param mensajesRecibidos
+	 * @param mensajesRecibidos lista de mensajes
 	 * @return cadena de códigos
 	 */
 	private String obtenerCodigosMensajesRecibidos(List<Mensaje> mensajesRecibidos) {
@@ -228,7 +236,7 @@ public class AdaptadorContactoIndividual implements ContactoIndividualDAO {
 	/**
 	 * Convierte una cadena de códigos a una lista de mensajes
 	 * 
-	 * @param codigos
+	 * @param codigos cadena de códigos
 	 * @return lista de mensajes
 	 */
 	private List<Mensaje> obtenerMensajesDesdeCodigos(String codigos) {

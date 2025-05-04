@@ -16,22 +16,47 @@ import java.util.List;
 /**
  * Ventana que permite añadir un nuevo contacto.
  */
+@SuppressWarnings("serial")
 public class VentanaContacto extends JFrame {
 
-    private static final long serialVersionUID = 1L;
-
     // ===================== Constantes de color =====================
+	/**
+	 * Color naranja claro
+	 */
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+    /**
+     * Color naranja oscuro
+     */
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+	/**
+	 * Color naranja boton
+	 */
     private final Color boton = Colores.NARANJA_BOTON.getColor();
 
     // ===================== Componentes =====================
+    /**
+     * Panel de contenido de la ventana.
+     */
     private JPanel contentPane;
+	/**
+	 * Campo de texto para ingresar el nombre del contacto.
+	 */
     private JTextField textFieldName;
+    /**
+     * Campo de texto para ingresar el teléfono del contacto.
+     */
     private JTextField textFieldTelf;
+    /**
+     * Modelo de lista de contactos.
+     */
     private DefaultListModel<Contacto> modelContacts;
 
     // ===================== Constructor =====================
+	/**
+	 * Crea la ventana de añadir contacto.
+	 *
+	 * @param modelo Modelo de lista de contactos.
+	 */
     public VentanaContacto(DefaultListModel<Contacto> modelo) {
         this.modelContacts = modelo;
 

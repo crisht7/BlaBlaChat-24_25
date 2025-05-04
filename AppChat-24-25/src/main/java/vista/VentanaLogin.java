@@ -13,15 +13,39 @@ import java.awt.event.ActionEvent;
 public class VentanaLogin {
 
     // ===================== Constantes de color =====================
+	/**
+	 * Color naranja claro
+     */
     private final Color naranjaClaro = Colores.NARANJA_CLARO.getColor();
+    /**
+     * Color naranja oscuro
+     */
     private final Color naranjaOscuro = Colores.NARANJA_OSCURO.getColor();
+    /**
+     * Color turquesa
+     */
     private final Color turquesa = Colores.TURQUESA.getColor();
+    /**
+     * Color naranja boton
+     */
     private final Color boton = Colores.NARANJA_BOTON.getColor();
 
     // ===================== Componentes =====================
+    /**
+     * Ventana de login.
+     */
     public JFrame frmLogin;
+	/**
+	 * Campo de texto para ingresar el número de teléfono.
+	 */
     private JTextField textFieldTelefono;
+    /**
+     * Campo de texto para ingresar la contraseña.
+     */
     private JPasswordField passwordFieldContraseña;
+    /**
+     * Instancia de la ventana de login.
+     */
     private static VentanaLogin instancia;
 
 
@@ -33,6 +57,11 @@ public class VentanaLogin {
         initialize();
     }
     
+    /**
+     * Devuelve la instancia de la ventana de login.
+     * 
+     * @return Instancia de la ventana de login.
+     */
     public static VentanaLogin getInstancia() {
         if (instancia == null) {
             instancia = new VentanaLogin();
@@ -58,6 +87,9 @@ public class VentanaLogin {
         crearPanelCentral();
     }
 
+	/**
+	 * Crea el panel de botones de la ventana de login.
+	 */
     private void crearPanelBotones() {
         JPanel panelBot = new JPanel(new BorderLayout(0, 0));
         panelBot.setBackground(new Color(236, 215, 176));
@@ -100,6 +132,9 @@ public class VentanaLogin {
         panelRegistrar.add(btnRegistrar);
     }
 
+	/**
+	 * Crea el panel superior de la ventana de login.
+	 */
     private void crearPanelSuperior() {
         JPanel panelTop = new JPanel(new GridBagLayout());
         panelTop.setBackground(naranjaClaro);
@@ -125,6 +160,9 @@ public class VentanaLogin {
         panelTop.add(lblTitulo, gbc);
     }
 
+    /**
+     * Crea el panel central de la ventana de login.
+     */
     private void crearPanelCentral() {
         JPanel panelMid = new JPanel(new GridBagLayout());
         panelMid.setBackground(naranjaClaro);
@@ -176,7 +214,11 @@ public class VentanaLogin {
     }
 
     // ===================== Lógica de eventos =====================
-
+	/**
+	 * Acción al hacer clic en el botón de login.
+	 * 
+	 * @param e Evento de acción.
+	 */
     private void accionLogin(ActionEvent e) {
         String telefono = textFieldTelefono.getText();
         @SuppressWarnings("deprecation")
@@ -195,7 +237,9 @@ public class VentanaLogin {
             mostrarDialogoError();
         }
     }
-
+    /**
+     * Muestra un diálogo de error al intentar iniciar sesión.
+     */
     private void mostrarDialogoError() {
         JPanel panel = new JPanel(new BorderLayout());
         JLabel mensaje = new JLabel("Login incorrecto", SwingConstants.CENTER);
@@ -213,6 +257,8 @@ public class VentanaLogin {
 
     /**
      * Muestra u oculta la ventana de login.
+     * 
+     * @param visible true para mostrar la ventana, false para ocultarla.
      */
     public void setVisible(boolean visible) {
         frmLogin.setVisible(visible);

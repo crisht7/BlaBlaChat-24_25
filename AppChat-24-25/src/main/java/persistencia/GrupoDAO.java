@@ -4,26 +4,30 @@ import java.util.List;
 
 import appChat.Grupo;
 
+/**
+ * Interfaz GrupoDAO que define los métodos para la persistencia de grupos.
+ * 
+ */
 public interface GrupoDAO {
 
 	/**
 	 * Registra un grupo en la base de datos
 	 * 
-	 * @param grupo
+	 * @param grupo a registrar
 	 */
 	public void registrarGrupo(Grupo grupo);
 
 	/**
 	 * Elimina un grupo de la base de datos
 	 * 
-	 * @param grupo
+	 * @param grupo a eliminar
 	 */
 	public void borrarGrupo(Grupo grupo);
 
 	/**
 	 * Recupera un grupo de la base de datos a traves del codigo
 	 * 
-	 * @param codigo
+	 * @param codigo codigo del grupo a recuperar
 	 * @return grupo
 	 */
 	public Grupo recuperarGrupo(int codigo);
@@ -38,7 +42,7 @@ public interface GrupoDAO {
 	/**
 	 * Modifica un grupo de la base de datos
 	 * 
-	 * @param grupo
+	 * @param grupo a modificar
 	 */
 	public void modificarGrupo(Grupo grupo);
 	

@@ -11,12 +11,23 @@ import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
+/**
+ * Clase que implementa el Adaptador de Mensaje para base de datos con DAO
+ */
 public class AdaptadorMensaje implements MensajeDAO {
 
+	/**
+	 * Instancia única de la clase AdaptadorMensaje (Singleton)
+	 */
 	public static AdaptadorMensaje unicainstancia = null;
+	/**
+	 * Servicio de persistencia
+	 */
 	public static ServicioPersistencia servPersistencia;
 
-	// Constructor privado Singleton	
+	/**
+	 *  Constructor privado Singleton	
+	 */
 	private AdaptadorMensaje() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}

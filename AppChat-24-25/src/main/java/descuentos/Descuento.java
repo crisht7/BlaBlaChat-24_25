@@ -9,5 +9,11 @@ import appChat.Usuario;
  * basado en la información del usuario.
  */
 public interface Descuento {
+	/**
+	 * Devuelve el porcentaje de descuento aplicable a un usuario.
+	 * 
+	 * @param usuario Usuario al que se le evaluará el descuento
+	 * @return porcentaje de descuento aplicable
+	 */
     double obtenerPorcentajeDescuento(Usuario usuario);
 }

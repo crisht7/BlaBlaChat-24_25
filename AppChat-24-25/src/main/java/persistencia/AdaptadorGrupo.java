@@ -17,20 +17,33 @@ import beans.Propiedad;
 import tds.driver.FactoriaServicioPersistencia;
 import tds.driver.ServicioPersistencia;
 
+/**
+ * Clase que implementa el Adaptador de Grupo para base de datos
+ */
 public class AdaptadorGrupo implements GrupoDAO{
-
+	
+	/**
+	 * Instancia única de la clase AdaptadorGrupo (Singleton)
+	 */
 	private static AdaptadorGrupo unicaInstancia = null;
+	/**
+	 * Servicio de persistencia
+	 */
 	private static ServicioPersistencia servPersistencia;
 	
-	//Instacia unica para mantener el patron singleton 
+	/**
+	 * Instacia unica para mantener el patron singleton 
+	 * @return unicaInstancia
+	 */
 	public static AdaptadorGrupo getUnicaInstancia() {
 		if (unicaInstancia == null)
             unicaInstancia = new AdaptadorGrupo();
         return unicaInstancia;
 	}
 
-	// Constructor privado para mantener el patron singleton
-	
+	/**
+	 * Constructor privado para mantener el patron singleton
+	 */
 	private AdaptadorGrupo() {
 		servPersistencia = FactoriaServicioPersistencia.getInstance().getServicioPersistencia();
 	}
@@ -38,7 +51,7 @@ public class AdaptadorGrupo implements GrupoDAO{
 	/**
 	 * Registra un grupo en la base de datos
 	 * 
-	 * @param grupo
+	 * @param grupo a registrar
 	 */
 	@Override
 	public void registrarGrupo(Grupo grupo) {
@@ -76,7 +89,7 @@ public class AdaptadorGrupo implements GrupoDAO{
 	/**
 	 * Elimina un grupo de la base de datos
 	 * 
-	 * @param grupo
+	 * @param grupo a eliminar
 	 */
 	@Override
 	public void borrarGrupo(Grupo grupo) {
@@ -87,7 +100,7 @@ public class AdaptadorGrupo implements GrupoDAO{
 	/**
 	 * Recupera un grupo de la base de datos a traves del codigo
 	 * 
-	 * @param codigo
+	 * @param codigo codigo del grupo a recuperar
 	 * @return grupo
 	 */
 	@Override
@@ -139,7 +152,7 @@ public class AdaptadorGrupo implements GrupoDAO{
 	/**
 	 * Modifica un grupo de la base de datos
 	 * 
-	 * @param grupo
+	 * @param grupo a modificar
 	 */
 	@Override
 	public void modificarGrupo(Grupo grupo) {
@@ -171,18 +184,18 @@ public class AdaptadorGrupo implements GrupoDAO{
 	/**
 	 * Convierte una cadena de texto a un ImageIcon
 	 * 
-	 * @param path
+	 * @param path ruta de la imagen
 	 * @return ImageIcon
 	 */
 	private ImageIcon getImageIcon(String path) {
-		// TODO Auto-generated method stub
 		return new ImageIcon(path);
 	}
 
 	/**
 	 * Convierte una lista de mensajes a un String de codigos
 	 * 
-	 * @return codigo
+	 * @param mensajesRecibidos lista de mensajes
+	 * @return codigo del mensaje
 	 */
 	private String obtenerCodigosMensajes(List<Mensaje> mensajesRecibidos) {
 		return mensajesRecibidos.stream().
@@ -193,7 +206,8 @@ public class AdaptadorGrupo implements GrupoDAO{
 	/**
 	 * Convierte una lista de miembros a un String de codigos
 	 * 
-	 * @return codigo
+	 * @param miembros lista de miembros
+	 * @return codigo del miembro
 	 */
 	private String obtenerCodigosMiembros(List<ContactoIndividual> miembros) {
 		return miembros.stream().
@@ -204,6 +218,7 @@ public class AdaptadorGrupo implements GrupoDAO{
 	/**
 	 * Convierte un String de codigos a una lista de miembros
 	 * 
+	 * @param codigos a convertir
 	 * @return lista de miembros
 	 */
 	private List<ContactoIndividual> obtenerMiembros(String codigos) {
