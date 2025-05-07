@@ -657,7 +657,7 @@ public class VentanaMain extends JFrame {
      // Botón de emojis
         JButton btnEmoji = new JButton("");
         btnEmoji.setBackground(new Color(234, 158, 66));
-        btnEmoji.setIcon(new ImageIcon(VentanaMain.class.getResource("/emoji.png"))); // tu icono de emoji
+        btnEmoji.setIcon(new ImageIcon(VentanaMain.class.getResource("/emoji.png"))); 
 
         // Crear menú emergente
         JPopupMenu menuEmojis = new JPopupMenu();
@@ -847,8 +847,15 @@ public class VentanaMain extends JFrame {
             colorBurbuja = turquesa;
             
         } else {
-            Optional<ContactoIndividual> contactoOpcional = Controlador.getInstancia().getContactoDelUsuarioActual(m.getEmisor());
-            emisor = contactoOpcional.map(ContactoIndividual::getNombre).orElse("Desconocido");
+        	String telefonoEmisor = m.getEmisor().getTelefono();
+
+        	Optional<ContactoIndividual> contactoOpcional = 
+        	    Controlador.getInstancia()
+        	               .getUsuarioActual()
+        	               .getContactosIndividuales()
+        	               .stream()
+        	               .filter(c -> c.getTelefono().equals(telefonoEmisor))
+        	               .findFirst();            emisor = contactoOpcional.map(ContactoIndividual::getNombre).orElse("Desconocido");
             direccionMensaje = BubbleText.RECEIVED;
             colorBurbuja = turquesaOscuro;
         }
@@ -958,6 +965,7 @@ public class VentanaMain extends JFrame {
             if (nuevoNombre != null && !nuevoNombre.trim().isEmpty()) {
                 Controlador.getInstancia().renombrarContacto(seleccionado, nuevoNombre.trim());
                 actualizarListaContactos();
+                forzarRecargaDeChat(seleccionado);
             }
         });
         menuContextual.add(itemCambiarNombre);
@@ -1011,6 +1019,7 @@ public class VentanaMain extends JFrame {
             if (nombre != null && !nombre.trim().isEmpty()) {
                 Controlador.getInstancia().crearContacto(nombre.trim(), ci.getTelefono());
                 actualizarListaContactos();
+                forzarRecargaDeChat(seleccionado);
             }
         });
         menuContextual.add(itemAñadirContacto);
@@ -1058,6 +1067,44 @@ public class VentanaMain extends JFrame {
 
 
     /**
+     * Fuerza la recarga del chat si el contacto actualizado es el que está activo.
+     * 
+     * @param contactoPosiblementeModificado el contacto que ha sido renombrado o agregado
+     */
+    private void forzarRecargaDeChat(Contacto contacto) {
+        if (contactoActual == null || contacto == null) return;
+
+        // Comparación por usuario (más confiable)
+        if (contactoActual instanceof ContactoIndividual &&
+            contacto instanceof ContactoIndividual) {
+
+            ContactoIndividual actual = (ContactoIndividual) contactoActual;
+            ContactoIndividual modificado = (ContactoIndividual) contacto;
+
+            if (actual.getUsuario() != null &&
+                modificado.getUsuario() != null &&
+                actual.getUsuario().getCodigo() == modificado.getUsuario().getCodigo()) {
+
+                // Obtener versión actualizada del contacto
+                ContactoIndividual actualizado = Controlador.getInstancia()
+                    .getUsuarioActual()
+                    .getContactosIndividuales()
+                    .stream()
+                    .filter(c -> c.getUsuario() != null &&
+                                 c.getUsuario().getCodigo() == modificado.getUsuario().getCodigo())
+                    .findFirst()
+                    .orElse(null);
+
+                if (actualizado != null) {
+                    chatsRecientes.remove(contactoActual); // muy importante
+                    contactoActual = actualizado;
+                    cargarChat(contactoActual);
+                }
+            }
+        }
+    }
+
+	/**
      * Método para actualizar los datos del usuario actual en la interfaz.
      */
     public void actualizarDatosUsuario() {

@@ -200,7 +200,9 @@ public class VentanaPerfil extends JDialog {
             VentanaMain.getInstancia().dispose();
             dispose();
             SwingUtilities.invokeLater(() -> {
-                VentanaLogin.getInstancia().setVisible(true);
+                VentanaLogin ventanaLogin = VentanaLogin.getInstancia();
+                ventanaLogin.limpiarCampos();
+                ventanaLogin.setVisible(true);
                 
             });
         }

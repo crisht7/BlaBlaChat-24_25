@@ -468,10 +468,21 @@ public class Controlador {
 			crearContactoAnonimo(contacto);
 		}
 
-		Mensaje mensaje = new Mensaje(emoticono, LocalDateTime.now(), usuarioActual, contacto);
-		contacto.enviarMensaje(mensaje);
+		// Recuperar contacto actualizado desde lista de contactos del usuario actual
+		ContactoIndividual real = getUsuarioActual().getContactosIndividuales().stream()
+			.filter(c -> c.getTelefono().equals(contacto.getTelefono()))
+			.findFirst()
+			.orElse(null);
+
+		if (real == null) {
+			System.err.println("No se pudo encontrar el contacto persistido para enviar emoticono.");
+			return;
+		}
+
+		Mensaje mensaje = new Mensaje(emoticono, LocalDateTime.now(), usuarioActual, real);
+		real.enviarMensaje(mensaje);
 		adaptadorMensaje.registrarMensaje(mensaje);
-		adaptadorContactoIndividual.modificarContacto(contacto);
+		adaptadorContactoIndividual.modificarContacto(real);
 	}
 
 	/**

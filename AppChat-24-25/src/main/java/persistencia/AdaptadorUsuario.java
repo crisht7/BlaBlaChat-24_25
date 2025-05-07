@@ -84,7 +84,7 @@ public class AdaptadorUsuario implements UsuarioDAO {
 				new Propiedad("contraseña", usuario.getContraseña()),
 				new Propiedad("saludo", usuario.getSaludo()),
 				new Propiedad("premium", String.valueOf(usuario.isPremium())),
-				new Propiedad("foto", obtenerRutaRelativaFoto(usuario.getFotoPerfil())),
+				new Propiedad("foto", usuario.getFotoPerfil().getDescription()),
 				new Propiedad("contactos", obtenerCodigosContactoIndividual(usuario.getContactos())),
 				new Propiedad("fechaRegistro", usuario.getFechaRegistro().toString()),
 				new Propiedad("grupos", obtenerCodigosGrupos(usuario.getGrupos())))));
@@ -93,25 +93,6 @@ public class AdaptadorUsuario implements UsuarioDAO {
 		usuario.setCodigo(eUsuario.getId());
 		
 		PoolDAO.getUnicaInstancia().añadirObjeto(usuario.getCodigo(), usuario);
-	}
-
-	/**
-	 * Obtiene la ruta relativa de la foto si proviene de recursos.
-	 * Si no, devuelve la descripción tal cual.
-	 */
-	private String obtenerRutaRelativaFoto(ImageIcon foto) {
-	    String desc = foto.getDescription();
-
-	    if (desc == null) return "";
-
-	    // Si es una ruta que empieza por "file:/", es desde recursos del proyecto
-	    if (desc.contains("/recursos/")) {
-	        // Extrae solo desde /recursos/... en adelante
-	        int idx = desc.indexOf("/recursos/");
-	        return desc.substring(idx);
-	    }
-
-	    return desc; // Ruta absoluta local
 	}
 
 	/**
@@ -164,20 +145,22 @@ public class AdaptadorUsuario implements UsuarioDAO {
 
 	    if (direccionFoto != null) {
 	        try {
-	            if (direccionFoto.startsWith("/recursos/")) {
-	                URL url = getClass().getResource(direccionFoto);
+	            if (direccionFoto.startsWith("file:/")) {
+	                // Imagen predeterminada del proyecto
+	                @SuppressWarnings("deprecation")
+					URL url = new URL(direccionFoto);
 	                fotoPerfil = new ImageIcon(url);
 	            } else {
-	                // Imagen local del PC (ruta absoluta)
+	                // Imagen local del PC
 	                fotoPerfil = new ImageIcon(direccionFoto);
 	            }
 	        } catch (Exception e) {
 	            System.err.println(" Error cargando imagen: " + direccionFoto);
 	            fotoPerfil = new ImageIcon(getClass().getResource("/recursos/account.png"));
-	        }
+	            if (fotoPerfil != null) {
+	                fotoPerfil.setDescription("/recursos/account.png");
+	            }
 
-	        if (fotoPerfil != null) {
-	            fotoPerfil.setDescription(direccionFoto);
 	        }
 	    }
 

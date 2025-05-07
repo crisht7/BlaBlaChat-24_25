@@ -372,7 +372,9 @@ public class VentanaRegistro extends JFrame {
 	        JOptionPane.showMessageDialog(this, "Usuario registrado correctamente", "Registro", JOptionPane.INFORMATION_MESSAGE);
 	        Toolkit.getDefaultToolkit().beep();
 	        dispose();
-	        new VentanaLogin().frmLogin.setVisible(true);
+	        VentanaLogin login = VentanaLogin.getInstancia();
+	        login.limpiarCampos(); 
+	        login.setVisible(true);
 	    }
 	}
 
@@ -381,7 +383,9 @@ public class VentanaRegistro extends JFrame {
 	 */
 	private void cancelarRegistro() {
 		dispose();
-		new VentanaLogin().frmLogin.setVisible(true);
+		VentanaLogin login = VentanaLogin.getInstancia();
+		login.limpiarCampos(); 
+		login.setVisible(true);
 	}
 
 	/**
@@ -489,6 +493,20 @@ public class VentanaRegistro extends JFrame {
 	 */
 	public void setImagenPerfil(BufferedImage imagenPerfil) {
 		this.imagenPerfil = imagenPerfil;
+	}
+	/**
+	 * Método para limpiar los campos de la ventana de registro.
+     */
+	public void limpiarCampos() {
+	    textFieldNombre.setText("");
+	    textFieldApellidos.setText("");
+	    textFieldTelefono.setText("");
+	    textFieldSaludo.setText("");
+	    passwordFieldContraseña.setText("");
+	    passwordFieldRepContraseña.setText("");
+	    dateChooserFechaNac.setDate(null);
+	    lblIcon.setIcon(new ImageIcon(VentanaRegistro.class.getResource("/account.png")));
+	    imagenPerfil = null;
 	}
 
 	

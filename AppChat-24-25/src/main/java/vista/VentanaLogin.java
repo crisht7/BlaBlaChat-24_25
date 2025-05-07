@@ -127,7 +127,9 @@ public class VentanaLogin {
         btnRegistrar.setIcon(new ImageIcon(VentanaLogin.class.getResource("/register.png")));
         btnRegistrar.addActionListener(e -> {
             frmLogin.dispose();
-            VentanaRegistro.getInstancia().setVisible(true);
+            VentanaRegistro ventanaRegistro = VentanaRegistro.getInstancia();
+            ventanaRegistro.limpiarCampos();
+            ventanaRegistro.setVisible(true);
         });
         panelRegistrar.add(btnRegistrar);
     }
@@ -254,6 +256,12 @@ public class VentanaLogin {
 
         JOptionPane.showMessageDialog(frmLogin, panel, "Login failed", JOptionPane.PLAIN_MESSAGE);
     }
+    
+    public void limpiarCampos() {
+        textFieldTelefono.setText("");
+        passwordFieldContraseña.setText("");
+    }
+
 
     /**
      * Muestra u oculta la ventana de login.
