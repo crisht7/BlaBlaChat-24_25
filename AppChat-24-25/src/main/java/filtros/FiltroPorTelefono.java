@@ -2,7 +2,12 @@ package filtros;
 
 import java.util.List;
 import java.util.stream.Collectors;
+
+import appChat.Contacto;
+import appChat.ContactoIndividual;
 import appChat.Mensaje;
+import appChat.Usuario;
+import controlador.Controlador;
 
 /**
  * Filtro que selecciona mensajes cuyo emisor tiene un número de teléfono específico.
@@ -32,8 +37,19 @@ public class FiltroPorTelefono implements FiltroBusqueda {
         if (numeroTelefono == null || numeroTelefono.isEmpty()) return mensajes;
 
         return mensajes.stream()
-                .filter(m -> m.getEmisor().getTelefono().equals(numeroTelefono))
+                .filter(m -> {
+                    Usuario emisor = m.getEmisor();
+                    Usuario receptor =Controlador.getInstancia().getUsuarioPorTelefono(numeroTelefono);
+
+                    boolean emisorCoincide = emisor.getTelefono().equals(numeroTelefono);
+                    boolean receptorCoincide = receptor.getTelefono().equals(numeroTelefono);
+
+                    return emisorCoincide || receptorCoincide;
+                })
                 .collect(Collectors.toList());
+        
+        
+        
     }
 }
 

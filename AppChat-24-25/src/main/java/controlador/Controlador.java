@@ -684,6 +684,10 @@ public class Controlador {
 	public Usuario getUsuarioPorTelefono(String telefono) {
 	    return adaptadorUsuario.recuperarUsuarioPorTelefono(telefono);
 	}
+	
+	
+	
+	
 	/**
 	 * Obtiene un grupo específico del usuario actual
 	 * 
